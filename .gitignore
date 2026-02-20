@@ -211,3 +211,7 @@ dataset
 dataset/
 results/
 wandb/
+
+.python-version
+pyproject.toml
+uv.lock
