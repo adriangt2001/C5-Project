@@ -11,7 +11,7 @@ from tqdm import tqdm
 from transformers import pipeline
 from transformers.pipelines.pt_utils import KeyDataset
 
-from custom_datasets import KittiDatasetHuggingface as KittiDataset
+from src.custom_datasets import KittiDatasetHuggingface as KittiDataset
 
 
 def argument_parser():
@@ -29,14 +29,7 @@ def argument_parser():
 
     return args
 
-def create_dataset(root: str, annotations_folder: str, image_folder: str, seqmap_file: str):
-    base_ds = KittiDataset(root, annotations_folder, image_folder, seqmap_file)
-    features = base_ds.features
-    features['image_id'] = list(range(len(features['image'])))
-    dataset = Dataset.from_dict(features).cast_column('image', DImage())
 
-    print(dataset)
-    return dataset
 
 def save_image_bbox(image: Image.Image, info_list: list, save_folder: str, name: str):
     W, H = image.size
@@ -67,7 +60,7 @@ def main(args):
         dtype=torch.float16,
         device_map=0
     )
-    dataset = create_dataset(args.dataset, args.annotations_folder, args.image_folder, 'custom_datasets/val.seqmap')
+    dataset = KittiDataset(args.dataset, args.annotations_folder, args.image_folder, 'src/custom_datasets/val.seqmap').get_hf_ds()
 
     for idx, out in tqdm(enumerate(pipe(KeyDataset(dataset, "image"))), total=len(dataset)):
         scores = [o['score'] for o in out]

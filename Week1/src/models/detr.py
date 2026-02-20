@@ -6,23 +6,22 @@ import torch
 from PIL import Image
 
 
-@register_model('detr')
 class DeTR(BaseModel):
-    def __init__(self, args):
+    def __init__(self, device=None):
+        self.device = device
         interpreter_login()
 
-        self.model_name = 'microsoft/conditional-detr-resnet-50'
-        self.pipe = None
         self.image_processor = AutoImageProcessor.from_pretrained('microsoft/conditional-detr-resnet-50')
         self.model = AutoModelForObjectDetection.from_pretrained('microsoft/conditional-detr-resnet-50')
+        self.model.to(self.device)
 
     def train(self):
         pass
 
-    def _label2id(self, label: str):
+    def __label2id(self, label: str):
         return 0
 
-    def _list2dict(self, l: list):
+    def __list2dict(self, l: list):
         d = {
             'scores': [],
             'labels': [],
@@ -46,11 +45,14 @@ class DeTR(BaseModel):
         return d
 
     def inference(self, images: list, reset=False):
-        inputs = self.image_processor(images=images, return_tensors="pt")
+        inputs = self.image_processor(images=images, return_tensors="pt", do_rescale=False)
+
+        inputs = {key: tensor.to(self.device) for key, tensor in inputs.items()}
 
         with torch.no_grad():
             outputs = self.model(**inputs)
         
-        results = self.image_processor.post_process_object_detection(outputs, target_sizes=torch.tensor([images.size[::-1]]), threshold=0.3)
+        sizes = torch.as_tensor([img.shape[1:] for img in images])
+        results = self.image_processor.post_process_object_detection(outputs, target_sizes=sizes, threshold=0.0)
 
         return results
