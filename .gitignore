@@ -209,3 +209,5 @@ __marimo__/
 # EXTRAS
 dataset
 dataset/
+results/
+wandb/

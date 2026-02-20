@@ -54,7 +54,7 @@ class KittiDataset(torch.utils.data.Dataset):
 
         image = ToTensor()(image)
 
-        return image, bboxes, categories
+        return image
 
     def __len__(self):
         return len(self.features['image'])

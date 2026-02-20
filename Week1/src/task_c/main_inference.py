@@ -1,7 +1,7 @@
 import torch
 from torch.utils.data import DataLoader
-from src.models.fasterrcnn import FasterRCNN
-from src.custom_datasets.dataset_torchvision import KittiDatasetTorchvision
+from src.models import DeTR, FasterRCNN
+from src.custom_datasets import KittiDataset
 import argparse
 import os
 import time
@@ -9,39 +9,59 @@ import wandb
 from torchvision.utils import draw_bounding_boxes
 from torchvision.transforms.v2 import functional as F
 from tqdm import tqdm
+from datasets import Dataset
+from datasets import Image as DImage
 
-def main_inference(model_type="fasterrcnn", variant="resnet50_fpn", batch_size=16):
+def main_inference(args):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-    wandb.init(
-        project="C5-Week1",
-        entity="c5-team2", 
-        name=f"Inference-{model_type}-{variant}",
-        config={
-            "model": model_type,
-            "variant": variant,
-            "batch_size": batch_size,
-        }
-    )
+    model_type = args.model
+    batch_size = args.batch_size
+
+    ds = KittiDataset('dataset/KITTI-MOTS', 'instances_txt', 'training', 'src/custom_datasets/val.seqmap')
+    loader = DataLoader(ds, batch_size=batch_size, collate_fn=lambda x: list(x))
     
     if model_type == "fasterrcnn":
+        variant = args.variant
+        model_name = f"{model_type} ({variant})"
         detector = FasterRCNN(variant=variant, device=device)
-        ds = KittiDatasetTorchvision('dataset/KITTI-MOTS', 'instances_txt', 'training', 'src/custom_datasets/val.seqmap')
         coco_categories = detector.categories
-        # Use zip(*) to handle variable numbers of objects per image and prevent tensor stacking errors
-        loader = DataLoader(ds, batch_size=batch_size, collate_fn=lambda x: tuple(zip(*x))) 
+        wandb.init(
+            project="C5-Week1",
+            entity="c5-team2", 
+            name=f"Inference-{model_type}-{variant}",
+            config={
+                "model": model_type,
+                "variant": variant,
+                "batch_size": batch_size,
+            }
+        )
     
     elif model_type == "detr":
-        pass
+        model_name = f"{model_type}"
+        detector = DeTR(device=device)
+        coco_categories = detector.model.config.id2label
+        wandb.init(
+            project="C5-Week1",
+            entity="c5-team2", 
+            name=f"Inference-{model_type}",
+            config={
+                "model": model_type,
+                "batch_size": batch_size,
+            }
+        )
 
     elif model_type == "yolo":
         pass
 
+    else:
+        raise ValueError(f"Unknown model {model_type}.")
+
     total_time = 0
     total_images = 0
 
-    for i, (images, targets) in enumerate(tqdm(loader, desc="Running Inference")):
-
+    for i, images in enumerate(tqdm(loader, desc="Running Inference")):
+        
         # For task g
         if device.type == 'cuda':
             torch.cuda.synchronize()
@@ -67,7 +87,7 @@ def main_inference(model_type="fasterrcnn", variant="resnet50_fpn", batch_size=1
                 labels = pred['labels']
                 scores = pred['scores']
                 
-                label_names = [f"{coco_categories[l]}: {s:.2f}" for l, s in zip(labels, scores)]
+                label_names = [f"{coco_categories[l.item()]}: {s:.2f}" for l, s in zip(labels, scores)]
                 
                 if len(boxes) > 0:
                     result_img = draw_bounding_boxes(
@@ -91,7 +111,7 @@ def main_inference(model_type="fasterrcnn", variant="resnet50_fpn", batch_size=1
         "performance/total_time": total_time
     })
 
-    print(f"Model: {model_type} ({variant})")
+    print(f"Model: {model_name}")
     print(f"Total Parameters: {sum(p.numel() for p in detector.model.parameters()):,}") 
     print(f"Total Images Processed: {total_images}") 
     print(f"Total Inference Time: {total_time:.2f}s") 
@@ -108,4 +128,4 @@ if __name__ == "__main__":
     parser.add_argument("--batch_size", type=int, default=16)
     args = parser.parse_args()
     
-    main_inference(model_type=args.model)
+    main_inference(args)
