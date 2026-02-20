@@ -11,7 +11,7 @@ from tqdm import tqdm
 from transformers import pipeline
 from transformers.pipelines.pt_utils import KeyDataset
 
-from .dataset_base import KittiDataset
+from custom_datasets import KittiDatasetHuggingface as KittiDataset
 
 
 def argument_parser():
@@ -67,7 +67,7 @@ def main(args):
         dtype=torch.float16,
         device_map=0
     )
-    dataset = create_dataset(args.dataset, args.annotations_folder, args.image_folder, 'val.seqmap')
+    dataset = create_dataset(args.dataset, args.annotations_folder, args.image_folder, 'custom_datasets/val.seqmap')
 
     for idx, out in tqdm(enumerate(pipe(KeyDataset(dataset, "image"))), total=len(dataset)):
         scores = [o['score'] for o in out]

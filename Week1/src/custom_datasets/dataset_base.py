@@ -1,10 +1,13 @@
-import torch
-import motsio
-from typing import Literal
 from pathlib import Path
-from PIL import Image
+from typing import Literal
+
 import pycocotools.mask as rletools
+import torch
+from PIL import Image
 from torchvision.transforms import ToTensor
+
+from . import motsio
+
 
 class KittiDataset(torch.utils.data.Dataset):
     def __init__(self, root: str, annotations_folder: str, image_folder: str, seqmap_file: str, transforms = None):
@@ -29,7 +32,7 @@ class KittiDataset(torch.utils.data.Dataset):
         loaded_txt = motsio.load_txt(txt_path)
         
         for frame_idx, frame_info in loaded_txt.items():
-            self.features['image'].append(Image.open(image_folder/f"{frame_idx:06d}.png"))
+            self.features['image'].append(image_folder/f"{frame_idx:06d}.png")
             self.features['width'].append(frame_info[0].mask['size'][1])
             self.features['height'].append(frame_info[0].mask['size'][0])
             self.features['objects'].append({
@@ -45,9 +48,11 @@ class KittiDataset(torch.utils.data.Dataset):
                 self.features['objects'][-1]['category'].append(segmentation.class_id)
         
     def __getitem__(self, idx):
-        image = self.features['image'][idx]
+        image = Image.open(self.features['image'][idx])
         bboxes = self.features['objects'][idx]['bbox']
         categories = self.features['objects'][idx]['category']
+
+        image = ToTensor()(image)
 
         return image, bboxes, categories
 
