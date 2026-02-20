@@ -6,7 +6,7 @@ import torch
 from PIL import Image
 
 
-class DeTR(BaseModel):
+class DeTR:
     def __init__(self, device=None):
         self.device = device
         interpreter_login()
