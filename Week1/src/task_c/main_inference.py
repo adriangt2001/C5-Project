@@ -5,12 +5,24 @@ from src.custom_datasets.dataset_torchvision import KittiDatasetTorchvision
 import argparse
 import os
 import time
+import wandb
 from torchvision.utils import draw_bounding_boxes
 from torchvision.transforms.v2 import functional as F
 from tqdm import tqdm
 
 def main_inference(model_type="fasterrcnn", variant="resnet50_fpn", batch_size=16):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+    wandb.init(
+        project="C5-Week1",
+        entity="c5-team2", 
+        name=f"Inference-{model_type}-{variant}",
+        config={
+            "model": model_type,
+            "variant": variant,
+            "batch_size": batch_size,
+        }
+    )
     
     if model_type == "fasterrcnn":
         detector = FasterRCNN(variant=variant, device=device)
@@ -72,6 +84,13 @@ def main_inference(model_type="fasterrcnn", variant="resnet50_fpn", batch_size=1
 
     avg_time_per_img = total_time / total_images
     fps = 1 / avg_time_per_img # frames per second
+
+    wandb.log({
+        "performance/avg_time_per_img": avg_time_per_img,
+        "performance/fps": fps,
+        "performance/total_time": total_time
+    })
+
     print(f"Model: {model_type} ({variant})")
     print(f"Total Parameters: {sum(p.numel() for p in detector.model.parameters()):,}") 
     print(f"Total Images Processed: {total_images}") 
@@ -79,6 +98,8 @@ def main_inference(model_type="fasterrcnn", variant="resnet50_fpn", batch_size=1
     print(f"Average Time per Image: {avg_time_per_img:.4f}s") 
     print(f"Inference Speed: {fps:.2f} FPS") 
     print(f"Inference finished. Qualitative results saved in 'results/task_c'.")
+
+    wandb.finish()
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
