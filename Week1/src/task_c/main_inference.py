@@ -4,6 +4,7 @@ from src.models.fasterrcnn import FasterRCNN
 from src.custom_datasets.dataset_torchvision import KittiDatasetTorchvision
 import argparse
 import os
+import time
 from torchvision.utils import draw_bounding_boxes
 from torchvision.transforms.v2 import functional as F
 from tqdm import tqdm
@@ -24,8 +25,26 @@ def main_inference(model_type="fasterrcnn", variant="resnet50_fpn", batch_size=1
     elif model_type == "yolo":
         pass
 
+    total_time = 0
+    total_images = 0
+
     for i, (images, targets) in enumerate(tqdm(loader, desc="Running Inference")):
+
+        # For task g
+        if device.type == 'cuda':
+            torch.cuda.synchronize()
+
+        start_batch = time.perf_counter()
+
         preds = detector.inference(images)
+
+        if device.type == 'cuda':
+            torch.cuda.synchronize()
+            
+        end_batch = time.perf_counter()
+
+        total_time += (end_batch - start_batch)
+        total_images += len(images)
 
         # Visualizing results for the first few batches
         if i < 3: 
@@ -51,7 +70,15 @@ def main_inference(model_type="fasterrcnn", variant="resnet50_fpn", batch_size=1
                     save_path = f"results/task_c/{model_type}_batch{i}_img{j}.png"
                     F.to_pil_image(result_img).save(save_path)
 
-    print(f"Inference finished. Qualitative results saved in 'results/qualitative'.")
+    avg_time_per_img = total_time / total_images
+    fps = 1 / avg_time_per_img # frames per second
+    print(f"Model: {model_type} ({variant})")
+    print(f"Total Parameters: {sum(p.numel() for p in detector.model.parameters()):,}") 
+    print(f"Total Images Processed: {total_images}") 
+    print(f"Total Inference Time: {total_time:.2f}s") 
+    print(f"Average Time per Image: {avg_time_per_img:.4f}s") 
+    print(f"Inference Speed: {fps:.2f} FPS") 
+    print(f"Inference finished. Qualitative results saved in 'results/task_c'.")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
