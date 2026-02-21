@@ -17,31 +17,8 @@ class DeTR:
     def train(self):
         pass
 
-    def __label2id(self, label: str):
-        return 0
-
-    def __list2dict(self, l: list):
-        d = {
-            'scores': [],
-            'labels': [],
-            'boxes': []
-        }
-
-        for element in l:
-            d['scores'].append(element['score'])
-            d['labels'].append(self._label2id(element['label']))
-            d['boxes'].append([
-                element['box']['xmin'],
-                element['box']['ymin'],
-                element['box']['xmax'],
-                element['box']['ymax'],
-            ])
-
-        d['scores'] = torch.as_tensor(d['scores'])
-        d['labels'] = torch.as_tensor(d['labels'])
-        d['boxes'] = torch.as_tensor(d['boxes'])
-
-        return d
+    def get_labels(self):
+        return self.model.config.id2label
 
     def inference(self, images: list, reset=False):
         inputs = self.image_processor(images=images, return_tensors="pt", do_rescale=False)
@@ -55,3 +32,8 @@ class DeTR:
         results = self.image_processor.post_process_object_detection(outputs, target_sizes=sizes, threshold=0.0)
 
         return results
+
+if __name__ == '__main__':
+    model = DeTR()
+    labels = model.get_labels()
+    print(labels)
