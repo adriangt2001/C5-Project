@@ -61,11 +61,11 @@ def main_inference(args):
         model_name = f"{variant}"
         detector = YOLOModel(model=variant, device=device)
         coco_categories = detector.model.names
-        ds = KittiDatasetUltralytics('dataset/KITTI-MOTS', 'instances_txt', 'training',
+        ds, _ = KittiDatasetUltralytics('dataset/KITTI-MOTS', 'instances_txt', 'training',
                       'src/custom_datasets/val.seqmap')
         wandb.init(
             project="C5-Week1",
-            entity="c5-team2", 
+            entity="c5-team2",
             name=f"Inference-{model_type}-{variant}",
             config={
                 "model": model_type,
@@ -105,7 +105,6 @@ def main_inference(args):
             for j, (img, pred) in enumerate(zip(images, preds)):
                 if isinstance(img, Image):
                     img = ToTensor()(img)
-                #elif isinstance(img, str):
                     
                 img_uint8 = (img * 255).to(torch.uint8)
 

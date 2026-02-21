@@ -95,24 +95,59 @@ class YOLOModel:
                 "scores": result.boxes.conf        # (N,)
             }
 
-            # # Optional: if you want boxes back in ORIGINAL (unpadded) coords:
-            # if pads is not None and orig_sizes is not None:
-            #     pad_left, pad_top = pads[i]
-            #     h0, w0 = orig_sizes[i]
-            #     boxes = pred["boxes"].clone()
-            #     boxes[:, [0, 2]] -= pad_left
-            #     boxes[:, [1, 3]] -= pad_top
-            #     # clip to original image bounds
-            #     boxes[:, [0, 2]] = boxes[:, [0, 2]].clamp(0, w0)
-            #     boxes[:, [1, 3]] = boxes[:, [1, 3]].clamp(0, h0)
-            #     pred["boxes"] = boxes
+            # Convert boxes back in ORIGINAL (unpadded) coords:
+            if pads is not None and orig_sizes is not None:
+                pad_left, pad_top = pads[i]
+                h0, w0 = orig_sizes[i]
+                boxes = pred["boxes"].clone()
+                boxes[:, [0, 2]] -= pad_left
+                boxes[:, [1, 3]] -= pad_top
+                # clip to original image bounds
+                boxes[:, [0, 2]] = boxes[:, [0, 2]].clamp(0, w0)
+                boxes[:, [1, 3]] = boxes[:, [1, 3]].clamp(0, h0)
+                pred["boxes"] = boxes
 
             predictions.append(pred)
 
         return predictions
-    
-    def validation(self):
-        pass
+
+    def evaluate(self, images, targets, metric):
+        """
+        Processes a batch for evaluation, applying the class mapping and 
+        updating the provided torchmetrics MeanAveragePrecision object.
+        
+        Args:
+            images: Batch of images from DataLoader.
+            targets: Batch of ground truth dictionaries from DataLoader.
+            metric: torchmetrics.detection.mean_ap.MeanAveragePrecision instance.
+        """
+        preds = self.inference(images)
+
+        person_key = next(k for k, v in self.model.names.items() if v == "person")
+        car_key = next(k for k, v in self.model.names.items() if v == "car")
+        kitti_mapping = {
+            car_key: 1,
+            person_key: 2
+        }
+
+        processed_preds = []
+        for p in preds:
+            # Keep only classes present in our mapping (Pedestrian and Car)
+            keep = [i for i, label in enumerate(p['labels']) if label.item()
+                    in kitti_mapping]
+
+            processed_preds.append({
+                'boxes': p['boxes'][keep].cpu(),
+                'scores': p['scores'][keep].cpu(),
+                'labels': torch.tensor(
+                    [kitti_mapping[l.item()] for l in p['labels'][keep]],
+                    dtype=torch.int64)
+            })
+
+        targets_cpu = [{k: v.cpu() if isinstance(v, torch.Tensor) else v
+                        for k, v in t.items()} for t in targets]
+        metric.update(processed_preds, targets_cpu)
+
 
 
     def train(self):
