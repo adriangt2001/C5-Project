@@ -44,7 +44,6 @@ class FasterRCNN:
     """
     Torchvision Faster R-CNN detector (COCO pretrained).
     """
-
     def __init__(self, variant="resnet50_fpn_v2", device=None):
         self.device = device or torch.device("cuda" if torch.cuda.is_available() else "cpu")
         model, weights = build_fasterrcnn(variant)
@@ -52,9 +51,18 @@ class FasterRCNN:
         self.categories = weights.meta["categories"] 
         self.preprocess = weights.transforms()
         self._to_tensor = ToTensor() 
+        # Task d: Mapping COCo_KITTI-MOTS
+        self.kitti_mapping = {1: 2, 3: 1}
 
     @torch.inference_mode()
     def inference(self, images):
+        """
+        Performs inference on a batch of images.
+        Args:
+            images: List of PIL images or Tensors.
+        Returns:
+            List of dictionaries containing 'boxes', 'labels', and 'scores'.
+        """
         # If single image, convert to list
         if not isinstance(images, (list, tuple)):
             images = [images]
@@ -68,10 +76,28 @@ class FasterRCNN:
         predictions = self.model(processed_images)
         return predictions
 
-
-
+    def evaluate(self, images, targets, metric):
+        """
+        Processes a batch for evaluation, applying the class mapping and 
+        updating the provided torchmetrics MeanAveragePrecision object.
         
+        Args:
+            images: Batch of images from DataLoader.
+            targets: Batch of ground truth dictionaries from DataLoader.
+            metric: torchmetrics.detection.mean_ap.MeanAveragePrecision instance.
+        """
+        preds = self.inference(images)
 
-
-        
+        processed_preds = []
+        for p in preds:
+            # Keep only classes present in our mapping (Pedestrian and Car)
+            keep = [i for i, label in enumerate(p['labels']) if label.item() in self.kitti_mapping]
             
+            processed_preds.append({
+                'boxes': p['boxes'][keep].cpu(),
+                'scores': p['scores'][keep].cpu(),
+                'labels': torch.tensor([self.kitti_mapping[l.item()] for l in p['labels'][keep]], dtype=torch.int64)
+            })
+
+        targets_cpu = [{k: v.cpu() if isinstance(v, torch.Tensor) else v for k, v in t.items()} for t in targets]
+        metric.update(processed_preds, targets_cpu)
