@@ -43,9 +43,10 @@ class KittiDataset(torch.utils.data.Dataset):
             })
             
             for segmentation in frame_info:
-                self.features['objects'][-1]['area'].append(rletools.area(segmentation.mask))
-                self.features['objects'][-1]['bbox'].append(rletools.toBbox(segmentation.mask))
-                self.features['objects'][-1]['category'].append(segmentation.class_id)
+                if segmentation.class_id in [1,2]:
+                    self.features['objects'][-1]['area'].append(rletools.area(segmentation.mask))
+                    self.features['objects'][-1]['bbox'].append(rletools.toBbox(segmentation.mask))
+                    self.features['objects'][-1]['category'].append(segmentation.class_id)
         
     def __getitem__(self, idx):
         image = Image.open(self.features['image'][idx])
