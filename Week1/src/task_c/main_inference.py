@@ -1,6 +1,6 @@
 import torch
 from torch.utils.data import DataLoader
-from src.models.fasterrcnn import FasterRCNN
+from src.models import FasterRCNN, YOLOModel
 from src.custom_datasets.dataset_torchvision import KittiDatasetTorchvision
 import argparse
 import os
@@ -17,12 +17,17 @@ def main_inference(model_type="fasterrcnn", variant="resnet50_fpn", batch_size=1
         coco_categories = detector.categories
         # Use zip(*) to handle variable numbers of objects per image and prevent tensor stacking errors
         loader = DataLoader(ds, batch_size=batch_size, collate_fn=lambda x: tuple(zip(*x))) 
-    
+
     elif model_type == "detr":
         pass
 
     elif model_type == "yolo":
-        pass
+        detector = YOLOModel()
+        ds = KittiDatasetTorchvision('dataset/KITTI-MOTS', 'instances_txt', 'training', 'src/custom_datasets/val.seqmap')
+        coco_categories = detector.categories
+        # Use zip(*) to handle variable numbers of objects per image and prevent tensor stacking errors
+        loader = DataLoader(ds, batch_size=batch_size, collate_fn=lambda x: tuple(zip(*x))) 
+
 
     for i, (images, targets) in enumerate(tqdm(loader, desc="Running Inference")):
         preds = detector.inference(images)
