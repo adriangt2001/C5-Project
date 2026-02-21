@@ -280,7 +280,6 @@ def main(args):
     )
 
     metrics = trainer.evaluate(eval_dataset=dataset, metric_key_prefix='eval')
-    pprint(metrics)
 
     # Create a new dictionary for custom W&B names
     metrics_to_log = {
@@ -300,6 +299,9 @@ def main(args):
         "mAR/small": metrics["eval_mar_small"],
         "mAR/medium": metrics["eval_mar_medium"],
         "mAR/large": metrics["eval_mar_large"],
+        "performance/total_time": metrics["eval_runtime"],
+        "performance/fps": metrics["eval_samples_per_second"],
+        "performance/avg_time_per_img": 1 / metrics["eval_samples_per_second"]
     }
 
     # Log your perfectly formatted metrics directly
