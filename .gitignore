@@ -209,3 +209,9 @@ __marimo__/
 # EXTRAS
 dataset
 dataset/
+results/
+wandb/
+
+.python-version
+pyproject.toml
+uv.lock

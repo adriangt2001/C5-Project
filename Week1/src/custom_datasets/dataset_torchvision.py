@@ -3,7 +3,8 @@ from PIL import Image
 from torchvision.transforms import ToTensor
 from torchvision import tv_tensors
 from torchvision.transforms.v2 import functional as F
-from .dataset_base import KittiDataset 
+from .dataset_base import KittiDataset
+
 
 class KittiDatasetTorchvision(KittiDataset):
     """
