@@ -17,6 +17,5 @@ class KittiDatasetHuggingface(KittiDataset):
         for idx, image in enumerate(self.features['image']):
             self.features['image'][idx] = Image.open(image)
         
-    
     def get_hf_ds(self):
         return Dataset.from_dict(self.features).cast_column('image', DImage())
