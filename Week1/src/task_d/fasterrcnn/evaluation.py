@@ -36,12 +36,22 @@ def evaluation(args):
         "mAP/small": results["map_small"],
         "mAP/medium": results["map_medium"],
         "mAP/large": results["map_large"],
+        "mAR/Det1": results["mar_1"],        # AR
+        "mAR/Det10": results["mar_10"],
+        "mAR/Det100": results["mar_100"],
+        "mAR/small": results["mar_small"],
+        "mAR/medium": results["mar_medium"],
+        "mAR/large": results["mar_large"],
     }
 
     if "map_per_class" in results:
         # 1: Car, 2: Pedestrian
         metrics_to_log["mAP/class_Car"] = results["map_per_class"][0]
         metrics_to_log["mAP/class_Pedestrian"] = results["map_per_class"][1]
+
+    if "mar_100_per_class" in results:
+        metrics_to_log["mAR/Det100_class_Car"] = results["mar_100_per_class"][0]
+        metrics_to_log["mAR/Det100_class_Pedestrian"] = results["mar_100_per_class"][1]
     
     wandb.log(metrics_to_log)
 
@@ -49,6 +59,10 @@ def evaluation(args):
     print(f"mAP @.50:.95: {results['map']:.4f}")
     print(f"mAP @.50:      {results['map_50']:.4f}")
     print(f"mAP @.75:      {results['map_75']:.4f}")
+    print(f"mAR Det1:      {results['mar_1']:.4f}")
+    print(f"mAR Det10:     {results['mar_10']:.4f}")
+    print(f"mAR Det100:    {results['mar_100']:.4f}")
+
 
     wandb.finish()
 
