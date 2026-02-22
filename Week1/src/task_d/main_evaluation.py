@@ -1,11 +1,14 @@
 import argparse
-from src.task_d.fasterrcnn.evaluation import evaluation as eval_fasterrcnn
-from src.task_d.yolo.evaluation import evaluation as eval_yolo
+
+from src.task_d import eval_fasterrcnn, eval_huggingface, eval_yolo
 
 
 def main_evaluation():
     parser = argparse.ArgumentParser()
+    parser.add_argument('--dataset', type=str, default="dataset/KITTI-MOTS")
     parser.add_argument("--model", type=str, default="fasterrcnn")
+    parser.add_argument('--annotation_folder', type=str, default='instances_txt')
+    parser.add_argument('--image_folder', type=str, default='training')
     parser.add_argument("--variant", type=str, default="resnet50_fpn_v2")
     parser.add_argument("--batch_size", type=int, default=8)
     parser.add_argument(
@@ -21,7 +24,7 @@ def main_evaluation():
         eval_fasterrcnn(args)
 
     elif args.model == "detr":
-        pass
+        eval_huggingface(args)
 
     elif args.model == "yolo":
         eval_yolo(args)

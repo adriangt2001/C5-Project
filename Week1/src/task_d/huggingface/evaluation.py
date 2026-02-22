@@ -1,20 +1,16 @@
-from huggingface_hub import interpreter_login
-
 import argparse
-import wandb
-
-from transformers.image_transforms import center_to_corners_format
-from src.custom_datasets import KittiDatasetHuggingface
-from src.models import DeTR
-from transformers import Trainer, AutoModelForObjectDetection, TrainingArguments, AutoImageProcessor
-import torch
-from pprint import pprint
-import numpy as np
-from dataclasses import dataclass
-from torchmetrics.detection.mean_ap import MeanAveragePrecision
 from functools import partial
 
-import os
+import numpy as np
+import torch
+import wandb
+from huggingface_hub import interpreter_login
+from src.custom_datasets import KittiDatasetHuggingface
+from torchmetrics.detection.mean_ap import MeanAveragePrecision
+from transformers import (AutoImageProcessor, AutoModelForObjectDetection,
+                          Trainer, TrainingArguments)
+from transformers.image_transforms import center_to_corners_format
+
 
 class ModelOutput:
     @torch.no_grad()
@@ -197,19 +193,23 @@ def augment_and_transform_batch(examples, image_processor, class_map, return_pix
 
     return result
 
-def main(args):
+def evaluation(args):
     interpreter_login()
 
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-    model_name = args.model
-    max_size = 480
+    model_name = args.variant
+    dataset = args.dataset
+    annotation_folder = args.annotation_folder
+    image_folder = args.image_folder
+    batch_size = args.batch_size
+    log_wandb = args.log_wandb
 
     # Load Model
     model = AutoModelForObjectDetection.from_pretrained(model_name)
     model.to(device)
 
     # Load Dataset
-    dataset = KittiDatasetHuggingface(args.dataset, args.annotation_folder, args.image_folder, 'src/custom_datasets/val.seqmap').get_hf_ds()
+    dataset = KittiDatasetHuggingface(dataset, annotation_folder, image_folder, 'src/custom_datasets/val.seqmap').get_hf_ds()
     
     data2model = {
         1: model.config.label2id['car'],
@@ -239,19 +239,21 @@ def main(args):
     )
 
     # Initialize wandb
-    wandb.init(
-        project="C5-Week1", 
-        entity="c5-team2", 
-        name=f"Eval-{args.model}",
-        config=args
-    )
+    if log_wandb:
+        wandb.init(
+            project="C5-Week1", 
+            entity="c5-team2", 
+            name=f"Eval-{args.model}",
+            config=args
+        )
 
     # Trainer
     training_args = TrainingArguments(
         output_dir="results/task_d",
         num_train_epochs=30,
         fp16=False,
-        per_device_train_batch_size=8,
+        per_device_train_batch_size=batch_size,
+        per_device_eval_batch_size=batch_size,
         dataloader_num_workers=4,
         learning_rate=5e-5,
         lr_scheduler_type="cosine",
@@ -305,8 +307,9 @@ def main(args):
     }
 
     # Log your perfectly formatted metrics directly
-    wandb.log(metrics_to_log)
-    wandb.finish()
+    if log_wandb:
+        wandb.log(metrics_to_log)
+        wandb.finish()
 
     print(f"\nEvaluation Finished for {args.model}:")
     print(f"mAP @.50:.95:  {metrics['eval_map']:.4f}")
@@ -319,4 +322,4 @@ def main(args):
 if __name__ == '__main__':
     args = args_parser()
 
-    main(args)
+    evaluation(args)
