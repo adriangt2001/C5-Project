@@ -65,6 +65,7 @@ Week1/
 │   ├── task_f/          # Fine-tuning in a different domain
 │   ├── task_g/          # Comparative analysis
 │   └── task_h/          # Fine-tuning RT-DETR
+├── environment.yml      # Environment yaml
 └── README.md            # README for Week 1
 ```
 
