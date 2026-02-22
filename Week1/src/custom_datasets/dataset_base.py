@@ -5,7 +5,7 @@ import pycocotools.mask as rletools
 import torch
 from PIL import Image
 from torchvision.transforms import ToTensor
-
+import glob
 from . import motsio
 
 
@@ -30,23 +30,37 @@ class KittiDataset(torch.utils.data.Dataset):
         txt_path = Path(txt_path)
         image_folder = Path(image_folder)
         loaded_txt = motsio.load_txt(txt_path)
-        
-        for frame_idx, frame_info in loaded_txt.items():
-            self.features['image'].append(image_folder/f"{frame_idx:06d}.png")
-            self.features['width'].append(frame_info[0].mask['size'][1])
-            self.features['height'].append(frame_info[0].mask['size'][0])
-            self.features['objects'].append({
+
+        features = {
+            'image': [],
+            'width': [],
+            'height': [],
+            'objects': []
+        }
+
+        for image in sorted(glob.glob(f"{image_folder}/*.png")):
+            img = Image.open(image)
+            features['image'].append(image)
+            features['width'].append(img.size[0])
+            features['height'].append(img.size[1])
+            features['objects'].append({
                 'id': [],
                 'area': [],
                 'bbox': [],
                 'category': []
             })
-            
+
+        for frame_idx, frame_info in loaded_txt.items():            
             for segmentation in frame_info:
                 if segmentation.class_id in [1,2]:
-                    self.features['objects'][-1]['area'].append(rletools.area(segmentation.mask))
-                    self.features['objects'][-1]['bbox'].append(rletools.toBbox(segmentation.mask))
-                    self.features['objects'][-1]['category'].append(segmentation.class_id)
+                    features['objects'][frame_idx]['area'].append(rletools.area(segmentation.mask))
+                    features['objects'][frame_idx]['bbox'].append(rletools.toBbox(segmentation.mask))
+                    features['objects'][frame_idx]['category'].append(segmentation.class_id)
+        
+        self.features['image'].extend(features['image'])
+        self.features['width'].extend(features['width'])
+        self.features['height'].extend(features['height'])
+        self.features['objects'].extend(features['objects'])
         
     def __getitem__(self, idx):
         image = Image.open(self.features['image'][idx])
@@ -61,7 +75,7 @@ class KittiDataset(torch.utils.data.Dataset):
         return len(self.features['image'])
 
 if __name__ == '__main__':
-    ds = KittiDataset('../../../dataset/KITTI-MOTS', 'instances_txt', 'training', 'train.seqmap')
+    ds = KittiDataset('dataset/KITTI-MOTS', 'instances_txt', 'training', 'val.seqmap')
     print(len(ds))
     print(ds[0])
     
