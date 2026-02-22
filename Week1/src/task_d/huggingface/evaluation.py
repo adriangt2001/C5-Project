@@ -18,16 +18,6 @@ class ModelOutput:
         self.logits: torch.Tensor = logits
         self.pred_boxes: torch.Tensor = pred_boxes
 
-def args_parser():
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--dataset', type=str)
-    parser.add_argument('--model', type=str, default='facebook/detr-resnet-50')
-    parser.add_argument('--annotation_folder', type=str, default='instances_txt')
-    parser.add_argument('--image_folder', type=str, default='training')
-
-    args = parser.parse_args()
-    return args
-
 def convert_bbox_yolo_to_pascal(boxes, image_size):
     """
     Convert bounding boxes from YOLO format (x_center, y_center, width, height) in range [0, 1]
@@ -202,6 +192,7 @@ def evaluation(args):
     annotation_folder = args.annotation_folder
     image_folder = args.image_folder
     batch_size = args.batch_size
+    threshold = args.threshold
     log_wandb = args.log_wandb
 
     # Load Model
@@ -235,7 +226,7 @@ def evaluation(args):
 
     # Define Metrics
     eval_compute_metrics_fn = partial(
-        compute_metrics, image_processor=image_processor, threshold=0.5, id2label=id2label
+        compute_metrics, image_processor=image_processor, threshold=threshold, id2label=id2label
     )
 
     # Initialize wandb
@@ -318,8 +309,3 @@ def evaluation(args):
     print(f"mAR Det1:      {metrics['eval_mar_1']:.4f}")
     print(f"mAR Det10:     {metrics['eval_mar_10']:.4f}")
     print(f"mAR Det100:    {metrics['eval_mar_100']:.4f}")
-
-if __name__ == '__main__':
-    args = args_parser()
-
-    evaluation(args)

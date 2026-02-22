@@ -68,9 +68,84 @@ Week1/
 └── README.md            # README for Week 1
 ```
 
+## Installation
+To run the code in this repo you must first install all needed libraries using conda with the help of the ```environment.yml``` file. This code is tested under python version 3.12.
+
+```bash
+cd Week1
+conda env create -f environment.yml
+conda activate c5
+```
+
 ## Task c
+In Task C, we run inference of different models to get some qualitative results. Those models are Faster R-CNN, DeTR and YOLO. To run the code and get some results run:
+
+```bash
+# To run FasterRCNN
+python -m src.task_c.main_inference --model fasterrcnn --variant resnet50_fpn_v2 --batch_size 16
+
+# To run DeTR
+python -m src.task_c.main_inference --model detr --variant facebook/detr-resnet-50 --batch_size 16
+
+# To run YOLO
+python -m src.task_c.main_inference --model yolo --variant yolov10m.pt --batch_size 16
+```
+
+For more information of the different arguments run:
+
+```bash
+python -m src.task_c.main_inference --help
+```
+
+Results are saved in the ```Week1/results/task_c``` folder.
+
+**Tested variants model variants**
+* Faster R-CNN
+  - resnet50_fpn_v2
+  - resnet50_fpn
+  - mobilenet_v3_large_320_fpn
+  - mobilenet_v3_large_fpn
+  - 
+* DETR:
+  - facebook/detr-resnet-50
+  - microsoft/conditional-detr-resnet-50
+* YOLO:
+  - yolov10m.pt
 
 ## Task d
+In Task D, we evaluate the different models and their variants to get quantitative results using the COCO metrics. To run the code and get some results run:
+
+```bash
+# To run FasterRCNN
+python -m src.task_d.main_evaluation --model fasterrcnn --variant resnet50_fpn_v2 --batch_size 8
+
+# To run DeTR
+python -m src.task_d.main_evaluation --model detr --variant facebook/detr-resnet-50 --batch_size 8
+
+# To run YOLO
+python -m src.task_d.main_evaluation --model yolo --variant yolov10m.pt --batch_size 8
+```
+
+For more information of the different arguments run:
+
+```bash
+python -m src.task_d.main_evaluation --help
+```
+
+Results are logged in **wandb** by default under the project **C5Week1**.
+
+**Tested variants model variants**
+* Faster R-CNN
+  - resnet50_fpn_v2
+  - resnet50_fpn
+  - mobilenet_v3_large_320_fpn
+  - mobilenet_v3_large_fpn
+  - 
+* DETR:
+  - facebook/detr-resnet-50
+  - microsoft/conditional-detr-resnet-50
+* YOLO:
+  - yolov10m.pt
 
 ## Task e
 

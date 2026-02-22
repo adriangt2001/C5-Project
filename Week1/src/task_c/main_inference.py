@@ -43,8 +43,9 @@ def main_inference(args):
         )
 
     elif model_type == "detr":
-        model_name = f"{model_type}"
-        detector = DeTR(device=device)
+        model_name = f"{model_type} ({variant})"
+        threshold = args.threshold
+        detector = DeTR(variant=variant, threshold=threshold, device=device)
         coco_categories = detector.model.config.id2label
         wandb.init(
             project="C5-Week1",
@@ -148,9 +149,10 @@ def main_inference(args):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--model", type=str, default="fastrrcnn", choices=["fasterrcnn", "detr", "yolo"])
-    parser.add_argument("--variant", type=str, default="resnet50_fpn_v2")
-    parser.add_argument("--batch_size", type=int, default=16)
+    parser.add_argument("--model", type=str, default="fastrrcnn", choices=["fasterrcnn", "detr", "yolo"], help="Main model to use on inference. fasterrcnn uses Torchvision, detr uses HuggingFace and yolo uses Ultralytics. Defaults to fasterrcnn.")
+    parser.add_argument("--variant", type=str, default="resnet50_fpn_v2", help="Variant of the model to use on inference. Defaults to resnet50_fpn_v2.")
+    parser.add_argument("--batch_size", type=int, default=16, help="Batch size for inference. Defaults to 16.")
+    parser.add_argument("--threshold", type=float, default=0.5, help="Threshold for the score of each bounding box. Defaults to 0.5.")
     args = parser.parse_args()
     
     main_inference(args)
