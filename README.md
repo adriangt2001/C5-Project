@@ -8,8 +8,6 @@
 - Adrián García Tapia
 - Marina Rosell Murillo
 
-## Setup
-
 ## Project Structure
 
 This repository is structured by weeks. Each directory contains its own source code, experiments, and a dedicated README with detailed technical documentation.
