@@ -44,8 +44,9 @@ class FasterRCNN:
     """
     Torchvision Faster R-CNN detector (COCO pretrained).
     """
-    def __init__(self, variant="resnet50_fpn_v2", device=None):
+    def __init__(self, variant="resnet50_fpn_v2", threshold=0.5, device=None):
         self.device = device or torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        self.threshold = threshold
         model, weights = build_fasterrcnn(variant)
         self.model = model.to(self.device).eval()
         self.categories = weights.meta["categories"] 
@@ -74,7 +75,17 @@ class FasterRCNN:
             processed_images.append(self.preprocess(img).to(self.device))
 
         predictions = self.model(processed_images)
-        return predictions
+
+        filtered_predictions = []
+        for pred in predictions:
+            keep = torch.greater(pred['scores'], self.threshold)
+            filtered_predictions.append({
+                'boxes': pred['boxes'][keep],
+                'labels': pred['labels'][keep],
+                'scores': pred['scores'][keep]
+            })
+
+        return filtered_predictions
 
     def evaluate(self, images, targets, metric):
         """
@@ -92,12 +103,12 @@ class FasterRCNN:
         for p in preds:
             # Keep only classes present in our mapping (Pedestrian and Car)
             keep = [i for i, label in enumerate(p['labels']) if label.item() in self.kitti_mapping]
-            
-            processed_preds.append({
+            filtered_pred = {
                 'boxes': p['boxes'][keep].cpu(),
                 'scores': p['scores'][keep].cpu(),
                 'labels': torch.tensor([self.kitti_mapping[l.item()] for l in p['labels'][keep]], dtype=torch.int64)
-            })
+            }
+            processed_preds.append(filtered_pred)
 
         targets_cpu = [{k: v.cpu() if isinstance(v, torch.Tensor) else v for k, v in t.items()} for t in targets]
         metric.update(processed_preds, targets_cpu)

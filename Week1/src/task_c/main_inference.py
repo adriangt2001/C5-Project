@@ -28,8 +28,9 @@ def main_inference(args):
 
     if model_type == "fasterrcnn":
         variant = args.variant
+        threshold = args.threshold
         model_name = f"{model_type} ({variant})"
-        detector = FasterRCNN(variant=variant, device=device)
+        detector = FasterRCNN(variant=variant, threshold=threshold, device=device)
         coco_categories = detector.categories
         wandb.init(
             project="C5-Week1",
@@ -102,7 +103,7 @@ def main_inference(args):
         total_images += len(images)
 
         # Visualizing results for the first few batches
-        if i < 3:
+        if i == 130 // batch_size:
             for j, (img, pred) in enumerate(zip(images, preds)):
                 if isinstance(img, Image):
                     img = ToTensor()(img)

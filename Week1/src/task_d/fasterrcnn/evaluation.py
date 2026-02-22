@@ -19,7 +19,7 @@ def evaluation(args):
 
     ds = KittiDatasetTorchvision('dataset/KITTI-MOTS', 'instances_txt', 'training', 'src/custom_datasets/val.seqmap')
     loader = DataLoader(ds, batch_size=args.batch_size, collate_fn=lambda x: tuple(zip(*x)))
-    detector = FasterRCNN(variant=args.variant, device=device)
+    detector = FasterRCNN(variant=args.variant, threshold=args.threshold, device=device)
     # class_metrics=True to see mAP for Car and Pedestrian separately
     metric = MeanAveragePrecision(box_format='xyxy', class_metrics=True)
 
