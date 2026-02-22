@@ -243,7 +243,7 @@ def evaluation(args):
         wandb.init(
             project="C5-Week1", 
             entity="c5-team2", 
-            name=f"Eval-{args.model}",
+            name=f"Eval-{args.model}-{args.variant}",
             config=args
         )
 
