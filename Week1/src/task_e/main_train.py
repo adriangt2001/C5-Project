@@ -26,13 +26,13 @@ def main_finetuning():
     args = parser.parse_args()
 
     if args.model == "fasterrcnn":
-        eval_fasterrcnn(args)
+        # eval_fasterrcnn(args)
 
     elif args.model == "detr":
         fine_huggingface(args)
 
     elif args.model == "yolo":
-        eval_yolo(args)
+        # eval_yolo(args)
 
 if __name__ == '__main__':
     main_finetuning()

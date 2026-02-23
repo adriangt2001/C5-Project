@@ -1,6 +1,7 @@
 import argparse
 from functools import partial
 
+import albumentations as A
 import numpy as np
 import torch
 import wandb
@@ -10,7 +11,6 @@ from torchmetrics.detection.mean_ap import MeanAveragePrecision
 from transformers import (AutoImageProcessor, AutoModelForObjectDetection,
                           Trainer, TrainingArguments)
 from transformers.image_transforms import center_to_corners_format
-import albumentations as A
 
 
 class ModelOutput:
@@ -186,7 +186,7 @@ def augment_and_transform_batch(examples, transform, image_processor, class_map,
 
     return result
 
-def finetuning(args):
+def train(args):
     interpreter_login()
 
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
