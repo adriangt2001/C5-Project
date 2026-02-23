@@ -14,15 +14,26 @@ logging.getLogger('ultralytics').setLevel(logging.WARNING)
 
 class YOLOModel:
 
-    def __init__(self, model: str = "yolov10m.pt", device=None):
+    def __init__(
+            self,
+            model: str = "yolov10m.pt",
+            threshold: float = 0.5,
+            device=None):
         self.device = device
+        self.threshold = threshold
         # load model
         self.model = YOLO(os.path.join("models", model), verbose=False)
         self.model.to(self.device)
 
-    def _pad_to_shape(self, x: torch.Tensor, target_h: int, target_w: int, value: float = 0.5):
+    def _pad_to_shape(
+            self,
+            x: torch.Tensor,
+            target_h: int,
+            target_w: int,
+            value: float = 0.5):
         """
-        Pad a single image tensor (C,H,W) to (C,target_h,target_w) with symmetric padding.
+        Pad a single image tensor (C,H,W) to (C,target_h,target_w) with 
+        symmetric padding.
         Returns padded tensor and (left, top) padding offsets.
         """
         assert x.ndim == 3, f"Expected (C,H,W), got {x.shape}"
@@ -30,7 +41,8 @@ class YOLOModel:
         pad_h = target_h - h
         pad_w = target_w - w
         if pad_h < 0 or pad_w < 0:
-            raise ValueError(f"Target shape smaller than input: input {(h,w)} target {(target_h,target_w)}")
+            raise ValueError(f"Target shape smaller than input: input {(h, w)} "
+                             f"target {(target_h, target_w)}")
 
         left = pad_w // 2
         right = pad_w - left
@@ -40,7 +52,11 @@ class YOLOModel:
         x = F.pad(x, (left, right, top, bottom), value=value)
         return x, (left, top)
 
-    def _make_batch(self, imgs: List[torch.Tensor], stride: int = 32, pad_value: float = 0.5):
+    def _make_batch(
+            self,
+            imgs: List[torch.Tensor],
+            stride: int = 32,
+            pad_value: float = 0.5):
         """
         imgs: list of (C,H,W) tensors (can vary H,W)
         Returns:
@@ -52,7 +68,8 @@ class YOLOModel:
         norm = [self._normalize_images(im) for im in imgs]
 
         # record original sizes
-        orig_sizes = [(int(im.shape[1]), int(im.shape[2])) for im in norm]  # (H,W)
+        orig_sizes = [(int(im.shape[1]), int(im.shape[2]))
+                      for im in norm]  # (H,W)
 
         # choose a common target H,W for the batch: max dims, rounded to stride
         max_h = max(h for h, w in orig_sizes)
@@ -63,7 +80,8 @@ class YOLOModel:
         padded = []
         pads = []
         for im in norm:
-            im_pad, (pl, pt) = self._pad_to_shape(im, target_h, target_w, value=pad_value)
+            im_pad, (pl, pt) = self._pad_to_shape(
+                im, target_h, target_w, value=pad_value)
             padded.append(im_pad)
             pads.append((pl, pt))
 
@@ -75,22 +93,24 @@ class YOLOModel:
         if x.max() > 1.0:
             x = x / 255.0
         return x.clamp(0.0, 1.0)
-    
 
     def inference(self, img):
         pads = None
         orig_sizes = None
 
+        # list of tensors -> must be padded
         if isinstance(img, list) and len(img) > 0 and isinstance(img[0], torch.Tensor):
             # expect list of (C,H,W), possibly different sizes
-            img, pads, orig_sizes = self._make_batch(img, stride=32, pad_value=0.5)
+            img, pads, orig_sizes = self._make_batch(
+                img, stride=32, pad_value=0.5)
 
-        results = self.model(img)
+        results = self.model(img, conf=self.threshold)
 
         predictions = []
         for i, result in enumerate(results):
             pred = {
-                "boxes": result.boxes.xyxy,        # (N,4) in padded image coords
+                # (N,4) in padded image coords
+                "boxes": result.boxes.xyxy,
                 "labels": result.boxes.cls.int(),  # (N,)
                 "scores": result.boxes.conf        # (N,)
             }
@@ -115,7 +135,7 @@ class YOLOModel:
         """
         Processes a batch for evaluation, applying the class mapping and 
         updating the provided torchmetrics MeanAveragePrecision object.
-        
+
         Args:
             images: Batch of images from DataLoader.
             targets: Batch of ground truth dictionaries from DataLoader.
@@ -123,7 +143,8 @@ class YOLOModel:
         """
         preds = self.inference(images)
 
-        person_key = next(k for k, v in self.model.names.items() if v == "person")
+        person_key = next(
+            k for k, v in self.model.names.items() if v == "person")
         car_key = next(k for k, v in self.model.names.items() if v == "car")
         kitti_mapping = {
             car_key: 1,
@@ -148,7 +169,5 @@ class YOLOModel:
                         for k, v in t.items()} for t in targets]
         metric.update(processed_preds, targets_cpu)
 
-
-
-    def train(self):
-        pass
+    def train(self, cfg):
+        results = self.model.train(cfg=cfg)
