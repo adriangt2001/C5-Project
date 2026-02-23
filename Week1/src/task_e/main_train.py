@@ -1,6 +1,6 @@
 import argparse
 
-from src.task_e import fine_huggingface
+from src.task_e import train_huggingface
 
 def main_finetuning():
     parser = argparse.ArgumentParser()
@@ -26,12 +26,14 @@ def main_finetuning():
     args = parser.parse_args()
 
     if args.model == "fasterrcnn":
+        pass
         # eval_fasterrcnn(args)
 
     elif args.model == "detr":
-        fine_huggingface(args)
+        train_huggingface(args)
 
     elif args.model == "yolo":
+        pass
         # eval_yolo(args)
 
 if __name__ == '__main__':

@@ -170,7 +170,7 @@ def augment_and_transform_batch(examples, transform, image_processor, class_map,
         images.append(output['image'])
 
         # map from dataset to model labels
-        objects["category"] = [class_map[x] for x in objects["category"]]
+        output["category"] = [class_map[x] for x in output["category"]]
 
         # format annotations in COCO format
         formatted_annotations = format_image_annotations_as_coco(
@@ -204,7 +204,7 @@ def train(args):
     # Load Dataset
     train_dataset = KittiDatasetHuggingface(dataset, annotation_folder, image_folder, 'src/custom_datasets/train.seqmap').get_hf_ds()
     val_dataset = KittiDatasetHuggingface(dataset, annotation_folder, image_folder, 'src/custom_datasets/val.seqmap').get_hf_ds()
-    
+
     data2model = {
         1: model.config.label2id['car'],
         2: model.config.label2id['person']
@@ -267,7 +267,7 @@ def train(args):
     lr = args.lr
 
     training_args = TrainingArguments(
-        output_dir="results/task_d",
+        output_dir="results/task_e",
         num_train_epochs=epochs,
         fp16=False,
         per_device_train_batch_size=batch_size,
@@ -284,7 +284,7 @@ def train(args):
         save_strategy="epoch",
         save_total_limit=2,
         remove_unused_columns=False,
-        report_to="none",
+        report_to="wandb",
         run_name="finetuned-detr",
         eval_do_concat_batches=False,
         push_to_hub=False,
