@@ -1,10 +1,10 @@
 import argparse
 
 # from src.task_e import train_fasterrcnn, train_huggingface, train_yolo
-from src.task_e import train_yolo
+from src.task_e import train_yolo, train_huggingface
 
 
-def main_evaluation():
+def main_training():
     parser = argparse.ArgumentParser()
     parser.add_argument('--dataset', type=str, default="dataset/KITTI-MOTS",
                         help="Path to the root of the dataset. Defaults to dataset/KITTI-MOTS.")
@@ -25,6 +25,11 @@ def main_evaluation():
         help="Disable logging to Weights & Biases"
     )
 
+    # Extras for training
+    parser.add_argument("--lr", type=float, default=5e-5, help="Starting learning rate for training. Defaults to 5e-5.")
+    parser.add_argument("--epochs", type=float, default=50, help="Max num. epochs for training. Defaults to 50.")
+
+
     parser.set_defaults(log_wandb=True)
 
     args = parser.parse_args()
@@ -35,11 +40,11 @@ def main_evaluation():
 
     elif args.model == "detr":
         pass
-        # train_huggingface(args)
+        train_huggingface(args)
 
     elif args.model == "yolo":
         train_yolo(args)
 
 
 if __name__ == "__main__":
-    main_evaluation()
+    main_training()
