@@ -6,6 +6,10 @@ from torch.utils.data import DataLoader
 from src.models import YOLOModel
 from src.custom_datasets import KittiDatasetUltralytics
 
+from dotenv import load_dotenv
+load_dotenv()
+
+
 def evaluation(args):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     if args.log_wandb:

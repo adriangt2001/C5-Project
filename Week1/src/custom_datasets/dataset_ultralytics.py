@@ -7,10 +7,11 @@ from .dataset_base import KittiDataset
 class KittiDatasetUltralytics(KittiDataset):
     """
     Wrapper around the base KITTI dataset
-    
+
     Returns the output image as a PIL which is more suitable for 
     Ultralytics expected input
     """
+
     def __getitem__(self, idx):
         # Load image
         img_path = self.features["image"][idx]
@@ -44,5 +45,4 @@ class KittiDatasetUltralytics(KittiDataset):
             "area": area,
             "iscrowd": iscrowd,
         }
-
         return image, target
