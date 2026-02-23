@@ -39,7 +39,6 @@ def main_training():
         # train_fasterrcnn(args)
 
     elif args.model == "detr":
-        pass
         train_huggingface(args)
 
     elif args.model == "yolo":
