@@ -33,6 +33,7 @@ def main_inference(args):
         model_name = f"{model_type} ({variant})"
         detector = FasterRCNN(
             variant=variant, threshold=threshold, device=device)
+        detector.set_eval_mode()
         coco_categories = detector.categories
         wandb.init(
             project="C5-Week1",
@@ -149,8 +150,7 @@ def main_inference(args):
     })
 
     print(f"Model: {model_name}")
-    print(
-        f"Total Parameters: {sum(p.numel() for p in detector.model.parameters()):,}")
+    print(f"Total Parameters: {sum(p.numel() for p in detector.model.parameters()):,}")
     print(f"Total Images Processed: {total_images}")
     print(f"Total Inference Time: {total_time:.2f}s")
     print(f"Average Time per Image: {avg_time_per_img:.4f}s")

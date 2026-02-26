@@ -1,7 +1,7 @@
 import argparse
 
 # from src.task_e import train_fasterrcnn, train_huggingface, train_yolo
-from src.task_e import train_yolo, train_huggingface
+from src.task_e import train_yolo, train_huggingface, train_fasterrcnn
 
 
 def main_training():
@@ -35,8 +35,7 @@ def main_training():
     args = parser.parse_args()
 
     if args.model == "fasterrcnn":
-        pass
-        # train_fasterrcnn(args)
+        train_fasterrcnn(args)
 
     elif args.model == "detr":
         train_huggingface(args)

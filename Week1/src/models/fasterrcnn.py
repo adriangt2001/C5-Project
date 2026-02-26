@@ -11,6 +11,7 @@ from torchvision.models.detection import (
     FasterRCNN_MobileNet_V3_Large_FPN_Weights,
     FasterRCNN_MobileNet_V3_Large_320_FPN_Weights,
 )
+from torchvision.models.detection.faster_rcnn import FastRCNNPredictor
 
 def build_fasterrcnn(variant: str):
     """
@@ -44,16 +45,31 @@ class FasterRCNN:
     """
     Torchvision Faster R-CNN detector (COCO pretrained).
     """
-    def __init__(self, variant="resnet50_fpn_v2", threshold=0.5, device=None):
+    def __init__(self, variant="resnet50_fpn_v2", threshold=0.5, device=None, num_classes=None):
         self.device = device or torch.device("cuda" if torch.cuda.is_available() else "cpu")
         self.threshold = threshold
-        model, weights = build_fasterrcnn(variant)
-        self.model = model.to(self.device).eval()
+
+        if num_classes:
+            model, weights = build_fasterrcnn(variant)
+            in_features = model.roi_heads.box_predictor.cls_score.in_features
+            model.roi_heads.box_predictor = FastRCNNPredictor(in_features, num_classes)
+            self.model = model.to(self.device)
+            self.kitti_mapping = None
+        else:
+            model, weights = build_fasterrcnn(variant)
+            self.model = model.to(self.device)
+            # Task d: Mapping COCo_KITTI-MOTS
+            self.kitti_mapping = {1: 2, 3: 1}
         self.categories = weights.meta["categories"] 
         self.preprocess = weights.transforms()
         self._to_tensor = ToTensor() 
-        # Task d: Mapping COCo_KITTI-MOTS
-        self.kitti_mapping = {1: 2, 3: 1}
+        
+
+    def set_train_mode(self):
+        self.model.train()
+
+    def set_eval_mode(self):
+        self.model.eval()
 
     @torch.inference_mode()
     def inference(self, images):
@@ -101,13 +117,20 @@ class FasterRCNN:
 
         processed_preds = []
         for p in preds:
-            # Keep only classes present in our mapping (Pedestrian and Car)
-            keep = [i for i, label in enumerate(p['labels']) if label.item() in self.kitti_mapping]
-            filtered_pred = {
-                'boxes': p['boxes'][keep].cpu(),
-                'scores': p['scores'][keep].cpu(),
-                'labels': torch.tensor([self.kitti_mapping[l.item()] for l in p['labels'][keep]], dtype=torch.int64)
-            }
+            if self.kitti_mapping:
+                # Keep only classes present in our mapping (Pedestrian and Car)
+                keep = [i for i, label in enumerate(p['labels']) if label.item() in self.kitti_mapping]
+                filtered_pred = {
+                    'boxes': p['boxes'][keep].cpu(),
+                    'scores': p['scores'][keep].cpu(),
+                    'labels': torch.tensor([self.kitti_mapping[l.item()] for l in p['labels'][keep]], dtype=torch.int64)
+                }
+            else:
+                filtered_pred = {
+                    'boxes': p['boxes'].cpu(),
+                    'scores': p['scores'].cpu(),
+                    'labels': p['labels'].cpu().to(torch.int64)
+                }
             processed_preds.append(filtered_pred)
 
         targets_cpu = [{k: v.cpu() if isinstance(v, torch.Tensor) else v for k, v in t.items()} for t in targets]

@@ -4,6 +4,7 @@ from torchvision.transforms import ToTensor
 from torchvision import tv_tensors
 from torchvision.transforms.v2 import functional as F
 from .dataset_base import KittiDataset
+import numpy as np
 
 
 class KittiDatasetTorchvision(KittiDataset):
@@ -16,29 +17,46 @@ class KittiDatasetTorchvision(KittiDataset):
         - labels as int64 tensors
         - additional required fields (area, iscrowd, image_id)
     """
+    def __init__(self, root, annotations_folder, image_folder, seqmap_file, transform=None):
+        super().__init__(root, annotations_folder, image_folder, seqmap_file)
+        self.transform = transform
+
     def __getitem__(self, idx):
         # Load image
         img_path = self.features["image"][idx]
-        image = Image.open(img_path).convert("RGB")
-        image = ToTensor()(image)  # Tensor [3, H, W] in range [0,1]
+        image_pil = Image.open(img_path).convert("RGB")
+        image = ToTensor()(image_pil)  # Tensor [3, H, W] in range [0,1]
 
         # Retrieve ground-truth bounding boxes (stored as XYWH)
         bboxes_xywh = self.features["objects"][idx]["bbox"]
         labels = self.features["objects"][idx]["category"]
         areas = self.features["objects"][idx]["area"]
 
-        # Convert bounding boxes from XYWH to XYXY
-        if len(bboxes_xywh) == 0:
-            boxes = torch.zeros((0, 4), dtype=torch.float32)
-            labels = torch.zeros((0,), dtype=torch.int64)
-            area = torch.zeros((0,), dtype=torch.float32)
+        # Convert XYWH to XYXY 
+        boxes_list = [[x, y, x + w, y + h] for (x, y, w, h) in bboxes_xywh]
+
+        if hasattr(self, 'transform') and self.transform is not None:
+            # Albumentations needs the image in numpy array
+            augmented = self.transform(image=np.array(image_pil), bboxes=boxes_list, labels=labels)
+            image = augmented["image"]
+            if len(augmented["bboxes"]) > 0:
+                boxes = torch.as_tensor(augmented["bboxes"], dtype=torch.float32)
+                labels = torch.as_tensor(augmented["labels"], dtype=torch.int64)
+                area = (boxes[:, 3] - boxes[:, 1]) * (boxes[:, 2] - boxes[:, 0])
+            else:
+                boxes = torch.zeros((0, 4), dtype=torch.float32)
+                labels = torch.zeros((0,), dtype=torch.int64)
+                area = torch.zeros((0,), dtype=torch.float32)
         else:
-            boxes = torch.tensor(
-                [[x, y, x + w, y + h] for (x, y, w, h) in bboxes_xywh],
-                dtype=torch.float32
-            )
-            labels = torch.tensor(labels, dtype=torch.int64)
-            area = torch.tensor(areas, dtype=torch.float32)
+            image = ToTensor()(image_pil)
+            if len(bboxes_xywh) == 0:
+                boxes = torch.zeros((0, 4), dtype=torch.float32)
+                labels = torch.zeros((0,), dtype=torch.int64)
+                area = torch.zeros((0,), dtype=torch.float32)
+            else:
+                boxes = torch.tensor(boxes_list, dtype=torch.float32)
+                labels = torch.tensor(labels, dtype=torch.int64)
+                area = torch.tensor(areas, dtype=torch.float32)
 
         # Assume no crowd annotations
         iscrowd = torch.zeros((boxes.shape[0],), dtype=torch.int64)
@@ -46,7 +64,7 @@ class KittiDatasetTorchvision(KittiDataset):
         target = {
             "boxes": boxes,        # Required format: XYXY
             "labels": labels,      # Class IDs
-            "image_id": idx,       # Unique image identifier
+            "image_id": torch.tensor([idx]),       # Unique image identifier
             "area": area,
             "iscrowd": iscrowd,
         }
