@@ -39,6 +39,8 @@ class KittiDatasetTorchvision(KittiDataset):
             # Albumentations needs the image in numpy array
             augmented = self.transform(image=np.array(image_pil), bboxes=boxes_list, labels=labels)
             image = augmented["image"]
+            if image.dtype == torch.uint8:
+                image = image.float().div(255.0)
             if len(augmented["bboxes"]) > 0:
                 boxes = torch.as_tensor(augmented["bboxes"], dtype=torch.float32)
                 labels = torch.as_tensor(augmented["labels"], dtype=torch.int64)

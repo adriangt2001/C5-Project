@@ -58,7 +58,7 @@ class FasterRCNN:
         else:
             model, weights = build_fasterrcnn(variant)
             self.model = model.to(self.device)
-            # Task d: Mapping COCo_KITTI-MOTS
+            # Task d: Mapping COCO_KITTI-MOTS
             self.kitti_mapping = {1: 2, 3: 1}
         self.categories = weights.meta["categories"] 
         self.preprocess = weights.transforms()
@@ -86,9 +86,11 @@ class FasterRCNN:
 
         processed_images = []
         for img in images:
-            if not isinstance(img, torch.Tensor):
+            if isinstance(img, torch.Tensor):
+                processed_images.append(img.to(self.device))
+            else:
                 img = self._to_tensor(img)
-            processed_images.append(self.preprocess(img).to(self.device))
+                processed_images.append(self.preprocess(img).to(self.device))
 
         predictions = self.model(processed_images)
 

@@ -28,6 +28,7 @@ def main_training():
     # Extras for training
     parser.add_argument("--lr", type=float, default=5e-5, help="Starting learning rate for training. Defaults to 5e-5.")
     parser.add_argument("--epochs", type=float, default=50, help="Max num. epochs for training. Defaults to 50.")
+    parser.add_argument("--freeze_backbone", type=bool, default=False, help="Freeze backboness. Defaults to False.")
 
 
     parser.set_defaults(log_wandb=True)
