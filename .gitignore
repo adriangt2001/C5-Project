@@ -215,6 +215,7 @@ wandb/
 .python-version
 pyproject.toml
 uv.lock
+.vscode
 
 # logs folder
 logs/
