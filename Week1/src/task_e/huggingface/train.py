@@ -107,7 +107,7 @@ def train(args):
     # Initialize wandb
     if log_wandb:
         wandb.init(
-            project="C5-Week1",
+            project="huggingface",
             entity="c5-team2",
             name=f"Finetune-{args.model}-{args.variant}",
             config=args,

@@ -25,7 +25,7 @@ class KittiDatasetTorchvision(KittiDataset):
         # Load image
         img_path = self.features["image"][idx]
         image_pil = Image.open(img_path).convert("RGB")
-        image = ToTensor()(image_pil)  # Tensor [3, H, W] in range [0,1]
+        # image = ToTensor()(image_pil)  # Tensor [3, H, W] in range [0,1]
 
         # Retrieve ground-truth bounding boxes (stored as XYWH)
         bboxes_xywh = self.features["objects"][idx]["bbox"]
@@ -39,6 +39,7 @@ class KittiDatasetTorchvision(KittiDataset):
             # Albumentations needs the image in numpy array
             augmented = self.transform(image=np.array(image_pil), bboxes=boxes_list, labels=labels)
             image = augmented["image"]
+            image = ToTensor()(image)
             if image.dtype == torch.uint8:
                 image = image.float().div(255.0)
             if len(augmented["bboxes"]) > 0:

@@ -50,13 +50,10 @@ def compute_metrics(
         # boxes were converted to YOLO format needed for model training
         # here we will convert them to Pascal VOC format (x_min, y_min, x_max, y_max)
         for image_target in batch:
-            boxes = torch.tensor(image_target["boxes"])
             boxes = bbox_conversion(
-                boxes,
-                iformat="cxcywh",
-                oformat="xyxy",
-                image_size=image_target["orig_size"],
+                image_target["boxes"], "yolo", "pascal_voc", image_target["orig_size"]
             )
+            boxes = torch.as_tensor(boxes)
             labels = torch.tensor(image_target["class_labels"])
             post_processed_targets.append({"boxes": boxes, "labels": labels})
 
