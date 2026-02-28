@@ -10,9 +10,10 @@ from src.utils.huggingface_commons import (
     augment_and_transform_batch,
     collate_fn,
     compute_metrics,
+    print_trainable_parameters
 )
 from transformers import (
-    AutoImageProcessor,
+    DetrImageProcessorFast,
     AutoModelForObjectDetection,
     EarlyStoppingCallback,
     Trainer,
@@ -37,11 +38,12 @@ def train(args):
     lora_config = LoraConfig(
         r=32,
         lora_alpha=32,
-        target_modules=["k_proj", "v_proj", "q_proj", "o_proj", "fc1", "fc2"],
+        target_modules=".*decoder.*(_proj|fc.*)",
         lora_dropout=0.1,
         bias="lora_only",
     )
     model = get_peft_model(model, lora_config)
+    print_trainable_parameters(model)
     model.to(device=device)
 
     # Load Dataset
@@ -60,14 +62,15 @@ def train(args):
     }
     # label2id = {v: k for k, v in id2label.items()}
 
-    image_processor = AutoImageProcessor.from_pretrained(model_name)
+    image_processor = DetrImageProcessorFast.from_pretrained(model_name)
 
     train_augment_and_transform = A.Compose(
         [
+            A.GaussianBlur(sigma_limit=[0.5, 1.0], p=0.2),
             A.HorizontalFlip(p=0.5),
-            A.Perspective(p=0.1),
+            A.Perspective(p=0.5),
             A.RandomBrightnessContrast(p=0.5),
-            A.HueSaturationValue(p=0.1),
+            A.HueSaturationValue(p=0.5)
         ],
         bbox_params=A.BboxParams(
             format="coco", label_fields=["category"], clip=True, min_area=25

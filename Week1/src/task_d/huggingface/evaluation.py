@@ -10,7 +10,7 @@ from src.utils.huggingface_commons import (
     compute_metrics,
 )
 from transformers import (
-    AutoImageProcessor,
+    DetrImageProcessorFast,
     AutoModelForObjectDetection,
     Trainer,
     TrainingArguments,
@@ -46,12 +46,13 @@ def evaluation(args):
     }
     # label2id = {v: k for k, v in id2label.items()}
 
-    image_processor = AutoImageProcessor.from_pretrained(model_name)
+    image_processor = DetrImageProcessorFast.from_pretrained(model_name)
 
     validation_transform_batch = partial(
         augment_and_transform_batch,
         image_processor=image_processor,
         class_map=data2model,
+        transform=None
     )
 
     dataset = dataset.with_transform(validation_transform_batch)

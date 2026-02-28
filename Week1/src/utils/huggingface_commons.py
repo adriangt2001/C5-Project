@@ -146,7 +146,7 @@ def format_image_annotations_as_coco(image_id, categories, areas, bboxes):
 
 
 def augment_and_transform_batch(
-    examples, transform, image_processor, class_map, return_pixel_mask=False
+    examples, image_processor, class_map, transform=None, return_pixel_mask=False
 ):
     """Apply augmentations and format annotations in COCO format for object detection task"""
 
@@ -157,9 +157,16 @@ def augment_and_transform_batch(
     ):
         image = np.array(image.convert("RGB"))
 
-        output = transform(
-            image=image, bboxes=objects["bbox"], category=objects["category"]
-        )
+        if transform is not None:
+            output = transform(
+                image=image, bboxes=objects["bbox"], category=objects["category"]
+            )
+        else:
+            output = {
+                "image": image,
+                "bboxes": objects["bbox"],
+                "category": objects["category"],
+            }
         images.append(output["image"])
 
         # map from dataset to model labels
@@ -180,3 +187,18 @@ def augment_and_transform_batch(
         result.pop("pixel_mask", None)
 
     return result
+
+
+def print_trainable_parameters(model):
+    """
+    Prints the number of trainable parameters in the model.
+    """
+    trainable_params = 0
+    all_param = 0
+    for _, param in model.named_parameters():
+        all_param += param.numel()
+        if param.requires_grad:
+            trainable_params += param.numel()
+    print(
+        f"trainable params: {trainable_params} || all params: {all_param} || trainable%: {100 * trainable_params / all_param:.2f}"
+    )
