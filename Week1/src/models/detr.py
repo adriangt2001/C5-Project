@@ -1,8 +1,6 @@
-from huggingface_hub import interpreter_login
-from transformers import AutoModelForObjectDetection, AutoImageProcessor
-from transformers.pipelines.pt_utils import KeyDataset
 import torch
-from PIL import Image
+from huggingface_hub import interpreter_login
+from transformers import AutoImageProcessor, AutoModelForObjectDetection
 
 
 class DeTR:
