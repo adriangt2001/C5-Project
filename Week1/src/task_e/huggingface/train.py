@@ -7,10 +7,11 @@ from huggingface_hub import interpreter_login
 from peft import LoraConfig, get_peft_model
 from src.custom_datasets import KittiDatasetHuggingface
 from src.utils.huggingface_commons import (
+    WandbImageLoggerCallback,
     augment_and_transform_batch,
     collate_fn,
     compute_metrics,
-    print_trainable_parameters
+    print_trainable_parameters,
 )
 from transformers import (
     DetrImageProcessorFast,
@@ -19,6 +20,7 @@ from transformers import (
     Trainer,
     TrainingArguments,
 )
+import time
 
 
 def train(args):
@@ -70,7 +72,7 @@ def train(args):
             A.HorizontalFlip(p=0.5),
             A.Perspective(p=0.5),
             A.RandomBrightnessContrast(p=0.5),
-            A.HueSaturationValue(p=0.5)
+            A.HueSaturationValue(p=0.5),
         ],
         bbox_params=A.BboxParams(
             format="coco", label_fields=["category"], clip=True, min_area=25
@@ -122,7 +124,7 @@ def train(args):
     lr = args.lr
 
     training_args = TrainingArguments(
-        output_dir="results/task_e",
+        output_dir="results/task_e/checkpoints",
         num_train_epochs=epochs,
         fp16=False,
         per_device_train_batch_size=batch_size,
@@ -144,6 +146,7 @@ def train(args):
         run_name="finetuned-detr",
         eval_do_concat_batches=False,
         push_to_hub=False,
+        logging_dir="results/task_e/logs",
     )
 
     trainer = Trainer(
@@ -154,11 +157,22 @@ def train(args):
         processing_class=image_processor,
         data_collator=collate_fn,
         compute_metrics=eval_compute_metrics_fn,
-        callbacks=[EarlyStoppingCallback(early_stopping_patience=5)],
+        callbacks=[
+            EarlyStoppingCallback(early_stopping_patience=5),
+            WandbImageLoggerCallback(
+                num_samples=4, threshold=threshold, id2label=id2label
+            ),
+        ],
     )
 
+    start_time = time.time()
     trainer.train()
+    end_time = time.time()
+    elapsed_total_time = end_time - start_time
+
+
     metrics = trainer.evaluate(eval_dataset=val_dataset, metric_key_prefix="eval")
+    elapsed_eval_time = metrics["eval_runtime"] * trainer.state.epoch
 
     # Create a new dictionary for custom W&B names
     metrics_to_log = {
@@ -178,7 +192,9 @@ def train(args):
         "mAR/small": metrics["eval_mar_small"],
         "mAR/medium": metrics["eval_mar_medium"],
         "mAR/large": metrics["eval_mar_large"],
-        "performance/total_time": metrics["eval_runtime"],
+        "performance/total_train_time": elapsed_total_time,
+        "performance/time_per_epoch": (elapsed_total_time - elapsed_eval_time) / trainer.state.epoch,
+        "performance/total_eval_time": metrics["eval_runtime"],
         "performance/fps": metrics["eval_samples_per_second"],
         "performance/avg_time_per_img": 1 / metrics["eval_samples_per_second"],
     }

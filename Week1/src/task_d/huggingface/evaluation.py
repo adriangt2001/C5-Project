@@ -5,6 +5,7 @@ import wandb
 from huggingface_hub import interpreter_login
 from src.custom_datasets import KittiDatasetHuggingface
 from src.utils.huggingface_commons import (
+    WandbImageLoggerCallback,
     augment_and_transform_batch,
     collate_fn,
     compute_metrics,
@@ -52,7 +53,7 @@ def evaluation(args):
         augment_and_transform_batch,
         image_processor=image_processor,
         class_map=data2model,
-        transform=None
+        transform=None,
     )
 
     dataset = dataset.with_transform(validation_transform_batch)
@@ -106,6 +107,11 @@ def evaluation(args):
         processing_class=image_processor,
         data_collator=collate_fn,
         compute_metrics=eval_compute_metrics_fn,
+        callbacks=[
+            WandbImageLoggerCallback(
+                num_samples=4, threshold=threshold, id2label=id2label
+            )
+        ],
     )
 
     metrics = trainer.evaluate(eval_dataset=dataset, metric_key_prefix="eval")

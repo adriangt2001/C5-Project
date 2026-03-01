@@ -20,7 +20,7 @@ class DeTR:
         return self.model.config.id2label
 
     def inference(self, images: list):
-        inputs = self.image_processor(images=images, return_tensors="pt", do_rescale=False)
+        inputs = self.image_processor(images=images, return_tensors="pt")
 
         inputs = {key: tensor.to(self.device) for key, tensor in inputs.items()}
 

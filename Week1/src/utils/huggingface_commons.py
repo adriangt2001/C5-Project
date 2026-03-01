@@ -1,8 +1,10 @@
 import numpy as np
 import torch
+import wandb
 from src.utils.conversion import bbox_conversion
+from src.utils.drawing import draw_bbox
 from torchmetrics.detection.mean_ap import MeanAveragePrecision
-from transformers import AutoImageProcessor, EvalPrediction
+from transformers import AutoImageProcessor, EvalPrediction, TrainerCallback
 
 
 class ModelOutput:
@@ -202,3 +204,87 @@ def print_trainable_parameters(model):
     print(
         f"trainable params: {trainable_params} || all params: {all_param} || trainable%: {100 * trainable_params / all_param:.2f}"
     )
+
+
+class WandbImageLoggerCallback(TrainerCallback):
+    def __init__(self, num_samples, threshold, id2label):
+        self.num_samples = num_samples
+        self.threshold = threshold
+        self.id2label = id2label
+
+    def on_evaluate(
+        self,
+        args,
+        state,
+        control,
+        model=None,
+        eval_dataloader=None,
+        processing_class=None,
+        **kwargs,
+    ):
+        model.eval()
+        dataset = eval_dataloader.dataset
+        size_dataset = len(dataset)
+        sample_indexes = range(0, size_dataset, size_dataset // (self.num_samples - 1))
+        images_to_log = []
+        mean = torch.as_tensor(processing_class.image_mean).unsqueeze(1).unsqueeze(1)
+        std = torch.as_tensor(processing_class.image_std).unsqueeze(1).unsqueeze(1)
+        target_classes = torch.tensor(list(self.id2label.keys()))
+
+        for idx in sample_indexes:
+            sample = dataset[idx]
+            image = sample["pixel_values"]
+            unprocessed_images = image * std + mean
+            unprocessed_images = unprocessed_images.clip(0, 1).to(dtype=torch.float32)
+            inputs = {"pixel_values": image.unsqueeze(0)}
+            targets = sample["labels"]
+
+            inputs = {key: tensor.to(model.device) for key, tensor in inputs.items()}
+
+            with torch.no_grad():
+                outputs = model(**inputs)
+
+            size = torch.as_tensor(unprocessed_images.shape[1:]).unsqueeze(0)
+            results = processing_class.post_process_object_detection(
+                outputs, target_sizes=size, threshold=self.threshold
+            )[0]
+
+            results = {k: v.cpu() for k, v in results.items()}
+
+            mask = torch.isin(results["labels"], target_classes)
+            results = {
+                "boxes": results["boxes"][mask],
+                "scores": results["scores"][mask],
+                "labels": results["labels"][mask],
+            }
+
+            # Draw GT bounding boxes
+            drawing = draw_bbox(
+                unprocessed_images,
+                targets,
+                self.id2label,
+                "yolo",
+                boxes_key="boxes",
+                labels_key="class_labels",
+                scores_key=None,
+                colors="red",
+            )
+            drawing = draw_bbox(
+                drawing,
+                results,
+                self.id2label,
+                "pascal_voc",
+                boxes_key="boxes",
+                labels_key="labels",
+                scores_key="scores",
+                colors="green",
+            )
+
+            images_to_log.append(
+                wandb.Image(
+                    drawing,
+                    caption=f"Step {state.global_step} sample {idx}",
+                )
+            )
+
+        wandb.log({"eval/visualizations": images_to_log}, step=state.global_step)

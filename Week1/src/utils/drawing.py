@@ -16,7 +16,8 @@ def draw_bbox(
     format: Literal["coco", "pascal_voc", "yolo"] = "pascal_voc",
     boxes_key: str = "boxes",
     labels_key: str = "labels",
-    scores_key: str = "scores",
+    scores_key: str | None = None,
+    colors: str = "yellow"
 ):
     boxes = bbox[boxes_key]
     if len(boxes) == 0:
@@ -30,17 +31,22 @@ def draw_bbox(
         image = ToTensor()(image)
 
     boxes = bbox_conversion(
-        bbox, iformat=format, oformat="pascal_voc", image_size=image.shape[-2:]
+        boxes, iformat=format, oformat="pascal_voc", image_size=image.shape[-2:]
     )
     boxes = torch.as_tensor(boxes)
     labels = bbox[labels_key]
-    scores = bbox[scores_key]
 
-    names = [
-        f"{id2label[label.item()]}: {score:.2f}" for label, score in zip(labels, scores)
-    ]
+    if scores_key:
+        scores = bbox[scores_key]
+        names = [
+            f"{id2label[label.item()]}: {score:.2f}" for label, score in zip(labels, scores)
+        ]
+    else:
+        names = [
+            f"{id2label[label.item()]}" for label in labels
+        ]
 
-    drawing = draw_bounding_boxes(image, boxes, labels=names, colors="yellow", width=3)
+    drawing = draw_bounding_boxes(image, boxes, labels=names, colors=colors, width=3)
 
     if is_pil:
         drawing = ToPILImage()(drawing)
