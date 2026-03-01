@@ -145,7 +145,7 @@ def main_inference(args):
     wandb.log({
         "performance/avg_time_per_img": avg_time_per_img,
         "performance/fps": fps,
-        "performance/total_time": total_time
+        "performance/total_eval_time": total_time
     })
 
     print(f"Model: {model_name}")

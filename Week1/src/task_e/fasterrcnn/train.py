@@ -11,7 +11,7 @@ import os
 import time
 import random
 import numpy as np
-
+from src.utils import draw_bbox
 
 def set_seed(seed):
     random.seed(seed)
@@ -150,6 +150,8 @@ def train(args):
     epochs_no_improve = 0
     patience = 1
     eval_freq = 5
+    total_train_time = 0.0
+    total_val_time = 0.0
 
     for epoch in range(int(args.epochs)):
         detector.set_train_mode()
@@ -158,7 +160,7 @@ def train(args):
         if use_cuda:
             torch.cuda.synchronize()
             torch.cuda.reset_peak_memory_stats()
-            t_train0 = time.perf_counter()
+        t_train0 = time.perf_counter()
 
         pbar = tqdm(train_loader, desc=f"Epoch {epoch} [Train]")
 
@@ -178,14 +180,16 @@ def train(args):
 
         if use_cuda:
             torch.cuda.synchronize()
-            t_train1 = time.perf_counter()
+        t_train1 = time.perf_counter()
+        epoch_train_time = t_train1 - t_train0
+        total_train_time += epoch_train_time
 
         epoch_val_loss = 0
         detector.set_train_mode()
 
         if use_cuda:
             torch.cuda.synchronize()
-            t_val0 = time.perf_counter()
+        t_val0 = time.perf_counter()
 
         with torch.no_grad():
             pbar = tqdm(val_loader, desc=f"Epoch {epoch} [Val]")
@@ -199,7 +203,9 @@ def train(args):
 
         if use_cuda:
             torch.cuda.synchronize()
-            t_val1 = time.perf_counter()
+        t_val1 = time.perf_counter()
+        epoch_val_time = t_val1 - t_val0
+        total_val_time += epoch_val_time
 
         should_eval = ((epoch + 1) % eval_freq == 0 or epoch == int(args.epochs) - 1)
 
@@ -208,8 +214,80 @@ def train(args):
             detector.set_eval_mode()
             metric = MeanAveragePrecision( box_format="xyxy", class_metrics=True)
 
+            images_logged = False
+            max_images_to_log = 6
             for images, targets in tqdm(val_loader, desc=f"Epoch {epoch} [Eval mAP]"):
                 detector.evaluate(images, targets, metric)
+
+                if not images_logged:
+                    preds = detector.inference(images)
+
+                    id2label = {1: "Car", 2: "Pedestrian"}
+
+                    images_to_log = []
+
+                    for i in range(min(len(images), max_images_to_log)):
+
+                        img = images[i].detach().cpu()
+
+                        gt_dict = {
+                            "boxes": targets[i]["boxes"].detach().cpu(),
+                            "labels": targets[i]["labels"].detach().cpu(),
+                        }
+
+                        p = preds[i]
+
+                        if detector.kitti_mapping is not None:
+                            keep = [j for j, lab in enumerate(p["labels"]) if lab.item() in detector.kitti_mapping]
+
+                            pred_dict = {
+                                "boxes": p["boxes"][keep].detach().cpu(),
+                                "scores": p["scores"][keep].detach().cpu(),
+                                "labels": torch.tensor(
+                                    [detector.kitti_mapping[lab.item()] for lab in p["labels"][keep]],
+                                    dtype=torch.int64
+                                )
+                            }
+                        else:
+                            pred_dict = {
+                                "boxes": p["boxes"].detach().cpu(),
+                                "scores": p["scores"].detach().cpu(),
+                                "labels": p["labels"].detach().cpu(),
+                            }
+
+                        drawing = draw_bbox(
+                            img,
+                            gt_dict,
+                            id2label=id2label,
+                            format="pascal_voc",
+                            boxes_key="boxes",
+                            labels_key="labels",
+                            scores_key=None,
+                            colors="red",
+                        )
+
+                        drawing = draw_bbox(
+                            drawing,
+                            pred_dict,
+                            id2label=id2label,
+                            format="pascal_voc",
+                            boxes_key="boxes",
+                            labels_key="labels",
+                            scores_key="scores",
+                            colors="green",
+                        )
+
+                        images_to_log.append(
+                            wandb.Image(
+                                drawing,
+                                caption=f"Epoch {epoch} sample {i} (red=GT, green=Pred)"
+                            )
+                        )
+
+                    if args.log_wandb:
+                        wandb.log({"eval/visualizations": images_to_log}, step=epoch)
+
+                    images_logged = True
 
             results = metric.compute()
 
@@ -242,8 +320,6 @@ def train(args):
             "train/loss": epoch_train_loss / len(train_loader),
             "val/loss": epoch_val_loss / len(val_loader),
             "train/learning_rate": optimizer.param_groups[0]["lr"],
-            "performance/epoch_train_time": t_train1 - t_train0,
-            "performance/epoch_val_time": t_val1 - t_val0,
         }
 
         if results is not None:
@@ -274,6 +350,12 @@ def train(args):
  
     os.makedirs(f"checkpoints/{args.unfreeze_depth}/{args.lr}", exist_ok=True)
     torch.save(model.state_dict(), f"checkpoints/{args.unfreeze_depth}/{args.lr}/fasterrcnn_{args.variant}_final_epoch.pth")
+
+    if args.log_wandb:
+        wandb.log({
+            "performance/total_train_time": total_train_time,
+            "performance/total_eval_time": total_val_time
+        })
 
     if args.log_wandb:
         wandb.finish()
