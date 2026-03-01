@@ -26,10 +26,14 @@ def main_training():
     )
 
     # Extras for training
-    parser.add_argument("--lr", type=float, default=5e-5, help="Starting learning rate for training. Defaults to 5e-5.")
-    parser.add_argument("--epochs", type=float, default=50, help="Max num. epochs for training. Defaults to 50.")
-    parser.add_argument("--unfreeze_depth", type=int, default=0, help="Number of layers to unfreeze. Defaults to 0.")
-
+    parser.add_argument("--lr", type=float, default=5e-5,
+                        help="Starting learning rate for training. Defaults to 5e-5.")
+    parser.add_argument("--epochs", type=float, default=50,
+                        help="Max num. epochs for training. Defaults to 50.")
+    parser.add_argument("--unfreeze_depth", type=int, default=0,
+                        help="Number of layers to unfreeze. Defaults to 0.")
+    parser.add_argument("--augmentation", type=str,
+                        default="default", help="Type of augmentation to apply")
 
     parser.set_defaults(log_wandb=True)
 

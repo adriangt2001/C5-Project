@@ -1,6 +1,8 @@
 import torch
 import wandb
 from tqdm import tqdm
+import time
+
 from torchmetrics.detection.mean_ap import MeanAveragePrecision
 from torch.utils.data import DataLoader
 from src.models import YOLOModel
@@ -14,7 +16,7 @@ def evaluation(args):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     if args.log_wandb:
         wandb.init(
-            project="C5-Week1",
+            project="yolo-eval",
             entity="c5-team2",
             name=f"Eval-{args.model}-{args.variant}",
             config=args
@@ -27,8 +29,21 @@ def evaluation(args):
     detector = YOLOModel(model=args.variant, device=device)
     metric = MeanAveragePrecision(box_format='xyxy', class_metrics=True)
 
+    total_time = 0
+    total_images = 0
+
     for images, targets in tqdm(loader, desc="Evaluating"):
+        start_batch = time.perf_counter()
+
         detector.evaluate(images, targets, metric)
+
+        end_batch = time.perf_counter()
+
+        total_time += (end_batch - start_batch)
+        total_images += len(images)
+
+    avg_time_per_img = total_time / total_images
+    fps = 1 / avg_time_per_img  # frames per second
 
     print("Computing final metrics...")
     results = metric.compute()
@@ -47,6 +62,10 @@ def evaluation(args):
         "mAR/small": results["mar_small"],
         "mAR/medium": results["mar_medium"],
         "mAR/large": results["mar_large"],
+
+        "performance/avg_time_per_img": avg_time_per_img,
+        "performance/fps": fps,
+        "performance/total_time": total_time
     }
 
     if "map_per_class" in results:
