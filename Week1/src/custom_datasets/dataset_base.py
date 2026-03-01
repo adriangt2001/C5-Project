@@ -1,11 +1,11 @@
+import glob
 from pathlib import Path
-from typing import Literal
 
 import pycocotools.mask as rletools
 import torch
 from PIL import Image
 from torchvision.transforms import ToTensor
-import glob
+
 from . import motsio
 
 
@@ -69,7 +69,7 @@ class KittiDataset(torch.utils.data.Dataset):
 
         image = ToTensor()(image)
 
-        return image
+        return image, bboxes, categories
 
     def __len__(self):
         return len(self.features['image'])

@@ -1,8 +1,6 @@
-from huggingface_hub import interpreter_login
-from transformers import AutoModelForObjectDetection, AutoImageProcessor
-from transformers.pipelines.pt_utils import KeyDataset
 import torch
-from PIL import Image
+from huggingface_hub import interpreter_login
+from transformers import AutoImageProcessor, AutoModelForObjectDetection
 
 
 class DeTR:
@@ -22,7 +20,7 @@ class DeTR:
         return self.model.config.id2label
 
     def inference(self, images: list):
-        inputs = self.image_processor(images=images, return_tensors="pt", do_rescale=False)
+        inputs = self.image_processor(images=images, return_tensors="pt")
 
         inputs = {key: tensor.to(self.device) for key, tensor in inputs.items()}
 

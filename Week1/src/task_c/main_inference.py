@@ -22,6 +22,7 @@ def main_inference(args):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     model_type = args.model
+    variant = args.variant
     batch_size = args.batch_size
     threshold = args.threshold
 
@@ -29,7 +30,6 @@ def main_inference(args):
                       'src/custom_datasets/val.seqmap')
 
     if model_type == "fasterrcnn":
-        variant = args.variant
         model_name = f"{model_type} ({variant})"
         detector = FasterRCNN(
             variant=variant, threshold=threshold, device=device)
@@ -47,13 +47,13 @@ def main_inference(args):
         )
 
     elif model_type == "detr":
-        model_name = f"{model_type} ({variant})"
+        model_name = f"{model_type}-{variant}"
         detector = DeTR(variant=variant, threshold=threshold, device=device)
         coco_categories = detector.model.config.id2label
         wandb.init(
-            project="C5-Week1",
+            project="huggingface",
             entity="c5-team2",
-            name=f"Inference-{model_type}",
+            name=f"Inference-{model_name}",
             config={
                 "model": model_type,
                 "batch_size": batch_size,
@@ -61,7 +61,6 @@ def main_inference(args):
         )
 
     elif model_type == "yolo":
-        variant = args.variant
         model_name = f"{variant}"
         detector = YOLOModel(model=variant, threshold=threshold, device=device)
         coco_categories = detector.model.names
@@ -155,7 +154,7 @@ def main_inference(args):
     print(f"Total Inference Time: {total_time:.2f}s")
     print(f"Average Time per Image: {avg_time_per_img:.4f}s")
     print(f"Inference Speed: {fps:.2f} FPS")
-    print(f"Inference finished. Qualitative results saved in 'results/task_c'.")
+    print("Inference finished. Qualitative results saved in 'results/task_c'.")
 
     wandb.finish()
 
