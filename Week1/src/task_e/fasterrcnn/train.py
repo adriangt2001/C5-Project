@@ -342,7 +342,9 @@ def train(args):
                     "mAR/Det100": results["mar_100"],
                     "mAR/small": results["mar_small"],
                     "mAR/medium": results["mar_medium"],
-                    "mAR/large": results["mar_large"],      
+                    "mAR/large": results["mar_large"],     
+                    "mAR/Det100_class_Car": results["mar_100_per_class"][0],
+                    "mAR/Det100_class_Pedestrian": results["mar_100_per_class"][1],
             })
 
         if args.log_wandb:
