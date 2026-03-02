@@ -60,7 +60,7 @@ def main_training():
         "--lr",
         type=float,
         default=5e-5,
-        help="Starting learning rate for training. Defaults to 5e-4.",
+        help="Starting learning rate for training. Defaults to 5e-5.",
     )
     parser.add_argument(
         "--epochs",
@@ -73,6 +73,12 @@ def main_training():
         type=int,
         default=0,
         help="Number of layers to unfreeze. Defaults to 0.",
+    )
+    parser.add_argument(
+        "--augmentation",
+        type=str,
+        default="default",
+        help="Type of augmentation to apply",
     )
     parser.add_argument(
         "--lora_layer",

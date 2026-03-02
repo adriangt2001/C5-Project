@@ -169,5 +169,5 @@ class YOLOModel:
                         for k, v in t.items()} for t in targets]
         metric.update(processed_preds, targets_cpu)
 
-    def train(self, cfg):
-        results = self.model.train(cfg=cfg)
+    def train(self, **kwargs):
+        results = self.model.train(**kwargs)
