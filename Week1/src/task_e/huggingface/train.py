@@ -7,6 +7,7 @@ from huggingface_hub import interpreter_login
 from peft import LoraConfig, get_peft_model
 from src.custom_datasets import KittiDatasetHuggingface
 from src.utils.huggingface_commons import (
+    load_model,
     WandbImageLoggerCallback,
     augment_and_transform_batch,
     collate_fn,
@@ -15,7 +16,6 @@ from src.utils.huggingface_commons import (
 )
 from transformers import (
     DetrImageProcessorFast,
-    AutoModelForObjectDetection,
     EarlyStoppingCallback,
     Trainer,
     TrainingArguments,
@@ -33,14 +33,21 @@ def train(args):
     image_folder = args.image_folder
     threshold = args.threshold
     log_wandb = args.log_wandb
+    lora_layer = args.lora_layer
 
     # Load Model
-    model = AutoModelForObjectDetection.from_pretrained(model_name)
+    model = load_model(model_name)
+
+    lora_setups = {
+        "prediction": r".*bbox_predictor.*\d.*",
+        "decoder": r".*(bbox_predictor.*\d.*|decoder.*(_proj|fc.*))",
+        "encoder": r".*(bbox_predictor.*\d.*|(_proj|fc.*))",
+    }
 
     lora_config = LoraConfig(
         r=32,
         lora_alpha=32,
-        target_modules=".*decoder.*(_proj|fc.*)",
+        target_modules=lora_setups[lora_layer],
         lora_dropout=0.1,
         bias="lora_only",
     )
@@ -114,7 +121,7 @@ def train(args):
         wandb.init(
             project="huggingface",
             entity="c5-team2",
-            name=f"Finetune-{args.model}-{args.variant}",
+            name=f"Finetune-{args.model}-{args.variant}-{lora_layer}",
             config=args,
         )
 
@@ -170,7 +177,7 @@ def train(args):
     end_time = time.time()
     elapsed_total_time = end_time - start_time
 
-
+    trainer.save_model(f"results/task_e/checkpoints/hf/{lora_layer}")
     metrics = trainer.evaluate(eval_dataset=val_dataset, metric_key_prefix="eval")
     elapsed_eval_time = metrics["eval_runtime"] * trainer.state.epoch
 
@@ -193,7 +200,8 @@ def train(args):
         "mAR/medium": metrics["eval_mar_medium"],
         "mAR/large": metrics["eval_mar_large"],
         "performance/total_train_time": elapsed_total_time,
-        "performance/time_per_epoch": (elapsed_total_time - elapsed_eval_time) / trainer.state.epoch,
+        "performance/time_per_epoch": (elapsed_total_time - elapsed_eval_time)
+        / trainer.state.epoch,
         "performance/total_eval_time": metrics["eval_runtime"],
         "performance/fps": metrics["eval_samples_per_second"],
         "performance/avg_time_per_img": 1 / metrics["eval_samples_per_second"],

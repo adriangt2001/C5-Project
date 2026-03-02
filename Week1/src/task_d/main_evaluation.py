@@ -16,6 +16,7 @@ def main_evaluation():
         "--no_log_wandb", dest="log_wandb", action="store_false",
         help="Disable logging to Weights & Biases"
     )
+    parser.add_argument("--lora", type=str, default=None, help="Path to the LoRA trained model (DeTR only).")
 
     parser.set_defaults(log_wandb=True)
 

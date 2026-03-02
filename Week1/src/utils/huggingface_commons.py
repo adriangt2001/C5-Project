@@ -4,7 +4,22 @@ import wandb
 from src.utils.conversion import bbox_conversion
 from src.utils.drawing import draw_bbox
 from torchmetrics.detection.mean_ap import MeanAveragePrecision
-from transformers import AutoImageProcessor, EvalPrediction, TrainerCallback
+from transformers import (
+    AutoImageProcessor,
+    EvalPrediction,
+    TrainerCallback,
+    AutoModelForObjectDetection,
+)
+from peft import PeftModel
+
+
+def load_model(model_variant: str, lora_path: str = None, merged: bool = True):
+    model = AutoModelForObjectDetection.from_pretrained(model_variant)
+    if lora_path:
+        model = PeftModel.from_pretrained(model, lora_path)
+        if merged:
+            model = model.merge_and_unload()
+    return model
 
 
 class ModelOutput:
