@@ -135,8 +135,8 @@ def main_inference(args):
                         width=3
                     )
 
-                    os.makedirs("results/task_c/", exist_ok=True)
-                    save_path = f"results/task_c/{model_type}_batch{i}_img{j}.png"
+                    os.makedirs("results/task_e_slides/", exist_ok=True)
+                    save_path = f"results/task_e_slides/{model_type}_batch{i}_img{j}.png"
                     F.to_pil_image(result_img).save(save_path)
 
     avg_time_per_img = total_time / total_images
@@ -149,7 +149,8 @@ def main_inference(args):
     })
 
     print(f"Model: {model_name}")
-    print(f"Total Parameters: {sum(p.numel() for p in detector.model.parameters()):,}")
+    print(
+        f"Total Parameters: {sum(p.numel() for p in detector.model.parameters()):,}")
     print(f"Total Images Processed: {total_images}")
     print(f"Total Inference Time: {total_time:.2f}s")
     print(f"Average Time per Image: {avg_time_per_img:.4f}s")
