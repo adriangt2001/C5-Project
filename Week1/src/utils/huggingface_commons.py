@@ -222,10 +222,11 @@ def print_trainable_parameters(model):
 
 
 class WandbImageLoggerCallback(TrainerCallback):
-    def __init__(self, num_samples, threshold, id2label):
+    def __init__(self, num_samples, threshold, id2label, denormalize = True):
         self.num_samples = num_samples
         self.threshold = threshold
         self.id2label = id2label
+        self.denormalize = denormalize
 
     def on_evaluate(
         self,
@@ -249,8 +250,11 @@ class WandbImageLoggerCallback(TrainerCallback):
         for idx in sample_indexes:
             sample = dataset[idx]
             image = sample["pixel_values"]
-            unprocessed_images = image * std + mean
-            unprocessed_images = unprocessed_images.clip(0, 1).to(dtype=torch.float32)
+            if self.denormalize:
+                unprocessed_images = image * std + mean
+                unprocessed_images = unprocessed_images.clip(0, 1).to(dtype=torch.float32)
+            else:
+                unprocessed_images = image
             inputs = {"pixel_values": image.unsqueeze(0)}
             targets = sample["labels"]
 

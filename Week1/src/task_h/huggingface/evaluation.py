@@ -1,10 +1,8 @@
 from functools import partial
 
-import albumentations as A
 import torch
 import wandb
 from huggingface_hub import interpreter_login
-from peft import LoraConfig, get_peft_model
 from src.custom_datasets import KittiDatasetHuggingface
 from src.utils.huggingface_commons import (
     load_model,
@@ -12,18 +10,15 @@ from src.utils.huggingface_commons import (
     augment_and_transform_batch,
     collate_fn,
     compute_metrics,
-    print_trainable_parameters,
 )
 from transformers import (
-    DetrImageProcessorFast,
-    EarlyStoppingCallback,
+    RTDetrImageProcessorFast,
     Trainer,
     TrainingArguments,
 )
-import time
 
 
-def train(args):
+def evaluation(args):
     interpreter_login()
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -31,35 +26,17 @@ def train(args):
     dataset = args.dataset
     annotation_folder = args.annotation_folder
     image_folder = args.image_folder
+    batch_size = args.batch_size
     threshold = args.threshold
     log_wandb = args.log_wandb
     lora_layer = args.lora_layer
 
     # Load Model
-    model = load_model(model_name)
-
-    lora_setups = {
-        "prediction": r".*bbox_predictor.*\d.*",
-        "decoder": r".*(bbox_predictor.*\d.*|decoder.*(_proj|fc.*))",
-        "encoder": r".*(bbox_predictor.*\d.*|(_proj|fc.*))",
-    }
-
-    lora_config = LoraConfig(
-        r=32,
-        lora_alpha=32,
-        target_modules=lora_setups[lora_layer],
-        lora_dropout=0.1,
-        bias="lora_only",
-    )
-    model = get_peft_model(model, lora_config)
-    print_trainable_parameters(model)
-    model.to(device=device)
+    model = load_model(model_name, lora_path=lora_layer, merged=True)
+    model.to(device)
 
     # Load Dataset
-    train_dataset = KittiDatasetHuggingface(
-        dataset, annotation_folder, image_folder, "src/custom_datasets/train.seqmap"
-    ).get_hf_ds()
-    val_dataset = KittiDatasetHuggingface(
+    dataset = KittiDatasetHuggingface(
         dataset, annotation_folder, image_folder, "src/custom_datasets/val.seqmap"
     ).get_hf_ds()
 
@@ -71,42 +48,22 @@ def train(args):
     }
     # label2id = {v: k for k, v in id2label.items()}
 
-    image_processor = DetrImageProcessorFast.from_pretrained(model_name)
-
-    train_augment_and_transform = A.Compose(
-        [
-            A.GaussianBlur(sigma_limit=[0.5, 1.0], p=0.2),
-            A.HorizontalFlip(p=0.5),
-            A.Perspective(p=0.5),
-            A.RandomBrightnessContrast(p=0.5),
-            A.HueSaturationValue(p=0.5),
-        ],
-        bbox_params=A.BboxParams(
-            format="coco", label_fields=["category"], clip=True, min_area=25
-        ),
-    )
-
-    validation_transform = A.Compose(
-        [A.NoOp()],
-        bbox_params=A.BboxParams(format="coco", label_fields=["category"], clip=True),
-    )
-
-    train_transform_batch = partial(
-        augment_and_transform_batch,
-        transform=train_augment_and_transform,
-        image_processor=image_processor,
-        class_map=data2model,
+    # Uncommenting the options lead to a square distorted image.
+    image_processor = RTDetrImageProcessorFast.from_pretrained(
+        model_name,
+        # size={"max_height": 640, "max_width": 640},
+        # do_pad=True,
+        # pad_size={"height": 640, "width": 640},
     )
 
     validation_transform_batch = partial(
         augment_and_transform_batch,
-        transform=validation_transform,
         image_processor=image_processor,
         class_map=data2model,
+        transform=None,
     )
 
-    train_dataset = train_dataset.with_transform(train_transform_batch)
-    val_dataset = val_dataset.with_transform(validation_transform_batch)
+    dataset = dataset.with_transform(validation_transform_batch)
 
     # Define Metrics
     eval_compute_metrics_fn = partial(
@@ -121,23 +78,19 @@ def train(args):
         wandb.init(
             project="huggingface",
             entity="c5-team2",
-            name=f"Finetune-{args.model}-{args.variant}-{lora_layer}",
+            name=f"Eval-{args.model}-{args.variant}",
             config=args,
         )
 
     # Trainer
-    epochs = args.epochs
-    batch_size = args.batch_size
-    lr = args.lr
-
     training_args = TrainingArguments(
-        output_dir="results/task_e/checkpoints",
-        num_train_epochs=epochs,
+        output_dir="results/task_h",
+        num_train_epochs=30,
         fp16=False,
         per_device_train_batch_size=batch_size,
         per_device_eval_batch_size=batch_size,
         dataloader_num_workers=4,
-        learning_rate=lr,
+        learning_rate=5e-5,
         lr_scheduler_type="cosine",
         weight_decay=1e-4,
         max_grad_norm=0.01,
@@ -145,41 +98,30 @@ def train(args):
         greater_is_better=True,
         load_best_model_at_end=True,
         eval_strategy="epoch",
-        eval_steps=5,
         save_strategy="epoch",
         save_total_limit=2,
         remove_unused_columns=False,
-        report_to="wandb",
-        run_name="finetuned-detr",
+        report_to="none",
+        run_name="pretrained-rtdetr-eval",
         eval_do_concat_batches=False,
         push_to_hub=False,
-        logging_dir="results/task_e/logs",
     )
 
     trainer = Trainer(
         model=model,
         args=training_args,
-        train_dataset=train_dataset,
-        eval_dataset=val_dataset,
+        eval_dataset=dataset,
         processing_class=image_processor,
         data_collator=collate_fn,
         compute_metrics=eval_compute_metrics_fn,
         callbacks=[
-            EarlyStoppingCallback(early_stopping_patience=5),
             WandbImageLoggerCallback(
-                num_samples=4, threshold=threshold, id2label=id2label, denormalize=True
-            ),
+                num_samples=4, threshold=threshold, id2label=id2label, denormalize=False
+            )
         ],
     )
 
-    start_time = time.time()
-    trainer.train()
-    end_time = time.time()
-    elapsed_total_time = end_time - start_time
-
-    trainer.save_model(f"results/task_e/checkpoints/hf/{lora_layer}")
-    metrics = trainer.evaluate(eval_dataset=val_dataset, metric_key_prefix="eval")
-    elapsed_eval_time = metrics["eval_runtime"] * trainer.state.epoch
+    metrics = trainer.evaluate(eval_dataset=dataset, metric_key_prefix="eval")
 
     # Create a new dictionary for custom W&B names
     metrics_to_log = {
@@ -199,10 +141,7 @@ def train(args):
         "mAR/small": metrics["eval_mar_small"],
         "mAR/medium": metrics["eval_mar_medium"],
         "mAR/large": metrics["eval_mar_large"],
-        "performance/total_train_time": elapsed_total_time,
-        "performance/time_per_epoch": (elapsed_total_time - elapsed_eval_time)
-        / trainer.state.epoch,
-        "performance/total_eval_time": metrics["eval_runtime"],
+        "performance/total_time": metrics["eval_runtime"],
         "performance/fps": metrics["eval_samples_per_second"],
         "performance/avg_time_per_img": 1 / metrics["eval_samples_per_second"],
     }

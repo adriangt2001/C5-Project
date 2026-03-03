@@ -1,3 +1,4 @@
+import time
 from functools import partial
 
 import albumentations as A
@@ -7,20 +8,19 @@ from huggingface_hub import interpreter_login
 from peft import LoraConfig, get_peft_model
 from src.custom_datasets import KittiDatasetHuggingface
 from src.utils.huggingface_commons import (
-    load_model,
     WandbImageLoggerCallback,
     augment_and_transform_batch,
     collate_fn,
     compute_metrics,
+    load_model,
     print_trainable_parameters,
 )
 from transformers import (
-    DetrImageProcessorFast,
     EarlyStoppingCallback,
+    RTDetrImageProcessorFast,
     Trainer,
     TrainingArguments,
 )
-import time
 
 
 def train(args):
@@ -37,17 +37,14 @@ def train(args):
 
     # Load Model
     model = load_model(model_name)
+    model.get_input_embeddings = lambda: torch.nn.Module() # To fix LoRA not working
 
-    lora_setups = {
-        "prediction": r".*bbox_predictor.*\d.*",
-        "decoder": r".*(bbox_predictor.*\d.*|decoder.*(_proj|fc.*))",
-        "encoder": r".*(bbox_predictor.*\d.*|(_proj|fc.*))",
-    }
+    lora_regex = r".*(decoder\.layers\..*([qkv]_proj|o_proj|fc\d+|offsets|weights|proj)|(bbox_embed|query_pos_head|class_embed).*\.layers\.\d+$|class_embed\.\d+$)"
 
     lora_config = LoraConfig(
         r=32,
         lora_alpha=32,
-        target_modules=lora_setups[lora_layer],
+        target_modules=lora_regex,
         lora_dropout=0.1,
         bias="lora_only",
     )
@@ -71,7 +68,13 @@ def train(args):
     }
     # label2id = {v: k for k, v in id2label.items()}
 
-    image_processor = DetrImageProcessorFast.from_pretrained(model_name)
+    # Uncommenting the options lead to a square distorted image.
+    image_processor = RTDetrImageProcessorFast.from_pretrained(
+        model_name,
+        # size={"max_height": 640, "max_width": 640},
+        # do_pad=True,
+        # pad_size={"height": 640, "width": 640},
+    )
 
     train_augment_and_transform = A.Compose(
         [
@@ -131,7 +134,7 @@ def train(args):
     lr = args.lr
 
     training_args = TrainingArguments(
-        output_dir="results/task_e/checkpoints",
+        output_dir="results/task_h/checkpoints",
         num_train_epochs=epochs,
         fp16=False,
         per_device_train_batch_size=batch_size,
@@ -153,7 +156,7 @@ def train(args):
         run_name="finetuned-detr",
         eval_do_concat_batches=False,
         push_to_hub=False,
-        logging_dir="results/task_e/logs",
+        logging_dir="results/task_h/logs",
     )
 
     trainer = Trainer(
@@ -167,7 +170,7 @@ def train(args):
         callbacks=[
             EarlyStoppingCallback(early_stopping_patience=5),
             WandbImageLoggerCallback(
-                num_samples=4, threshold=threshold, id2label=id2label, denormalize=True
+                num_samples=4, threshold=threshold, id2label=id2label, denormalize=False
             ),
         ],
     )
@@ -177,7 +180,7 @@ def train(args):
     end_time = time.time()
     elapsed_total_time = end_time - start_time
 
-    trainer.save_model(f"results/task_e/checkpoints/hf/{lora_layer}")
+    trainer.save_model(f"results/task_h/checkpoints/hf/{lora_layer}")
     metrics = trainer.evaluate(eval_dataset=val_dataset, metric_key_prefix="eval")
     elapsed_eval_time = metrics["eval_runtime"] * trainer.state.epoch
 

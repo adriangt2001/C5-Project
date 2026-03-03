@@ -15,7 +15,7 @@ def train(args):
     name = f"{args.variant}_{args.augmentation[:7]}_"
 
     if args.augmentation == "albumentations":
-        cfg = "/ghome/group02/Marina/C5-Project/Week1/config/yolo_train_augmentation.yaml"
+        cfg = "config/yolo_train_augmentation.yaml"
         # Training with custom Albumentations transforms
         custom_transforms = [
             A.GaussianBlur(sigma_limit=[0.5, 1.0], p=0.2),
@@ -26,10 +26,10 @@ def train(args):
         ]
 
     elif args.augmentation == "default":
-        cfg = "/ghome/group02/Marina/C5-Project/Week1/config/yolo_train_augmentation.yaml"
+        cfg = "config/yolo_train_augmentation.yaml"
 
     elif args.augmentation == "none" or not args.augmentation:
-        cfg = "/ghome/group02/Marina/C5-Project/Week1/config/yolo_train_no_augmentation.yaml"
+        cfg = "config/yolo_train_no_augmentation.yaml"
 
     else:
         raise ValueError(
