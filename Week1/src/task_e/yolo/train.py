@@ -1,6 +1,7 @@
 import torch
 import albumentations as A
 import yaml
+import time
 
 from src.models import YOLOModel
 
@@ -46,7 +47,21 @@ def train(args):
         configs["name"] = name
         yaml.safe_dump(configs, f, sort_keys=False)
 
+    start_time = time.time()
+
     if args.augmentation == "albumentations":
         detector.train(cfg=cfg, augmentations=custom_transforms)
     else:
-        detector.train(cfg)
+        detector.train(cfg=cfg)
+
+    end_time = time.time()
+    elapsed_total_time = end_time - start_time
+
+    total_params = sum(p.numel() for p in detector.model.parameters())
+    trainable_params = sum(p.numel() for p in detector.model.parameters() if p.requires_grad)
+
+    print(f"Total parameters: {total_params}")
+    print(f"Trainable parameters: {trainable_params}")
+    print(f"Ellapsed time during training: {elapsed_total_time:.2f} seconds")
+    print(f"Training time per epoch: {elapsed_total_time / detector.model.trainer.epoch + 1} seconds")
+    
