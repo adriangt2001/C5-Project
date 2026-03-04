@@ -1,0 +1,1 @@
+from .fasterrcnn.train import train as train_fasterrcnn

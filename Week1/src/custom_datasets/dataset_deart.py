@@ -139,13 +139,21 @@ class DEArtDatasetTorchvision(Dataset):
             label = self.class_to_idx[name]
 
             bbox = obj.find("bndbox")
-            xmin = float(bbox.find("xmin").text)
-            ymin = float(bbox.find("ymin").text)
-            xmax = float(bbox.find("xmax").text)
-            ymax = float(bbox.find("ymax").text)
+           
+            try:
+                xmin = float(bbox.find("xmin").text)
+                ymin = float(bbox.find("ymin").text)
+                xmax = float(bbox.find("xmax").text)
+                ymax = float(bbox.find("ymax").text)
 
-            boxes.append([xmin, ymin, xmax, ymax])
-            labels.append(label)
+                # sanity check
+                if xmax > xmin and ymax > ymin:
+                    boxes.append([xmin, ymin, xmax, ymax])
+                    labels.append(label)
+
+            except (ValueError, TypeError):
+                # skip corrupted bounding box
+                continue
 
         if len(boxes) > 0:
             boxes = torch.tensor(boxes, dtype=torch.float32)
@@ -165,6 +173,9 @@ class DEArtDatasetTorchvision(Dataset):
             )
 
             image = augmented["image"]
+
+            if image.dtype == torch.uint8:
+                image = image.float() / 255.0
 
             if len(augmented["bboxes"]) > 0:
                 boxes = torch.tensor(augmented["bboxes"], dtype=torch.float32)
