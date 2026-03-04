@@ -1,5 +1,7 @@
 # Week 1: Object Detection
 
+[View Presentation](https://www.canva.com/design/DAHBmM5MBbU/E24ryIqKLlVz7kRqTmjn-Q/edit?utm_content=DAHBmM5MBbU&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
+
 ## Introduction
 
 This week focuses on the Object Detection task as part of the C5 Multimodal Recognition project. The objective is to explore, evaluate, and compare different state-of-the-art object detection models using PyTorch-based frameworks.
@@ -59,15 +61,17 @@ Week1/
 ├── src/
 │   ├── custom_datasets/ # Dataset loading and preprocessing
 │   ├── models/          # Model wrappers and utilities
+│   ├── notebooks/       # Notebooks
 │   ├── task_c/          # Inference with pre-trained models
 │   ├── task_d/          # Evaluation using COCO metrics
 │   ├── task_e/          # Fine-tuning 
 │   ├── task_f/          # Fine-tuning in a different domain
-│   ├── task_g/          # Comparative analysis
 │   └── task_h/          # Fine-tuning RT-DETR
 ├── environment.yml      # Environment yaml
 └── README.md            # README for Week 1
 ```
+
+> **Note:** Task **g** has no dedicated folder, as it focuses on benchmarking and comparing the results obtained across the previous tasks.
 
 ## Installation
 To run the code in this repo you must first install all needed libraries using conda with the help of the ```environment.yml``` file. This code is tested under python version 3.12.
@@ -98,7 +102,7 @@ For more information of the different arguments run:
 python -m src.task_c.main_inference --help
 ```
 
-Results are saved in the ```Week1/results/task_c``` folder.
+Results are logged in **wandb** by default under the project **C5Week1**.
 
 **Tested variants model variants**
 * Faster R-CNN
@@ -149,9 +153,47 @@ Results are logged in **wandb** by default under the project **C5Week1**.
   - yolov10m.pt
 
 ## Task e
+In Task E, we fine-tune pre-trained detectors on KITTI-MOTS (similar domain) to measure the effect of transfer learning. We support Faster R-CNN (Torchvision), DeTR (HuggingFace) and YOLO (Ultralytics). Only one version of each in this case.
+
+```bash
+# To fine-tune Faster R-CNN
+python -m src.task_e.main_training \
+  --model fasterrcnn \
+  --variant resnet50_fpn \
+  --dataset dataset/KITTI-MOTS \
+  --batch_size 32 \
+  --lr 5e-5 \
+  --epochs 50
+
+# To fine-tune DeTR (HuggingFace)
+python -m src.task_e.main_training \
+  --model detr \
+  --variant facebook/detr-resnet-50 \
+  --dataset dataset/KITTI-MOTS \
+  --batch_size 32 \
+  --lr 5e-5 \
+  --epochs 50
+
+# To fine-tune YOLO (Ultralytics)
+python -m src.task_e.main_training \
+  --model yolo \
+  --variant yolov10m.pt \
+  --dataset dataset/KITTI-MOTS \
+  --batch_size 32 \
+  --lr 5e-5 \
+  --epochs 50
+```
+
+For more information of the different arguments run:
+
+```bash
+python -m src.task_e.main_train --help
+```
+
+Results are logged in **wandb** by default under the project **C5Week1**.
+
+
 
 ## Task f
-
-## Task g
 
 ## Task h
