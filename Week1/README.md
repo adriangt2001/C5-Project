@@ -197,3 +197,35 @@ Results are logged in **wandb** by default under the project **C5Week1**.
 ## Task f
 
 ## Task h
+In Task H, we fine-tune the RT-DeTR detector on KITTI-MOTS (similar domain) to measure the effect of transfer learning. Be aware that our implementation gave strange results that are further discussed in the slides, so this code may not be completely correct and we had no more time to see what can be the issue.
+
+```bash
+
+# To evaluate RT-DeTR (HuggingFace)
+python -m src.task_h.main \
+  --mode eval \
+  --model rt-detr \
+  --variant PekingU/rtdetr_r50vd \
+  --dataset dataset/KITTI-MOTS \
+  --batch_size 32
+```
+
+```bash
+# To fine-tune RT-DeTR (HuggingFace)
+python -m src.task_h.main \
+  --mode train \
+  --model rt-detr \
+  --variant PekingU/rtdetr_r50vd \
+  --dataset dataset/KITTI-MOTS \
+  --batch_size 32 \
+  --lr 5e-5 \
+  --epochs 50
+```
+
+For more information of the different arguments run:
+
+```bash
+python -m src.task_h.main --help
+```
+
+Results are logged in **wandb** by default under the project **C5Week1**.
