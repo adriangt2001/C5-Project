@@ -195,6 +195,25 @@ Results are logged in **wandb** by default under the project **C5Week1**.
 
 
 ## Task f
+In Task F, we fine-tune Faster R-CNN on a different dataset (DeART). Once the dataset is downloaded, you can run the code by using the next commands.
+
+```bash
+# To fine-tune Faster R-CNN
+python -m src.task_f.main_training \
+  --dataset dataset/deart \
+  --variant resnet50_fpn \
+  --batch_size 32 \
+  --lr 0.001 \
+  --epochs 50
+```
+
+As an alternative, the ```src/task_f/files/run_experiments.sh``` script can be used to run all the experiments with just one command.
+
+For more information of the different arguments run:
+
+```bash
+python -m src.task_f.main_train --help
+```
 
 ## Task h
 In Task H, we fine-tune the RT-DeTR detector on KITTI-MOTS (similar domain) to measure the effect of transfer learning. Be aware that our implementation gave strange results that are further discussed in the slides, so this code may not be completely correct and we had no more time to see what can be the issue.
@@ -208,9 +227,7 @@ python -m src.task_h.main \
   --variant PekingU/rtdetr_r50vd \
   --dataset dataset/KITTI-MOTS \
   --batch_size 32
-```
 
-```bash
 # To fine-tune RT-DeTR (HuggingFace)
 python -m src.task_h.main \
   --mode train \
