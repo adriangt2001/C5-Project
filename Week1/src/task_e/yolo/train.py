@@ -1,6 +1,7 @@
 import torch
 import albumentations as A
 import yaml
+import time
 
 from src.models import YOLOModel
 
@@ -14,7 +15,7 @@ def train(args):
     name = f"{args.variant}_{args.augmentation[:7]}_"
 
     if args.augmentation == "albumentations":
-        cfg = "/ghome/group02/Marina/C5-Project/Week1/config/yolo_train_augmentation.yaml"
+        cfg = "config/yolo_train_augmentation.yaml"
         # Training with custom Albumentations transforms
         custom_transforms = [
             A.GaussianBlur(sigma_limit=[0.5, 1.0], p=0.2),
@@ -25,10 +26,10 @@ def train(args):
         ]
 
     elif args.augmentation == "default":
-        cfg = "/ghome/group02/Marina/C5-Project/Week1/config/yolo_train_augmentation.yaml"
+        cfg = "config/yolo_train_augmentation.yaml"
 
     elif args.augmentation == "none" or not args.augmentation:
-        cfg = "/ghome/group02/Marina/C5-Project/Week1/config/yolo_train_no_augmentation.yaml"
+        cfg = "config/yolo_train_no_augmentation.yaml"
 
     else:
         raise ValueError(
@@ -46,7 +47,21 @@ def train(args):
         configs["name"] = name
         yaml.safe_dump(configs, f, sort_keys=False)
 
+    start_time = time.time()
+
     if args.augmentation == "albumentations":
         detector.train(cfg=cfg, augmentations=custom_transforms)
     else:
-        detector.train(cfg)
+        detector.train(cfg=cfg)
+
+    end_time = time.time()
+    elapsed_total_time = end_time - start_time
+
+    total_params = sum(p.numel() for p in detector.model.parameters())
+    trainable_params = sum(p.numel() for p in detector.model.parameters() if p.requires_grad)
+
+    print(f"Total parameters: {total_params}")
+    print(f"Trainable parameters: {trainable_params}")
+    print(f"Ellapsed time during training: {elapsed_total_time:.2f} seconds")
+    print(f"Training time per epoch: {elapsed_total_time / detector.model.trainer.epoch + 1} seconds")
+    

@@ -143,13 +143,22 @@ class YOLOModel:
         """
         preds = self.inference(images)
 
-        person_key = next(
-            k for k, v in self.model.names.items() if v == "person")
-        car_key = next(k for k, v in self.model.names.items() if v == "car")
-        kitti_mapping = {
-            car_key: 1,
-            person_key: 2
-        }
+        print(self.model.names.items())
+
+        if len(self.model.names.items()) > 2:
+            person_key = next(
+                k for k, v in self.model.names.items() if v == "person")
+            car_key = next(
+                k for k, v in self.model.names.items() if v == "car")
+            kitti_mapping = {
+                car_key: 1,
+                person_key: 2
+            }
+        else:
+            kitti_mapping = {
+                0: 1,
+                1: 2
+            }
 
         processed_preds = []
         for p in preds:
@@ -168,6 +177,8 @@ class YOLOModel:
         targets_cpu = [{k: v.cpu() if isinstance(v, torch.Tensor) else v
                         for k, v in t.items()} for t in targets]
         metric.update(processed_preds, targets_cpu)
+
+        return processed_preds
 
     def train(self, **kwargs):
         results = self.model.train(**kwargs)

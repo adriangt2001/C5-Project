@@ -1,0 +1,8 @@
+data: dataset/yolo_kittimots/dataset.yaml
+epochs: 50
+batch: 32
+fraction: 1.0
+patience: 5
+project: ultralytics
+name: yolov10m.pt_default_freeze0
+freeze: 0

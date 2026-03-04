@@ -5,6 +5,7 @@ import wandb
 from huggingface_hub import interpreter_login
 from src.custom_datasets import KittiDatasetHuggingface
 from src.utils.huggingface_commons import (
+    load_model,
     WandbImageLoggerCallback,
     augment_and_transform_batch,
     collate_fn,
@@ -12,7 +13,6 @@ from src.utils.huggingface_commons import (
 )
 from transformers import (
     DetrImageProcessorFast,
-    AutoModelForObjectDetection,
     Trainer,
     TrainingArguments,
 )
@@ -29,9 +29,10 @@ def evaluation(args):
     batch_size = args.batch_size
     threshold = args.threshold
     log_wandb = args.log_wandb
+    lora = args.lora
 
     # Load Model
-    model = AutoModelForObjectDetection.from_pretrained(model_name)
+    model = load_model(model_name, lora_path=lora, merged=True)
     model.to(device)
 
     # Load Dataset
