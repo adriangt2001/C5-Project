@@ -48,6 +48,9 @@ class Prompt:
                 f"WARNING: Mismatch between prompt history mode '{self.mode}' and added prompt. Abort adding prompt."
             )
 
+    def __len__(self):
+        return len(self.prompts)
+
     def __getitem__(self, idx):
         return self.prompts[idx]
 
