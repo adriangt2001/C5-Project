@@ -14,6 +14,9 @@ class Prompt:
         self.mode = mode
         self.prompts = []
 
+    def get_all_prompts(self):
+        return self.prompts
+
     def clean_history(self):
         """Delete the entire prompts history."""
         self.prompts = []
@@ -44,6 +47,9 @@ class Prompt:
             print(
                 f"WARNING: Mismatch between prompt history mode '{self.mode}' and added prompt. Abort adding prompt."
             )
+
+    def __getitem__(self, idx):
+        return self.prompts[idx]
 
     @classmethod
     def from_file(cls, file: str):
