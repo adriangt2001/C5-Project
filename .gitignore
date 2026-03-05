@@ -219,7 +219,6 @@ results
 wandb/
 checkpoints/
 checkpoints
-prompts
 
 .python-version
 pyproject.toml
