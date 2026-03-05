@@ -210,10 +210,16 @@ marimo/_lsp/
 __marimo__/
 
 # EXTRAS
-dataset
 dataset/
+dataset
+datasets/
+datasets
 results/
+results
 wandb/
+checkpoints/
+checkpoints
+prompts
 
 .python-version
 pyproject.toml
