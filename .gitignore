@@ -34,6 +34,7 @@ MANIFEST
 
 # Data
 DEArt_dataset/
+/DATA/home/jgarcia/SpectralSegmentation/C5-Project/Week2/data/kitti-mots/
 
 # Installer logs
 pip-log.txt
