@@ -34,7 +34,7 @@ MANIFEST
 
 # Data
 DEArt_dataset/
-Week2/data/kitti-mots/
+Week2/data/
 
 # Installer logs
 pip-log.txt

@@ -9,78 +9,81 @@ from PIL import Image
 
 from . import motsio
 
-
 class KittiDataset(torch.utils.data.Dataset):
-    def __init__(
-        self,
-        image_folder: str,
-        annotations_folder: str,
-        seqmap_file: str,
-        mode: Literal["train", "test"] = "test",
-        transforms=None,
-    ):
-        self.transforms = transforms
-        self.mode = mode
-        self.features = {
-            "image_id": [],
-            "image": [],
-            "width": [],
-            "height": [],
-            "objects": [],
-        }
-        seqmap, max_frames = motsio.load_seqmap(seqmap_file)
 
-        for seq in seqmap:
-            self.load_sequence(
-                os.path.join(annotations_folder, "image_02", f"{seq}.txt"),
-                os.path.join(image_folder, "image_02", f"{seq}.txt"),
-            )
+    def __init__(self, image_folder, annotations_folder):
 
-    def load_sequence(self, txt_path, image_folder):
-        loaded_txt = motsio.load_txt(txt_path)
+        self.image_folder = image_folder
+        self.annotations_folder = annotations_folder
 
-        features = {"image": [], "width": [], "height": [], "objects": []}
+        self.samples = []
 
-        for image in sorted(glob.glob(f"{image_folder}/*.png")):
-            img = Image.open(image)
-            features["image"].append(img)
-            features["width"].append(img.size[0])
-            features["height"].append(img.size[1])
-            if self.mode == "train":
-                features["objects"].append(
-                    {"id": [], "area": [], "mask": [], "category": []}
-                )
+        annotation_files = sorted(glob.glob(os.path.join(annotations_folder, "*.txt")))
 
-        if self.mode == "train":
-            for frame_idx, frame_info in loaded_txt.items():
-                for segmentation in frame_info:
-                    if segmentation.class_id in [1, 2]:
-                        features["objects"][frame_idx]["area"].append(
-                            rletools.area(segmentation.mask)
-                        )
-                        features["objects"][frame_idx]["mask"].append(
-                            rletools.toBbox(segmentation.mask)
-                        )
-                        features["objects"][frame_idx]["category"].append(
-                            segmentation.class_id
-                        )
+        for ann_file in annotation_files:
 
-        self.features["image"].extend(features["image"])
-        self.features["width"].extend(features["width"])
-        self.features["height"].extend(features["height"])
-        self.features["objects"].extend(features["objects"])
+            seq_id = os.path.basename(ann_file).split(".")[0]
+
+            image_seq_folder = os.path.join(image_folder, seq_id)
+
+            images = sorted(glob.glob(os.path.join(image_seq_folder, "*.png")))
+
+            for frame_id, img_path in enumerate(images):
+
+                self.samples.append((img_path, ann_file, frame_id))
+
+
+    def __len__(self):
+        return len(self.samples)
 
     def __getitem__(self, idx):
-        # This is untested.
-        # Be sure that the segmentation mask returns an empty list for the "test" mode,
-        # and a list of masks (?) when in "train" mode,
-        image = np.array(self.features["image"][idx])
-        # Mask will be empty if test mode is set
-        mask = self.features["objects"][idx]["mask"]
 
-        if self.transforms:
-            # This format is for albumentations when using semantic segmentation
-            # (perhaps it needs to be changed for instance segmentation)
-            output = self.transforms(image=image, mask=mask)
+        img_path, ann_file, frame_id = self.samples[idx]
 
-        return output["image"], output["mask"]
+        image = np.array(Image.open(img_path).convert("RGB"))
+
+        height, width = image.shape[:2]
+
+        masks = []
+
+        with open(ann_file, "r") as f:
+            lines = f.readlines()
+
+        for line in lines:
+
+            parts = line.strip().split()
+
+            frame = int(parts[0])
+
+            if frame != frame_id:
+                continue
+
+            class_id = int(parts[2])
+
+            # skip ignore regions
+            if class_id == 10:
+                continue
+
+            height = int(parts[3])
+            width = int(parts[4])
+            rle_string = parts[5]
+
+            rle = {
+                "size": [height, width],
+                "counts": rle_string.encode("utf-8")
+            }
+
+            mask = rletools.decode(rle)
+
+            masks.append(mask)
+
+        if len(masks) > 0:
+            masks = np.stack(masks)
+        else:
+            masks = np.zeros((0, height, width))
+
+        return {
+            "image": torch.tensor(image).permute(2,0,1).float(),
+            "masks": torch.tensor(masks).float(),
+            "class_ids": torch.tensor([int(line.strip().split()[2]) for line in lines if int(line.strip().split()[0]) == frame_id and int(line.strip().split()[2]) != 10]).long()
+        }
