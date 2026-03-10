@@ -1,6 +1,6 @@
 import argparse
 import yaml
-
+from src.task_c.inference_sam_bbox import main_task_c
 
 def parse_config(parser: argparse.ArgumentParser, config_file: str):
     """
@@ -52,6 +52,9 @@ def main(args):
     """
     task = args.task
     assert task
+
+    if task == "task_c":
+        main_task_c(args)
 
 
 if __name__ == "__main__":

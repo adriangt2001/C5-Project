@@ -1,0 +1,12 @@
+task: task_c
+
+csv_path: src/task_c/fasterrcnn_kittimots_detections.csv
+
+image_folder: dataset/KITTI-MOTS/training
+annotations_folder: dataset/KITTI-MOTS/instances_txt
+seqmap_file: src/utils/val.seqmap
+
+score_mode: product
+run_name: task_c_non_fine_tuned
+batch_size: 1
+max_visualizations: 30

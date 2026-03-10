@@ -63,12 +63,13 @@ class KittiDataset(torch.utils.data.Dataset):
         image = torch.tensor(image).permute(2, 0, 1).float() / 255.0
 
         target = {
-            "masks": torch.tensor(masks, dtype=torch.uint8),
+            "masks": torch.tensor(masks, dtype=torch.bool),
             "labels": torch.tensor(labels, dtype=torch.long),
+            "img_path": img_path,
+            "image_id": idx,
         }
 
         if self.transforms:
             image = self.transforms(image)
 
         return image, target
-
