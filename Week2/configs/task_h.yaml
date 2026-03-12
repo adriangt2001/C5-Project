@@ -1,0 +1,12 @@
+task: task_h
+
+image_folder: dataset/KITTI-MOTS/training
+annotations_folder: dataset/KITTI-MOTS/instances_txt
+seqmap_file: src/utils/val.seqmap
+
+prompt_mode: synonyms
+score_mode: product
+run_name: task_h
+batch_size: 1
+max_visualizations: 30
+box_threshold: 0.5
