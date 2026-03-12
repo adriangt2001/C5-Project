@@ -43,6 +43,7 @@ class KittiDataset(torch.utils.data.Dataset):
 
         masks = []
         labels = []
+        semantic_mask = np.zeros((h, w), dtype=np.uint8)
         
         for obj in frame_objects:
 
@@ -54,6 +55,7 @@ class KittiDataset(torch.utils.data.Dataset):
 
             masks.append(mask)
             labels.append(obj.class_id)
+            semantic_mask[mask == 1] = obj.class_id
 
         if len(masks) > 0:
             masks = np.stack(masks)
@@ -65,6 +67,7 @@ class KittiDataset(torch.utils.data.Dataset):
         target = {
             "masks": torch.tensor(masks, dtype=torch.bool),
             "labels": torch.tensor(labels, dtype=torch.long),
+            "semantic_mask": torch.tensor(semantic_mask, dtype=torch.long),
             "img_path": img_path,
             "image_id": idx,
         }

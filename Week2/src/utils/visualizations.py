@@ -2,6 +2,7 @@
 
 import numpy as np
 import matplotlib.pyplot as plt
+import seaborn as sns
 
 def show_mask(mask, ax, random_color=False):
     if random_color:
@@ -75,3 +76,36 @@ def show_masks_on_image(raw_image, masks, scores):
       axes[i].title.set_text(f"Mask {i+1}, Score: {score.item():.3f}")
       axes[i].axis("off")
     plt.show()
+
+# These are our implementations
+
+def show_semantic_mask(mask, ax):
+    colors = {
+        0: [0, 0, 0, 0],        # background 
+        1: [1, 0, 0, 0.6],      # car 
+        2: [0, 0, 1, 0.6],      # pedestrian
+    }
+
+    h, w = mask.shape
+    overlay = np.zeros((h, w, 4))
+
+    for class_id, color in colors.items():
+        overlay[mask == class_id] = color
+
+    ax.imshow(overlay)
+
+def plot_confusion_matrix(cm, class_names):
+  fig, ax = plt.subplots(figsize=(6, 5))
+  sns.heatmap(
+      cm.numpy().astype(int),
+      annot=True,
+      fmt="d",
+      xticklabels=class_names,
+      yticklabels=class_names,
+      ax=ax,
+      cmap="Blues",
+  )
+  ax.set_xlabel("Predicted")
+  ax.set_ylabel("Ground Truth")
+  ax.set_title("Confusion Matrix")
+  return fig
