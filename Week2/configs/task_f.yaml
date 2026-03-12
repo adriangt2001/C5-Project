@@ -1,0 +1,13 @@
+task: task_f
+
+image_dir: /DATA/home/jgarcia/SpectralSegmentation/MSLM/ISIC2018/ISIC2018_Task1-2_Validation_Input
+mask_dir: /DATA/home/jgarcia/SpectralSegmentation/MSLM/ISIC2018/ISIC2018_Task1_Validation_GroundTruth
+
+sam_checkpoint: /DATA/home/jgarcia/SpectralSegmentation/C5-Project/Week2/src/task_e/sam_vit_b_01ec64.pth
+finetuned_checkpoint: /DATA/home/jgarcia/SpectralSegmentation/C5-Project/Week2/src/task_e/checkpoints/sam_task_e_best.pth
+model_type: vit_b
+
+batch_size: 1
+num_workers: 4
+visualize_count: 10
+output_dir: /DATA/home/jgarcia/SpectralSegmentation/C5-Project/Week2/src/task_f/results
