@@ -62,6 +62,12 @@ def build_argparser():
         type=Path,
         default=PROJECT_ROOT / "Week2" / "task_e" / "checkpoints",
     )
+    parser.add_argument("--augmentations", dest="augmentations", action="store_true")
+    parser.add_argument("--no-augmentations", dest="augmentations", action="store_false")
+    parser.set_defaults(augmentations=True)
+    parser.add_argument("--visualizations", dest="visualizations", action="store_true")
+    parser.add_argument("--no-visualizations", dest="visualizations", action="store_false")
+    parser.set_defaults(visualizations=True)
     parser.add_argument("--train-image-encoder", action="store_true")
     parser.add_argument("--train-prompt-encoder", action="store_true")
 
@@ -157,6 +163,8 @@ def main():
     print("Starting fine-tuning...")
     print(f"Trainable parameter tensors: {len(trainable_params)}")
     print(f"Using checkpoint: {checkpoint_path}")
+    print(f"Augmentations enabled: {args.augmentations}")
+    print(f"Visualizations enabled: {args.visualizations}")
 
     train(
         model=sam,
@@ -166,6 +174,8 @@ def main():
         device=device,
         epochs=args.epochs,
         output_dir=args.output_dir,
+        augmentations=args.augmentations,
+        visualizations=args.visualizations,
     )
 
 
