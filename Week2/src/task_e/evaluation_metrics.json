@@ -1,0 +1,20 @@
+{
+  "sam_task_e_best.pth": {
+    "map": 0.6879,
+    "map_50": 0.9495,
+    "map_75": 0.7752,
+    "map_car": 0.8189,
+    "map_large": 0.8676,
+    "map_medium": 0.7477,
+    "map_pedestrian": 0.557,
+    "map_small": 0.5547,
+    "mar_1": 0.2109,
+    "mar_10": 0.7082,
+    "mar_100": 0.7162,
+    "mar_100_car": 0.8363,
+    "mar_100_pedestrian": 0.5962,
+    "mar_large": 0.8975,
+    "mar_medium": 0.7809,
+    "mar_small": 0.5946
+  }
+}

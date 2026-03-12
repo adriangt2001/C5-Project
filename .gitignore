@@ -35,8 +35,8 @@ MANIFEST
 # Data
 DEArt_dataset/
 Week2/data/
-Week2/task_e/checkpoints
-Week2/task_e/sam_vit_b_01ec64.pth
+Week2/src/task_e/checkpoints
+Week2/src/task_e/sam_vit_b_01ec64.pth
 
 # Installer logs
 pip-log.txt
