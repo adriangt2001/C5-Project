@@ -4,6 +4,8 @@ import yaml
 import sys
 sys.path.append("/DATA/home/jgarcia/SpectralSegmentation/C5-Project/Week2/")
 
+from src.task_a.run_task_a import main_task_a
+from src.task_b.run_task_b import main_task_b
 from src.task_c.inference_sam_bbox import main_task_c
 from src.task_f.evaluate_domain_shift import main_task_f
 from src.task_g.analyze_prompt_robustness import main_task_g
@@ -41,7 +43,85 @@ def args_parser():
         help="Entry point to run a specific part of the repo.",
     )
 
-    # Task N
+    # Shared dataset arguments
+    parser.add_argument(
+        "--image_folder",
+        type=str,
+        default="/DATA/home/jgarcia/SpectralSegmentation/C5-Project/Week2/data/KITTI-MOTS/training",
+    )
+    parser.add_argument(
+        "--annotations_folder",
+        type=str,
+        default="/DATA/home/jgarcia/SpectralSegmentation/C5-Project/Week2/data/KITTI-MOTS/instances_txt",
+    )
+    parser.add_argument(
+        "--seqmap_file",
+        type=str,
+        default="/DATA/home/jgarcia/SpectralSegmentation/C5-Project/Week2/src/utils/val.seqmap",
+    )
+    parser.add_argument(
+        "--batch_size",
+        type=int,
+        default=1,
+    )
+    parser.add_argument(
+        "--max_visualizations",
+        type=int,
+        default=10,
+    )
+    parser.add_argument(
+        "--run_name",
+        type=str,
+        default="week2-run",
+    )
+    parser.add_argument(
+        "--score_mode",
+        type=str,
+        default="product",
+    )
+    parser.add_argument(
+        "--box_threshold",
+        type=float,
+        default=0.25,
+    )
+    parser.add_argument(
+        "--csv_path",
+        type=str,
+        default="/DATA/home/jgarcia/SpectralSegmentation/C5-Project/Week2/src/task_c/fasterrcnn_kittimots_detections.csv",
+    )
+    parser.add_argument(
+        "--prompt_mode",
+        type=str,
+        default="baseline",
+    )
+    parser.add_argument(
+        "--text_threshold",
+        type=float,
+        default=0.25,
+    )
+
+    # Task A
+    parser.add_argument(
+        "--output_dir",
+        type=str,
+        default="/DATA/home/jgarcia/SpectralSegmentation/C5-Project/Week2/src/results",
+    )
+    parser.add_argument(
+        "--max_samples",
+        type=int,
+        default=-1,
+        help="Number of dataset samples to evaluate for Task A. Use -1 for all samples.",
+    )
+    parser.add_argument(
+        "--prompt_comparison_index",
+        type=int,
+        default=880,
+    )
+    parser.add_argument(
+        "--seed",
+        type=int,
+        default=42,
+    )
 
     # Task W
 
@@ -59,6 +139,14 @@ def main(args):
     """
     task = args.task
     assert task
+
+    if task == "task_a":
+        print("Running Task A: SAM point-prompt evaluation")
+        main_task_a(args)
+
+    if task == "task_b":
+        print("Running Task B: GroundingDINO prompt evaluation")
+        main_task_b(args)
 
     if task == "task_c":
         main_task_c(args)
