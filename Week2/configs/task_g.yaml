@@ -1,0 +1,16 @@
+task: task_g
+
+image_folder: Week2/data/KITTI-MOTS/training
+annotations_folder: Week2/data/KITTI-MOTS/instances_txt
+seqmap_file: Week2/src/utils/val.seqmap
+
+batch_size: 1
+box_threshold: 0.25
+nms_threshold: 0.5
+max_visualizations: 4
+seed: 42
+
+output_dir: Week2/src/task_g/results
+visualize_only: true # nomes si voleu treure visualitzacions i ja
+generate_qualitative: true 
+metrics_json: Week2/src/task_g/results/prompt_analysis_metrics.json

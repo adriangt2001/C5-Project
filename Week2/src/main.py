@@ -6,6 +6,7 @@ sys.path.append("/DATA/home/jgarcia/SpectralSegmentation/C5-Project/Week2/")
 
 from src.task_c.inference_sam_bbox import main_task_c
 from src.task_f.evaluate_domain_shift import main_task_f
+from src.task_g.analyze_prompt_robustness import main_task_g
 from src.task_h.inference_semantic_text import main_task_h
 
 def parse_config(parser: argparse.ArgumentParser, config_file: str):
@@ -65,6 +66,10 @@ def main(args):
     if task == "task_f":
         print("Running Task F: Evaluating Domain Shift")
         main_task_f(args)
+
+    if task == "task_g":
+        print("Running Task G: Prompt Robustness Analysis")
+        main_task_g(args)
 
     if task == "task_h":
         main_task_h(args)

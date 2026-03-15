@@ -37,6 +37,7 @@ DEArt_dataset/
 Week2/data/
 Week2/src/task_e/checkpoints
 Week2/src/task_e/sam_vit_b_01ec64.pth
+Week2/src/task_g/results
 
 # Installer logs
 pip-log.txt
