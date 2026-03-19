@@ -40,6 +40,8 @@ Week2/data/
 Week2/src/task_e/checkpoints
 Week2/src/task_e/sam_vit_b_01ec64.pth
 Week2/src/task_g/results
+Week3/test_runs
+Week3/runs_final_test
 
 # Installer logs
 pip-log.txt

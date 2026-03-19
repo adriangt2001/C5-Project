@@ -504,6 +504,10 @@ def train(
     epochs: int = 5,
     batch_size: int = 32,
     lr: float = 1e-3,
+    lr_decay_factor: float = 0.5,
+    lr_decay_patience: int = 1,
+    min_lr: float = 1e-6,
+    early_stopping_patience: int = 3,
     max_len: int = 40,
     vocab_size: int = 5000,
     min_freq: int = 2,
@@ -588,10 +592,18 @@ def train(
 
     criterion = nn.CrossEntropyLoss(ignore_index=tokenizer.pad_id)
     optimizer = torch.optim.Adam(model.parameters(), lr=lr)
+    scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
+        optimizer,
+        mode="max",
+        factor=lr_decay_factor,
+        patience=lr_decay_patience,
+        min_lr=min_lr,
+    )
 
     history: List[Dict[str, object]] = []
     best_score = -1.0
     best_path = output_dir / "best.pt"
+    epochs_without_improvement = 0
 
     for epoch in range(1, epochs + 1):
         train_loss = _run_epoch(model, train_loader, optimizer, criterion, device)
@@ -608,6 +620,7 @@ def train(
             "epoch": epoch,
             "train_loss": train_loss,
             "val_loss": val_loss,
+            "lr": optimizer.param_groups[0]["lr"],
             **metrics,
         }
         history.append(epoch_record)
@@ -615,6 +628,7 @@ def train(
         score = metrics["meteor"] + metrics["rougeL"] + metrics["bleu2"]
         if score > best_score:
             best_score = score
+            epochs_without_improvement = 0
             torch.save(
                 {
                     "model_state": model.state_dict(),
@@ -634,16 +648,28 @@ def train(
             (output_dir / "val_predictions.json").write_text(
                 json.dumps(qualitative[:50], indent=2)
             )
+        else:
+            epochs_without_improvement += 1
+
+        scheduler.step(score)
 
         print(
             f"epoch={epoch} "
             f"train_loss={train_loss:.4f} "
             f"val_loss={val_loss:.4f} "
+            f"lr={optimizer.param_groups[0]['lr']:.6f} "
             f"BLEU1={metrics['bleu1']:.4f} "
             f"BLEU2={metrics['bleu2']:.4f} "
             f"ROUGE-L={metrics['rougeL']:.4f} "
             f"METEOR={metrics['meteor']:.4f}"
         )
+
+        if epochs_without_improvement >= early_stopping_patience:
+            print(
+                "Early stopping triggered "
+                f"after {epoch} epochs without validation-score improvement."
+            )
+            break
 
     summary = {
         "best_checkpoint": str(best_path),
@@ -656,9 +682,14 @@ def train(
             "epochs": epochs,
             "batch_size": batch_size,
             "lr": lr,
+            "lr_decay_factor": lr_decay_factor,
+            "lr_decay_patience": lr_decay_patience,
+            "min_lr": min_lr,
+            "early_stopping_patience": early_stopping_patience,
             "max_len": max_len,
             "val_ratio": val_ratio,
             "split_seed": split_seed,
+            "pretrained_encoder": pretrained_encoder,
         },
     }
     (output_dir / "history.json").write_text(json.dumps(summary, indent=2))
@@ -698,19 +729,31 @@ def load_checkpoint(
 def evaluate_checkpoint(
     checkpoint_path: Path,
     data_dir: Path,
-    split: str = "val",
+    split: str = "heldout",
     batch_size: int = 32,
     num_workers: int = 0,
     max_examples: Optional[int] = None,
 ) -> Dict[str, object]:
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model, tokenizer, config = load_checkpoint(checkpoint_path, device=device)
-    samples = load_annotations(Path(data_dir) / "annotations" / f"{split}.json")
+    split = split.lower()
+    data_dir = Path(data_dir)
+
+    if split in {"heldout", "internal_val", "train_val"}:
+        all_samples = load_annotations(data_dir / "annotations" / "train.json")
+        _, samples = split_train_val(
+            all_samples,
+            val_ratio=config.get("val_ratio", 0.1),
+            seed=config.get("split_seed", 42),
+        )
+    else:
+        samples = load_annotations(data_dir / "annotations" / f"{split}.json")
+
     if max_examples is not None:
         samples = samples[:max_examples]
 
     dataset = VizWizCaptionDataset(
-        data_dir=Path(data_dir),
+        data_dir=data_dir,
         samples=samples,
         tokenizer=tokenizer,
         max_len=config["max_len"],
@@ -735,4 +778,5 @@ def evaluate_checkpoint(
         "metrics": metrics,
         "examples": qualitative[:50],
         "config": config,
+        "evaluated_split": split,
     }

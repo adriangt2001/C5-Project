@@ -54,9 +54,13 @@ def parse_args() -> argparse.Namespace:
     train_parser.add_argument("--decoder", type=str, default="gru")
     train_parser.add_argument("--token-level", type=str, default="char")
     train_parser.add_argument("--use-attention", action="store_true")
-    train_parser.add_argument("--epochs", type=int, default=5)
-    train_parser.add_argument("--batch-size", type=int, default=32)
+    train_parser.add_argument("--epochs", type=int, default=30)
+    train_parser.add_argument("--batch-size", type=int, default=64)
     train_parser.add_argument("--lr", type=float, default=1e-3)
+    train_parser.add_argument("--lr-decay-factor", type=float, default=0.5)
+    train_parser.add_argument("--lr-decay-patience", type=int, default=1)
+    train_parser.add_argument("--min-lr", type=float, default=1e-6)
+    train_parser.add_argument("--early-stopping-patience", type=int, default=5)
     train_parser.add_argument("--max-len", type=int, default=40)
     train_parser.add_argument("--vocab-size", type=int, default=5000)
     train_parser.add_argument("--min-freq", type=int, default=2)
@@ -73,7 +77,7 @@ def parse_args() -> argparse.Namespace:
     eval_parser = subparsers.add_parser("eval", help="Evaluate a saved checkpoint")
     eval_parser.add_argument("--data-dir", type=Path, default=Path("Week3/data"))
     eval_parser.add_argument("--checkpoint", type=Path, required=True)
-    eval_parser.add_argument("--split", type=str, default="val")
+    eval_parser.add_argument("--split", type=str, default="heldout")
     eval_parser.add_argument("--batch-size", type=int, default=32)
     eval_parser.add_argument("--num-workers", type=int, default=0)
     eval_parser.add_argument("--max-examples", type=int)
@@ -96,6 +100,10 @@ def main() -> int:
             epochs=args.epochs,
             batch_size=args.batch_size,
             lr=args.lr,
+            lr_decay_factor=args.lr_decay_factor,
+            lr_decay_patience=args.lr_decay_patience,
+            min_lr=args.min_lr,
+            early_stopping_patience=args.early_stopping_patience,
             max_len=args.max_len,
             vocab_size=args.vocab_size,
             min_freq=args.min_freq,
