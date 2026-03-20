@@ -668,8 +668,21 @@ def train(
     )
 
     history: List[Dict[str, object]] = []
-    best_score = -1.0
-    best_path = output_dir / "best.pt"
+
+    best_score_sum = -1.0
+    best_score_bleu1 = -1.0
+    best_score_bleu2 = -1.0
+    best_score_rougeL = -1.0
+    best_score_meteor = -1.0
+
+    # paths models weights per metric
+
+    best_path_sum = output_dir / "best_sum.pt"
+    best_path_bleu1 = output_dir / "best_bleu1.pt"
+    best_path_bleu2 = output_dir / "best_bleu2.pt"
+    best_path_rougeL = output_dir / "best_rougeL.pt"
+    best_path_meteor = output_dir / "best_meteor.pt"
+
     epochs_without_improvement = 0
     scheduled_sampling_max_ratio = min(max(scheduled_sampling_max_ratio, 0.0), 1.0)
 
@@ -707,9 +720,10 @@ def train(
         }
         history.append(epoch_record)
 
-        score = metrics["meteor"] + metrics["rougeL"] + metrics["bleu2"]
-        if score > best_score:
-            best_score = score
+        score_sum = metrics["meteor"] + metrics["rougeL"] + metrics["bleu2"] + metrics["bleu1"]
+
+        if score_sum > best_score_sum:
+            best_score_sum = score_sum
             epochs_without_improvement = 0
             torch.save(
                 {
@@ -727,15 +741,115 @@ def train(
                         "embedding_dim": embedding_dim,
                     },
                 },
-                best_path,
+                best_path_sum,
             )
-            (output_dir / "val_predictions.json").write_text(
+            (output_dir / "val_predictions_best_sum.json").write_text(
                 json.dumps(qualitative[:50], indent=2)
             )
         else:
             epochs_without_improvement += 1
 
-        scheduler.step(score)
+        if best_score_bleu1 > best_score_bleu1:
+            best_score_bleu1 = metrics["bleu1"]
+            epochs_without_improvement = 0
+            torch.save(
+                {
+                    "model_state": model.state_dict(),
+                    "config": {
+                        "encoder_name": encoder_name,
+                        "decoder_type": decoder_type,
+                        "token_level": token_level,
+                        "use_attention": use_attention,
+                        "scheduled_sampling": scheduled_sampling,
+                        "scheduled_sampling_max_ratio": scheduled_sampling_max_ratio,
+                        "max_len": max_len,
+                        "vocab_size": tokenizer.vocab_size_actual,
+                        "hidden_dim": hidden_dim,
+                        "embedding_dim": embedding_dim,
+                    },
+                },
+                best_path_sum,
+            )
+            (output_dir / "val_predictions_best_bleu1.json").write_text(
+                json.dumps(qualitative[:50], indent=2)
+            )
+
+        if best_score_bleu2 > best_score_bleu2:
+            best_score_bleu2 = metrics["bleu2"]
+            epochs_without_improvement = 0
+            torch.save(
+                {
+                    "model_state": model.state_dict(),
+                    "config": {
+                        "encoder_name": encoder_name,
+                        "decoder_type": decoder_type,
+                        "token_level": token_level,
+                        "use_attention": use_attention,
+                        "scheduled_sampling": scheduled_sampling,
+                        "scheduled_sampling_max_ratio": scheduled_sampling_max_ratio,
+                        "max_len": max_len,
+                        "vocab_size": tokenizer.vocab_size_actual,
+                        "hidden_dim": hidden_dim,
+                        "embedding_dim": embedding_dim,
+                    },
+                },
+                best_path_bleu2,
+            )
+            (output_dir / "val_predictions_best_bleu2.json").write_text(
+                json.dumps(qualitative[:50], indent=2)
+            )
+
+        if best_score_rougeL > best_score_rougeL:   
+            best_score_rougeL = metrics["rougeL"]
+            epochs_without_improvement = 0
+            torch.save(
+                {
+                    "model_state": model.state_dict(),
+                    "config": {
+                        "encoder_name": encoder_name,
+                        "decoder_type": decoder_type,
+                        "token_level": token_level,
+                        "use_attention": use_attention,
+                        "scheduled_sampling": scheduled_sampling,
+                        "scheduled_sampling_max_ratio": scheduled_sampling_max_ratio,
+                        "max_len": max_len,
+                        "vocab_size": tokenizer.vocab_size_actual,
+                        "hidden_dim": hidden_dim,
+                        "embedding_dim": embedding_dim,
+                    },
+                },
+                best_path_rougeL,
+            )
+            (output_dir / "val_predictions_best_rougeL.json").write_text(
+                json.dumps(qualitative[:50], indent=2)
+            )
+
+        if best_score_meteor > best_score_meteor:
+            best_score_meteor = metrics["meteor"]
+            epochs_without_improvement = 0
+            torch.save(
+                {
+                    "model_state": model.state_dict(),
+                    "config": {
+                        "encoder_name": encoder_name,
+                        "decoder_type": decoder_type,
+                        "token_level": token_level,
+                        "use_attention": use_attention,
+                        "scheduled_sampling": scheduled_sampling,
+                        "scheduled_sampling_max_ratio": scheduled_sampling_max_ratio,
+                        "max_len": max_len,
+                        "vocab_size": tokenizer.vocab_size_actual,
+                        "hidden_dim": hidden_dim,
+                        "embedding_dim": embedding_dim,
+                    },
+                },
+                best_path_meteor,
+            )
+            (output_dir / "val_predictions_best_meteor.json").write_text(
+                json.dumps(qualitative[:50], indent=2)
+            )
+
+        scheduler.step(score_sum)
 
         print(
             f"epoch={epoch} "

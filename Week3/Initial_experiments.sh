@@ -131,31 +131,33 @@ run_experiment() {
     "${EVAL_ARGS[@]}"
 }
 
+# Baseline
 run_experiment "baseline_resnet18_gru_char_scheduled_sampling" "char" "$MAX_LEN_CHAR" \
   --encoder resnet18 \
   --decoder gru
 
-run_experiment "encoder_resnet34_gru_char_scheduled_sampling" "char" "$MAX_LEN_CHAR" \
-  --encoder resnet34 \
+# Encoder variations
+run_experiment "encoder_resnet50_gru_char_scheduled_sampling" "char" "$MAX_LEN_CHAR" \
+  --encoder resnet50 \
   --decoder gru
 
+run_experiment "encoder_vgg19_gru_char_scheduled_sampling" "char" "$MAX_LEN_CHAR" \
+  --encoder vgg19\
+  --decoder gru
+
+# Decoder variations
 run_experiment "decoder_resnet18_lstm_char_scheduled_sampling" "char" "$MAX_LEN_CHAR" \
   --encoder resnet18 \
   --decoder lstm
 
+# Tokenization variations
 run_experiment "token_resnet18_gru_word_scheduled_sampling" "word" "$MAX_LEN_WORD" \
   --encoder resnet18 \
   --decoder gru
 
-run_experiment "attention_resnet18_gru_char_scheduled_sampling" "char" "$MAX_LEN_CHAR" \
+run_experiment "token_resnet18_gru_word_scheduled_sampling" "subword" "$MAX_LEN_WORD" \
   --encoder resnet18 \
-  --decoder gru \
-  --use-attention
-
-run_experiment "combined_resnet34_lstm_word_attention_scheduled_sampling" "word" "$MAX_LEN_WORD" \
-  --encoder resnet34 \
-  --decoder lstm \
-  --use-attention
+  --decoder gru
 
 SUMMARY_PATH="$RUNS_DIR/experiment_summary.tsv"
 export RUNS_DIR SUMMARY_PATH
