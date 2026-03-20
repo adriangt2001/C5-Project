@@ -54,6 +54,8 @@ def parse_args() -> argparse.Namespace:
     train_parser.add_argument("--decoder", type=str, default="gru")
     train_parser.add_argument("--token-level", type=str, default="char")
     train_parser.add_argument("--use-attention", action="store_true")
+    train_parser.add_argument("--scheduled-sampling", action="store_true")
+    train_parser.add_argument("--scheduled-sampling-max-ratio", type=float, default=0.25)
     train_parser.add_argument("--epochs", type=int, default=30)
     train_parser.add_argument("--batch-size", type=int, default=64)
     train_parser.add_argument("--lr", type=float, default=1e-3)
@@ -97,6 +99,8 @@ def main() -> int:
             decoder_type=args.decoder,
             token_level=args.token_level,
             use_attention=args.use_attention,
+            scheduled_sampling=args.scheduled_sampling,
+            scheduled_sampling_max_ratio=args.scheduled_sampling_max_ratio,
             epochs=args.epochs,
             batch_size=args.batch_size,
             lr=args.lr,

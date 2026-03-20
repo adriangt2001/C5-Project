@@ -171,14 +171,34 @@ class Decoder(nn.Module):
         spatial_feats: torch.Tensor,
         global_feat: torch.Tensor,
         input_ids: torch.Tensor,
+        scheduled_sampling_ratio: float = 0.0,
     ) -> torch.Tensor:
         hidden, cell = self.init_hidden(global_feat)
         logits_per_step: List[torch.Tensor] = []
+        step_input_ids = input_ids[:, 0]
         for step in range(input_ids.size(1)):
             logits, hidden, cell = self._step(
-                input_ids[:, step], spatial_feats, global_feat, hidden, cell
+                step_input_ids, spatial_feats, global_feat, hidden, cell
             )
             logits_per_step.append(logits.unsqueeze(1))
+
+            if step + 1 >= input_ids.size(1):
+                continue
+
+            step_input_ids = input_ids[:, step + 1]
+            if scheduled_sampling_ratio <= 0.0:
+                continue
+
+            use_model_predictions = (
+                torch.rand(input_ids.size(0), device=input_ids.device)
+                < scheduled_sampling_ratio
+            )
+            predicted_ids = logits.argmax(dim=-1).detach()
+            step_input_ids = torch.where(
+                use_model_predictions,
+                predicted_ids,
+                step_input_ids,
+            )
         return torch.cat(logits_per_step, dim=1)
     
     # generar captions
@@ -229,9 +249,19 @@ class CaptioningModel(nn.Module):
         self.encoder = encoder
         self.decoder = decoder
 
-    def forward(self, images: torch.Tensor, input_ids: torch.Tensor) -> torch.Tensor:
+    def forward(
+        self,
+        images: torch.Tensor,
+        input_ids: torch.Tensor,
+        scheduled_sampling_ratio: float = 0.0,
+    ) -> torch.Tensor:
         spatial_feats, global_feat = self.encoder(images)
-        return self.decoder(spatial_feats, global_feat, input_ids)
+        return self.decoder(
+            spatial_feats,
+            global_feat,
+            input_ids,
+            scheduled_sampling_ratio=scheduled_sampling_ratio,
+        )
 
     @torch.no_grad()
     def generate(
@@ -426,6 +456,7 @@ def _run_epoch(
     optimizer: Optional[torch.optim.Optimizer],
     criterion: nn.Module,
     device: torch.device,
+    scheduled_sampling_ratio: float = 0.0,
 ) -> float:
     train_mode = optimizer is not None
     model.train(train_mode)
@@ -436,7 +467,11 @@ def _run_epoch(
         input_ids = batch["input_ids"].to(device)
         target_ids = batch["target_ids"].to(device)
 
-        logits = model(images, input_ids)
+        logits = model(
+            images,
+            input_ids,
+            scheduled_sampling_ratio=scheduled_sampling_ratio if train_mode else 0.0,
+        )
         loss = criterion(
             logits.reshape(-1, logits.size(-1)),
             target_ids.reshape(-1),
@@ -501,6 +536,8 @@ def train(
     decoder_type: str = "gru",
     token_level: str = "char",
     use_attention: bool = False,
+    scheduled_sampling: bool = False,
+    scheduled_sampling_max_ratio: float = 0.25,
     epochs: int = 5,
     batch_size: int = 32,
     lr: float = 1e-3,
@@ -590,6 +627,36 @@ def train(
         trainable_backbone=trainable_backbone,
     ).to(device)
 
+    total_params = sum(parameter.numel() for parameter in model.parameters())
+    trainable_params = sum(
+        parameter.numel() for parameter in model.parameters() if parameter.requires_grad
+    )
+    encoder_trainable_params = sum(
+        parameter.numel()
+        for parameter in model.encoder.parameters()
+        if parameter.requires_grad
+    )
+    print(
+        "model_params "
+        f"total={total_params} "
+        f"trainable={trainable_params} "
+        f"encoder_trainable={encoder_trainable_params}"
+    )
+    print(
+        "training_config "
+        f"encoder={encoder_name} "
+        f"decoder={decoder_type} "
+        f"token_level={token_level} "
+        f"embedding_dim={embedding_dim} "
+        f"hidden_dim={hidden_dim} "
+        f"use_attention={use_attention} "
+        f"pretrained_encoder={pretrained_encoder} "
+        f"trainable_backbone={trainable_backbone} "
+        f"scheduled_sampling={scheduled_sampling} "
+        f"scheduled_sampling_max_ratio={scheduled_sampling_max_ratio}"
+    )
+    print(model)
+
     criterion = nn.CrossEntropyLoss(ignore_index=tokenizer.pad_id)
     optimizer = torch.optim.Adam(model.parameters(), lr=lr)
     scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
@@ -604,9 +671,23 @@ def train(
     best_score = -1.0
     best_path = output_dir / "best.pt"
     epochs_without_improvement = 0
+    scheduled_sampling_max_ratio = min(max(scheduled_sampling_max_ratio, 0.0), 1.0)
 
     for epoch in range(1, epochs + 1):
-        train_loss = _run_epoch(model, train_loader, optimizer, criterion, device)
+        scheduled_sampling_ratio = 0.0
+        if scheduled_sampling and epochs > 1:
+            scheduled_sampling_ratio = scheduled_sampling_max_ratio * ((epoch - 1) / (epochs - 1))
+        elif scheduled_sampling:
+            scheduled_sampling_ratio = scheduled_sampling_max_ratio
+
+        train_loss = _run_epoch(
+            model,
+            train_loader,
+            optimizer,
+            criterion,
+            device,
+            scheduled_sampling_ratio=scheduled_sampling_ratio,
+        )
         val_loss = _run_epoch(model, val_loader, None, criterion, device)
         predictions, references, qualitative = _predict(
             model=model,
@@ -621,6 +702,7 @@ def train(
             "train_loss": train_loss,
             "val_loss": val_loss,
             "lr": optimizer.param_groups[0]["lr"],
+            "scheduled_sampling_ratio": scheduled_sampling_ratio,
             **metrics,
         }
         history.append(epoch_record)
@@ -637,6 +719,8 @@ def train(
                         "decoder_type": decoder_type,
                         "token_level": token_level,
                         "use_attention": use_attention,
+                        "scheduled_sampling": scheduled_sampling,
+                        "scheduled_sampling_max_ratio": scheduled_sampling_max_ratio,
                         "max_len": max_len,
                         "vocab_size": tokenizer.vocab_size_actual,
                         "hidden_dim": hidden_dim,
@@ -658,6 +742,7 @@ def train(
             f"train_loss={train_loss:.4f} "
             f"val_loss={val_loss:.4f} "
             f"lr={optimizer.param_groups[0]['lr']:.6f} "
+            f"ss_ratio={scheduled_sampling_ratio:.4f} "
             f"BLEU1={metrics['bleu1']:.4f} "
             f"BLEU2={metrics['bleu2']:.4f} "
             f"ROUGE-L={metrics['rougeL']:.4f} "
@@ -679,6 +764,8 @@ def train(
             "decoder_type": decoder_type,
             "token_level": token_level,
             "use_attention": use_attention,
+            "scheduled_sampling": scheduled_sampling,
+            "scheduled_sampling_max_ratio": scheduled_sampling_max_ratio,
             "epochs": epochs,
             "batch_size": batch_size,
             "lr": lr,

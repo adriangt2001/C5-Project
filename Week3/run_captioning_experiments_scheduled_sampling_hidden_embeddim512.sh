@@ -5,21 +5,21 @@ set -euo pipefail
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 PROJECT_DIR="$ROOT_DIR/Week3"
 DATA_DIR="${DATA_DIR:-$PROJECT_DIR/data}"
-RUNS_DIR="${RUNS_DIR:-$PROJECT_DIR/runs}"
+RUNS_DIR="${RUNS_DIR:-$PROJECT_DIR/runs_scheduled_sampling}"
 PYTHON_BIN="${PYTHON_BIN:-python}"
 
-EPOCHS="${EPOCHS:-15}"
+EPOCHS="${EPOCHS:-20}"
 BATCH_SIZE="${BATCH_SIZE:-32}"
-LR="${LR:-5e-4}"
+LR="${LR:-3e-4}"
 LR_DECAY_FACTOR="${LR_DECAY_FACTOR:-0.5}"
-LR_DECAY_PATIENCE="${LR_DECAY_PATIENCE:-2}"
+LR_DECAY_PATIENCE="${LR_DECAY_PATIENCE:-3}"
 MIN_LR="${MIN_LR:-1e-6}"
-EARLY_STOPPING_PATIENCE="${EARLY_STOPPING_PATIENCE:-3}"
+EARLY_STOPPING_PATIENCE="${EARLY_STOPPING_PATIENCE:-5}"
 MAX_LEN_CHAR="${MAX_LEN_CHAR:-100}"
 MAX_LEN_WORD="${MAX_LEN_WORD:-40}"
 VOCAB_SIZE="${VOCAB_SIZE:-5000}"
 MIN_FREQ="${MIN_FREQ:-2}"
-EMBEDDING_DIM="${EMBEDDING_DIM:-256}"
+EMBEDDING_DIM="${EMBEDDING_DIM:-512}"
 HIDDEN_DIM="${HIDDEN_DIM:-512}"
 NUM_WORKERS="${NUM_WORKERS:-2}"
 VAL_RATIO="${VAL_RATIO:-0.1}"
@@ -29,6 +29,7 @@ LIMIT_VAL="${LIMIT_VAL:-}"
 MAX_EVAL_EXAMPLES="${MAX_EVAL_EXAMPLES:-}"
 EVAL_SPLIT="${EVAL_SPLIT:-heldout}"
 TRAINABLE_BACKBONE="${TRAINABLE_BACKBONE:-0}"
+SCHEDULED_SAMPLING_MAX_RATIO="${SCHEDULED_SAMPLING_MAX_RATIO:-0.35}"
 
 mkdir -p "$RUNS_DIR"
 
@@ -52,6 +53,8 @@ echo "  MAX_LEN_WORD=$MAX_LEN_WORD"
 echo "  EVAL_SPLIT=$EVAL_SPLIT"
 echo "  PRETRAINED_ENCODER=1 (forced)"
 echo "  TRAINABLE_BACKBONE=$TRAINABLE_BACKBONE"
+echo "  SCHEDULED_SAMPLING=1 (forced)"
+echo "  SCHEDULED_SAMPLING_MAX_RATIO=$SCHEDULED_SAMPLING_MAX_RATIO"
 echo "  VAL_RATIO=$VAL_RATIO"
 echo "  SPLIT_SEED=$SPLIT_SEED"
 
@@ -72,6 +75,8 @@ COMMON_ARGS=(
   --val-ratio "$VAL_RATIO"
   --split-seed "$SPLIT_SEED"
   --pretrained-encoder
+  --scheduled-sampling
+  --scheduled-sampling-max-ratio "$SCHEDULED_SAMPLING_MAX_RATIO"
 )
 
 if [[ -n "$LIMIT_TRAIN" ]]; then
@@ -126,28 +131,28 @@ run_experiment() {
     "${EVAL_ARGS[@]}"
 }
 
-run_experiment "baseline_resnet18_gru_char" "char" "$MAX_LEN_CHAR" \
+run_experiment "baseline_resnet18_gru_char_scheduled_sampling" "char" "$MAX_LEN_CHAR" \
   --encoder resnet18 \
   --decoder gru
 
-run_experiment "encoder_resnet34_gru_char" "char" "$MAX_LEN_CHAR" \
+run_experiment "encoder_resnet34_gru_char_scheduled_sampling" "char" "$MAX_LEN_CHAR" \
   --encoder resnet34 \
   --decoder gru
 
-run_experiment "decoder_resnet18_lstm_char" "char" "$MAX_LEN_CHAR" \
+run_experiment "decoder_resnet18_lstm_char_scheduled_sampling" "char" "$MAX_LEN_CHAR" \
   --encoder resnet18 \
   --decoder lstm
 
-run_experiment "token_resnet18_gru_word" "word" "$MAX_LEN_WORD" \
+run_experiment "token_resnet18_gru_word_scheduled_sampling" "word" "$MAX_LEN_WORD" \
   --encoder resnet18 \
   --decoder gru
 
-run_experiment "attention_resnet18_gru_char" "char" "$MAX_LEN_CHAR" \
+run_experiment "attention_resnet18_gru_char_scheduled_sampling" "char" "$MAX_LEN_CHAR" \
   --encoder resnet18 \
   --decoder gru \
   --use-attention
 
-run_experiment "combined_resnet34_lstm_word_attention" "word" "$MAX_LEN_WORD" \
+run_experiment "combined_resnet34_lstm_word_attention_scheduled_sampling" "word" "$MAX_LEN_WORD" \
   --encoder resnet34 \
   --decoder lstm \
   --use-attention
@@ -186,6 +191,8 @@ for run_dir in sorted(path for path in runs_dir.iterdir() if path.is_dir()):
             config.get("token_level", ""),
             str(config.get("use_attention", False)),
             str(config.get("pretrained_encoder", False)),
+            str(config.get("scheduled_sampling", False)),
+            str(config.get("scheduled_sampling_max_ratio", "")),
             str(config.get("lr", "")),
             str(config.get("lr_decay_factor", "")),
             str(config.get("lr_decay_patience", "")),
@@ -205,6 +212,8 @@ header = [
     "token_level",
     "attention",
     "pretrained_encoder",
+    "scheduled_sampling",
+    "scheduled_sampling_max_ratio",
     "lr",
     "lr_decay_factor",
     "lr_decay_patience",
