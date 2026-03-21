@@ -2,11 +2,15 @@
 
 set -euo pipefail
 
+CUDA_DEVICE_ORDER=PCI_BUS_ID
+CUDA_VISIBLE_DEVICES=2
+
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 PROJECT_DIR="$ROOT_DIR/Week3"
-DATA_DIR="${DATA_DIR:-$PROJECT_DIR/data}"
+DATA_DIR="${DATA_DIR:-$PROJECT_DIR/dataset}"
 RUNS_DIR="${RUNS_DIR:-$PROJECT_DIR/runs_scheduled_sampling}"
 PYTHON_BIN="${PYTHON_BIN:-python}"
+PYTHON_BIN=".venv/bin/python"
 
 EPOCHS="${EPOCHS:-20}"
 BATCH_SIZE="${BATCH_SIZE:-32}"
@@ -53,7 +57,7 @@ echo "  MAX_LEN_WORD=$MAX_LEN_WORD"
 echo "  EVAL_SPLIT=$EVAL_SPLIT"
 echo "  PRETRAINED_ENCODER=1 (forced)"
 echo "  TRAINABLE_BACKBONE=$TRAINABLE_BACKBONE"
-echo "  SCHEDULED_SAMPLING=1 (forced)"
+echo "  SCHEDULED_SAMPLING=0 (forced)"
 echo "  SCHEDULED_SAMPLING_MAX_RATIO=$SCHEDULED_SAMPLING_MAX_RATIO"
 echo "  VAL_RATIO=$VAL_RATIO"
 echo "  SPLIT_SEED=$SPLIT_SEED"
@@ -75,7 +79,6 @@ COMMON_ARGS=(
   --val-ratio "$VAL_RATIO"
   --split-seed "$SPLIT_SEED"
   --pretrained-encoder
-  --scheduled-sampling
   --scheduled-sampling-max-ratio "$SCHEDULED_SAMPLING_MAX_RATIO"
 )
 
@@ -126,15 +129,26 @@ run_experiment() {
 
   echo "Evaluating best checkpoint on internal held-out split for: $name"
   "$PYTHON_BIN" "$PROJECT_DIR/main.py" eval \
-    --checkpoint "$output_dir/best.pt" \
+    --checkpoint "$output_dir/best_sum.pt" \
     --output-json "$output_dir/eval_${EVAL_SPLIT}.json" \
     "${EVAL_ARGS[@]}"
 }
 
 # Baseline
-run_experiment "baseline_resnet18_gru_char_scheduled_sampling" "char" "$MAX_LEN_CHAR" \
-  --encoder resnet18 \
-  --decoder gru
+# run_experiment "baseline_resnet18_gru_char_scheduled_sampling_sgd" "char" "$MAX_LEN_CHAR" \
+#   --encoder resnet18 \
+#   --decoder gru \
+#   --opt_name sgd
+
+# run_experiment "baseline_resnet18_gru_char_scheduled_sampling_adam" "char" "$MAX_LEN_CHAR" \
+#   --encoder resnet18 \
+#   --decoder gru \
+#   --opt_name adam
+
+# run_experiment "baseline_resnet18_gru_char_scheduled_sampling_adamw" "char" "$MAX_LEN_CHAR" \
+#   --encoder resnet18 \
+#   --decoder gru \
+#   --opt_name adamw
 
 # Encoder variations
 run_experiment "encoder_resnet50_gru_char_scheduled_sampling" "char" "$MAX_LEN_CHAR" \
@@ -158,6 +172,8 @@ run_experiment "token_resnet18_gru_word_scheduled_sampling" "word" "$MAX_LEN_WOR
 run_experiment "token_resnet18_gru_word_scheduled_sampling" "subword" "$MAX_LEN_WORD" \
   --encoder resnet18 \
   --decoder gru
+
+echo Validation done!
 
 SUMMARY_PATH="$RUNS_DIR/experiment_summary.tsv"
 export RUNS_DIR SUMMARY_PATH

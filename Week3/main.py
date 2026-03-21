@@ -48,7 +48,7 @@ def parse_args() -> argparse.Namespace:
     subparsers = parser.add_subparsers(dest="command", required=True)
 
     train_parser = subparsers.add_parser("train", help="Train a captioning model")
-    train_parser.add_argument("--data-dir", type=Path, default=Path("Week3/data")) # jo ho tinc així canvieu el path
+    train_parser.add_argument("--data-dir", type=Path, default=Path("Week3/dataset")) # jo ho tinc així canvieu el path
     train_parser.add_argument("--output-dir", type=Path, required=True)
     train_parser.add_argument("--encoder", type=str, default="resnet18")
     train_parser.add_argument("--decoder", type=str, default="gru")
@@ -56,6 +56,7 @@ def parse_args() -> argparse.Namespace:
     train_parser.add_argument("--use-attention", action="store_true")
     train_parser.add_argument("--scheduled-sampling", action="store_true")
     train_parser.add_argument("--scheduled-sampling-max-ratio", type=float, default=0.25)
+    train_parser.add_argument("--opt_name", type=str, default="adamw")
     train_parser.add_argument("--epochs", type=int, default=30)
     train_parser.add_argument("--batch-size", type=int, default=64)
     train_parser.add_argument("--lr", type=float, default=1e-3)
@@ -66,7 +67,7 @@ def parse_args() -> argparse.Namespace:
     train_parser.add_argument("--max-len", type=int, default=40)
     train_parser.add_argument("--vocab-size", type=int, default=5000)
     train_parser.add_argument("--min-freq", type=int, default=2)
-    train_parser.add_argument("--embedding-dim", type=int, default=256)
+    train_parser.add_argument("--embedding-dim", type=int, default=512)
     train_parser.add_argument("--hidden-dim", type=int, default=512)
     train_parser.add_argument("--pretrained-encoder", action="store_true")
     train_parser.add_argument("--trainable-backbone", action="store_true")
@@ -101,6 +102,7 @@ def main() -> int:
             use_attention=args.use_attention,
             scheduled_sampling=args.scheduled_sampling,
             scheduled_sampling_max_ratio=args.scheduled_sampling_max_ratio,
+            opt_name=args.opt_name,
             epochs=args.epochs,
             batch_size=args.batch_size,
             lr=args.lr,
