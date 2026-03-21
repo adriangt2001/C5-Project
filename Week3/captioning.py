@@ -13,6 +13,11 @@ from torchvision import models
 from tqdm import tqdm
 
 try:
+    from transformers import ResNetModel
+except ImportError:
+    ResNetModel = None
+
+try:
     from .dataset import (
         SimpleTokenizer,
         VizWizCaptionDataset,
@@ -29,7 +34,7 @@ except ImportError:
         split_train_val,
     )
 
-# nom --> model 
+# nom --> model
 def _get_torchvision_model(name: str, pretrained: bool = False) -> nn.Module:
     name = name.lower()
     weights = None
@@ -55,6 +60,25 @@ def _get_torchvision_model(name: str, pretrained: bool = False) -> nn.Module:
         return models.vgg19(weights=weights)
     raise ValueError(f"Unsupported encoder: {name}")
 
+
+_HF_RESNET_MODEL_IDS = {
+    "hf_resnet18": "microsoft/resnet-18",
+    "hf_resnet50": "microsoft/resnet-50",
+}
+
+
+def _is_hf_resnet(name: str) -> bool:
+    return name.lower() in _HF_RESNET_MODEL_IDS
+
+
+def _get_hf_resnet_model(name: str, pretrained: bool) -> nn.Module:
+    model_id = _HF_RESNET_MODEL_IDS[name.lower()]
+    if ResNetModel is None:
+        raise ImportError("transformers")
+    if not pretrained:
+        raise ValueError("--pretrained-encoder")
+    return ResNetModel.from_pretrained(model_id)
+
 # definir encoder 
 class Encoder(nn.Module):
     def __init__(
@@ -66,27 +90,50 @@ class Encoder(nn.Module):
     ) -> None:
         super().__init__()
         self.name = name.lower()
-        backbone = _get_torchvision_model(self.name, pretrained=pretrained) # passar nom del model, dir si pretrained o no
+        self.is_hf_resnet = _is_hf_resnet(self.name)
+        backbone_dim = hidden_dim
 
-        if self.name.startswith("resnet"):
-            self.feature_extractor = nn.Sequential(*list(backbone.children())[:-2])
-            backbone_dim = 512 if self.name in {"resnet18", "resnet34"} else 2048
+        if self.is_hf_resnet:
+            print(f"encoder source: huggingface ({self.name})")
+            self.feature_extractor = _get_hf_resnet_model(
+                self.name,
+                pretrained=pretrained,
+            )
+            backbone_dim = 512 if self.name == "hf_resnet18" else 2048
         else:
-            self.feature_extractor = backbone.features
-            backbone_dim = 512
+            print(f"encoder source: torchvision ({self.name})")
+            backbone = _get_torchvision_model(self.name, pretrained=pretrained) # passar nom del model, dir si pretrained o no
 
-        self.project = nn.Conv2d(backbone_dim, hidden_dim, kernel_size=1)
+            if self.name.startswith("resnet"):
+                self.feature_extractor = nn.Sequential(*list(backbone.children())[:-2])
+                backbone_dim = 512 if self.name in {"resnet18", "resnet34"} else 2048
+            else:
+                self.feature_extractor = backbone.features
+                backbone_dim = 512
+
+        if self.is_hf_resnet:
+            self.project = nn.Conv2d(backbone_dim, hidden_dim, kernel_size=1)
+        else:
+            self.project = nn.Conv2d(backbone_dim, hidden_dim, kernel_size=1)
         self.avg_pool = nn.AdaptiveAvgPool2d((1, 1))
 
         for parameter in self.feature_extractor.parameters():
             parameter.requires_grad = trainable_backbone
 
-    # forwarad encoder 
+    # forwarad encoder
     def forward(self, images: torch.Tensor) -> Tuple[torch.Tensor, torch.Tensor]:
-        feats = self.feature_extractor(images)
+        if self.is_hf_resnet:
+            outputs = self.feature_extractor(images)
+            feats = outputs.last_hidden_state
+            global_feat = outputs.pooler_output.flatten(1)
+        else:
+            feats = self.feature_extractor(images)
+            global_feat = self.avg_pool(self.project(feats)).flatten(1)
+
         feats = self.project(feats)
         spatial = feats.flatten(2).transpose(1, 2)
-        global_feat = self.avg_pool(feats).flatten(1)
+        if self.is_hf_resnet:
+            global_feat = self.project(outputs.pooler_output).flatten(1)
         return spatial, global_feat
 
 # prova attention <3

@@ -133,12 +133,13 @@ run_experiment() {
 
 # Baseline
 run_experiment "baseline_resnet18_gru_char_scheduled_sampling" "char" "$MAX_LEN_CHAR" \
-  --encoder resnet18 \
+  --encoder hf_resnet18 \
   --decoder gru
 
 # Encoder variations
-run_experiment "encoder_resnet50_gru_char_scheduled_sampling" "char" "$MAX_LEN_CHAR" \
-  --encoder resnet50 \
+
+run_experiment "encoder_hf_resnet50_gru_char_scheduled_sampling" "char" "$MAX_LEN_CHAR" \
+  --encoder hf_resnet50 \
   --decoder gru
 
 run_experiment "encoder_vgg19_gru_char_scheduled_sampling" "char" "$MAX_LEN_CHAR" \

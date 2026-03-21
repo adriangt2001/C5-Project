@@ -14,7 +14,7 @@ from torch.utils.data import Dataset
 from torchvision import transforms
 
 
-_SPECIAL_TOKENS = ["<PAD>", "<SOS>", "<EOS>", "<UNK>"] # PAD: padding, SOS: start of sequence, EOS: end of sequence, UNK: unknown token
+_SPECIAL_TOKENS = ["<PAD>", "<SOS>", "<EOS>"]  # PAD: padding, SOS: start of sequence, EOS: end of sequence
 _WORD_RE = re.compile(r"\w+|[^\w\s]") # regex per tokenize words and punctuation
 
 # tret del github de les diapos
@@ -54,10 +54,6 @@ class SimpleTokenizer:
     @property
     def eos_id(self) -> int:
         return self.token_to_id["<EOS>"]
-
-    @property
-    def unk_id(self) -> int:
-        return self.token_to_id["<UNK>"]
 
     @property
     def vocab_size_actual(self) -> int:
@@ -203,7 +199,9 @@ class SimpleTokenizer:
     def encode(self, text: str, max_len: int) -> List[int]:
         token_ids = [self.sos_id]
         for token in self.tokenize(text):
-            token_ids.append(self.token_to_id.get(token, self.unk_id))
+            token_id = self.token_to_id.get(token)
+            if token_id is not None:
+                token_ids.append(token_id)
         token_ids.append(self.eos_id)
         token_ids = token_ids[:max_len]
         if len(token_ids) < max_len:
