@@ -70,7 +70,6 @@ _HF_RESNET_MODEL_IDS = {
 def _is_hf_resnet(name: str) -> bool:
     return name.lower() in _HF_RESNET_MODEL_IDS
 
-
 def _get_hf_resnet_model(name: str, pretrained: bool) -> nn.Module:
     model_id = _HF_RESNET_MODEL_IDS[name.lower()]
     if ResNetModel is None:
@@ -78,6 +77,15 @@ def _get_hf_resnet_model(name: str, pretrained: bool) -> nn.Module:
     if not pretrained:
         raise ValueError("--pretrained-encoder")
     return ResNetModel.from_pretrained(model_id)
+
+def _get_optimizer(opt_name: str, model: nn.Module, lr: int) -> torch.optim.Optimizer:
+    opt_name = opt_name.lower()
+    if opt_name == "sgd":
+        return torch.optim.SGD(model.parameters(), lr=lr)
+    if opt_name == "adam":
+        return  torch.optim.Adam(model.parameters(), lr=lr)
+    if opt_name == "adamw":
+        return torch.optim.AdamW(model.parameters(), lr=lr)
 
 # definir encoder 
 class Encoder(nn.Module):
@@ -160,7 +168,7 @@ class Decoder(nn.Module):
         self,
         vocab_size: int,
         hidden_dim: int = 512,
-        embedding_dim: int = 256,
+        embedding_dim: int = 512,
         decoder_type: str = "gru",
         use_attention: bool = False,
         dropout: float = 0.1,
@@ -585,6 +593,7 @@ def train(
     use_attention: bool = False,
     scheduled_sampling: bool = False,
     scheduled_sampling_max_ratio: float = 0.25,
+    opt_name: str = "adamw",
     epochs: int = 5,
     batch_size: int = 32,
     lr: float = 1e-3,
@@ -595,7 +604,7 @@ def train(
     max_len: int = 40,
     vocab_size: int = 5000,
     min_freq: int = 2,
-    embedding_dim: int = 256,
+    embedding_dim: int = 512,
     hidden_dim: int = 512,
     pretrained_encoder: bool = False,
     trainable_backbone: bool = False,
@@ -702,10 +711,10 @@ def train(
         f"scheduled_sampling={scheduled_sampling} "
         f"scheduled_sampling_max_ratio={scheduled_sampling_max_ratio}"
     )
-    print(model)
+    # print(model)
 
     criterion = nn.CrossEntropyLoss(ignore_index=tokenizer.pad_id)
-    optimizer = torch.optim.Adam(model.parameters(), lr=lr)
+    optimizer = _get_optimizer(opt_name, model, lr)
     scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
         optimizer,
         mode="max",
@@ -796,7 +805,7 @@ def train(
         else:
             epochs_without_improvement += 1
 
-        if best_score_bleu1 > best_score_bleu1:
+        if metrics["bleu1"] > best_score_bleu1:
             best_score_bleu1 = metrics["bleu1"]
             epochs_without_improvement = 0
             torch.save(
@@ -815,13 +824,13 @@ def train(
                         "embedding_dim": embedding_dim,
                     },
                 },
-                best_path_sum,
+                best_path_bleu1,
             )
             (output_dir / "val_predictions_best_bleu1.json").write_text(
                 json.dumps(qualitative[:50], indent=2)
             )
 
-        if best_score_bleu2 > best_score_bleu2:
+        if metrics["bleu2"] > best_score_bleu2:
             best_score_bleu2 = metrics["bleu2"]
             epochs_without_improvement = 0
             torch.save(
@@ -846,7 +855,7 @@ def train(
                 json.dumps(qualitative[:50], indent=2)
             )
 
-        if best_score_rougeL > best_score_rougeL:   
+        if metrics["rougeL"] > best_score_rougeL:   
             best_score_rougeL = metrics["rougeL"]
             epochs_without_improvement = 0
             torch.save(
@@ -871,7 +880,7 @@ def train(
                 json.dumps(qualitative[:50], indent=2)
             )
 
-        if best_score_meteor > best_score_meteor:
+        if metrics["meteor"] > best_score_meteor:
             best_score_meteor = metrics["meteor"]
             epochs_without_improvement = 0
             torch.save(
@@ -918,7 +927,7 @@ def train(
             break
 
     summary = {
-        "best_checkpoint": str(best_path),
+        "best_checkpoint": str(best_path_sum),
         "history": history,
         "config": {
             "encoder_name": encoder_name,
