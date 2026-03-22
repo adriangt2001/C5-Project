@@ -1,22 +1,22 @@
 #!/usr/bin/env bash
-#SBATCH -n 4 # Number of cores
-#SBATCH -N 1 # Ensure that all cores are on one machine
-#SBATCH -t 0-01:00 # Runtime in D-HH:MM
-#SBATCH -p mhigh # Partition to submit to
-#SBATCH -q masterhigh # Required to requeue other users mlow queue jobs
-                      # With this parameter only 1 job will be running in queue mhigh
-                      # By defaulf the value is masterlow if not defined
-#SBATCH --mem 4096 # 4GB memory
-#SBATCH --gres gpu:1 # Request of 1 gpu
-#SBATCH -o logs/%x_%u_%j.out # File to which STDOUT will be written
-#SBATCH -e logs/%x_%u_%j.err # File to which STDERR will be written
+# # SBATCH -n 4 # Number of cores
+# # SBATCH -N 1 # Ensure that all cores are on one machine
+# # SBATCH -t 0-01:00 # Runtime in D-HH:MM
+# # SBATCH -p mhigh # Partition to submit to
+# # SBATCH -q masterhigh # Required to requeue other users mlow queue jobs
+# #                       With this parameter only 1 job will be running in queue mhigh
+# #                       By defaulf the value is masterlow if not defined
+# # SBATCH --mem 4096 # 4GB memory
+# # SBATCH --gres gpu:1 # Request of 1 gpu
+# # SBATCH -o logs/%x_%u_%j.out # File to which STDOUT will be written
+# # SBATCH -e logs/%x_%u_%j.err # File to which STDERR will be written
 
 
 set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 PROJECT_DIR="$ROOT_DIR/Week3"
-DATA_DIR="${DATA_DIR:-$PROJECT_DIR/data}"
+DATA_DIR="${DATA_DIR:-$PROJECT_DIR/dataset}"
 RUNS_DIR="${RUNS_DIR:-$PROJECT_DIR/runs_attention}"
 PYTHON_BIN="${PYTHON_BIN:-python}"
 
@@ -31,7 +31,7 @@ MAX_LEN_CHAR="${MAX_LEN_CHAR:-100}"
 MAX_LEN_WORD="${MAX_LEN_WORD:-40}"
 VOCAB_SIZE="${VOCAB_SIZE:-5000}"
 MIN_FREQ="${MIN_FREQ:-2}"
-EMBEDDING_DIM="${EMBEDDING_DIM:-256}"
+EMBEDDING_DIM="${EMBEDDING_DIM:-512}"
 HIDDEN_DIM="${HIDDEN_DIM:-512}"
 NUM_WORKERS="${NUM_WORKERS:-2}"
 VAL_RATIO="${VAL_RATIO:-0.1}"
@@ -141,36 +141,46 @@ run_experiment() {
 
   echo "Evaluating best checkpoint on internal held-out split for: $name"
   "$PYTHON_BIN" "$PROJECT_DIR/main.py" eval \
-    --checkpoint "$output_dir/best.pt" \
+    --checkpoint "$output_dir/best_sum.pt" \
     --output-json "$output_dir/eval_${EVAL_SPLIT}.json" \
     "${EVAL_ARGS[@]}"
 }
 
 # Attention-only variants corresponding to experiments already run elsewhere
 # without attention.
+
+# Baseline
 run_experiment "baseline_resnet18_gru_char_attention" "char" "$MAX_LEN_CHAR" \
   --encoder resnet18 \
   --decoder gru \
   --use-attention
 
-run_experiment "encoder_resnet34_gru_char_attention" "char" "$MAX_LEN_CHAR" \
-  --encoder resnet34 \
+# Encoder variations
+run_experiment "encoder_resnet50_gru_char_attention" "char" "$MAX_LEN_CHAR" \
+  --encoder resnet50 \
   --decoder gru \
   --use-attention
 
-run_experiment "decoder_resnet18_lstm_char_attention" "char" "$MAX_LEN_CHAR" \
+run_experiment "decoder_vgg19_lstm_char_attention" "char" "$MAX_LEN_CHAR" \
+  --encoder vgg19 \
+  --decoder gru \
+  --use-attention
+
+# Decoder variations
+run_experiment "token_resnet18_lstm_char_attention" "char" "$MAX_LEN_WORD" \
   --encoder resnet18 \
   --decoder lstm \
   --use-attention
 
-run_experiment "token_resnet18_gru_word_attention" "word" "$MAX_LEN_WORD" \
+# Tokenization variations
+run_experiment "token_resnet18_gru_word_scheduled_sampling" "word" "$MAX_LEN_WORD" \
   --encoder resnet18 \
   --decoder gru \
   --use-attention
 
-run_experiment "combined_resnet34_lstm_word_attention" "word" "$MAX_LEN_WORD" \
-  --encoder resnet34 \
-  --decoder lstm \
+run_experiment "token_resnet18_gru_subword_scheduled_sampling" "subword" "$MAX_LEN_WORD" \
+  --encoder resnet18 \
+  --decoder gru \
   --use-attention
 
 SUMMARY_PATH="$RUNS_DIR/experiment_summary.tsv"

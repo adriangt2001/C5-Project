@@ -342,7 +342,7 @@ def build_model(
     encoder_name: str,
     decoder_type: str,
     hidden_dim: int = 512,
-    embedding_dim: int = 256,
+    embedding_dim: int = 512,
     use_attention: bool = False,
     pretrained_encoder: bool = False,
     trainable_backbone: bool = False,

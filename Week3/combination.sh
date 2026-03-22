@@ -8,7 +8,7 @@ CUDA_VISIBLE_DEVICES=2
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 PROJECT_DIR="$ROOT_DIR/Week3"
 DATA_DIR="${DATA_DIR:-$PROJECT_DIR/dataset}"
-RUNS_DIR="${RUNS_DIR:-$PROJECT_DIR/runs_scheduled_sampling}"
+RUNS_DIR="${RUNS_DIR:-$PROJECT_DIR/runs_combination}"
 PYTHON_BIN="${PYTHON_BIN:-python}"
 PYTHON_BIN=".venv/bin/python"
 
@@ -134,40 +134,12 @@ run_experiment() {
     "${EVAL_ARGS[@]}"
 }
 
-# Baseline
-run_experiment "baseline_resnet18_gru_char_scheduled_sampling" "char" "$MAX_LEN_CHAR" \
-  --encoder hf_resnet18 \
-  --decoder gru  \
-  --opt_name adamw
-
-# Encoder variations
-
-run_experiment "encoder_hf_resnet50_gru_char_scheduled_sampling" "char" "$MAX_LEN_CHAR" \
-  --encoder hf_resnet50 \
-  --decoder gru \
-  --opt_name adamw
-
-run_experiment "encoder_vgg19_gru_char_scheduled_sampling" "char" "$MAX_LEN_CHAR" \
-  --encoder vgg19\
-  --decoder gru \
-  --opt_name adamw
-
-# Decoder variations
-run_experiment "decoder_resnet18_lstm_char_scheduled_sampling" "char" "$MAX_LEN_CHAR" \
-  --encoder resnet18 \
+# All in
+run_experiment "combination_resnet50_lstm_attention_adamw" "subword" "$MAX_LEN_WORD" \
+  --encoder resnet50 \
   --decoder lstm \
-  --opt_name adamw
-
-# Tokenization variations
-run_experiment "token_resnet18_gru_word_scheduled_sampling" "word" "$MAX_LEN_WORD" \
-  --encoder resnet18 \
-  --decoder gru \
-  --opt_name adamw
-
-run_experiment "token_resnet18_gru_subword_scheduled_sampling" "subword" "$MAX_LEN_WORD" \
-  --encoder resnet18 \
-  --decoder gru \
-  --opt_name adamw
+  --opt_name adamw \
+  --use-attention
 
 echo Validation done!
 
