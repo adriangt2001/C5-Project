@@ -70,6 +70,7 @@ _HF_RESNET_MODEL_IDS = {
 def _is_hf_resnet(name: str) -> bool:
     return name.lower() in _HF_RESNET_MODEL_IDS
 
+
 def _get_hf_resnet_model(name: str, pretrained: bool) -> nn.Module:
     model_id = _HF_RESNET_MODEL_IDS[name.lower()]
     if ResNetModel is None:
@@ -77,6 +78,41 @@ def _get_hf_resnet_model(name: str, pretrained: bool) -> nn.Module:
     if not pretrained:
         raise ValueError("--pretrained-encoder")
     return ResNetModel.from_pretrained(model_id)
+
+
+def _checkpoint_config(
+    *,
+    encoder_name: str,
+    decoder_type: str,
+    token_level: str,
+    use_attention: bool,
+    scheduled_sampling: bool,
+    scheduled_sampling_max_ratio: float,
+    max_len: int,
+    vocab_size: int,
+    hidden_dim: int,
+    embedding_dim: int,
+    pretrained_encoder: bool,
+    trainable_backbone: bool,
+    val_ratio: float,
+    split_seed: int,
+) -> Dict[str, object]:
+    return {
+        "encoder_name": encoder_name,
+        "decoder_type": decoder_type,
+        "token_level": token_level,
+        "use_attention": use_attention,
+        "scheduled_sampling": scheduled_sampling,
+        "scheduled_sampling_max_ratio": scheduled_sampling_max_ratio,
+        "max_len": max_len,
+        "vocab_size": vocab_size,
+        "hidden_dim": hidden_dim,
+        "embedding_dim": embedding_dim,
+        "pretrained_encoder": pretrained_encoder,
+        "trainable_backbone": trainable_backbone,
+        "val_ratio": val_ratio,
+        "split_seed": split_seed,
+    }
 
 def _get_optimizer(opt_name: str, model: nn.Module, lr: int) -> torch.optim.Optimizer:
     opt_name = opt_name.lower()
@@ -784,18 +820,22 @@ def train(
             torch.save(
                 {
                     "model_state": model.state_dict(),
-                    "config": {
-                        "encoder_name": encoder_name,
-                        "decoder_type": decoder_type,
-                        "token_level": token_level,
-                        "use_attention": use_attention,
-                        "scheduled_sampling": scheduled_sampling,
-                        "scheduled_sampling_max_ratio": scheduled_sampling_max_ratio,
-                        "max_len": max_len,
-                        "vocab_size": tokenizer.vocab_size_actual,
-                        "hidden_dim": hidden_dim,
-                        "embedding_dim": embedding_dim,
-                    },
+                    "config": _checkpoint_config(
+                        encoder_name=encoder_name,
+                        decoder_type=decoder_type,
+                        token_level=token_level,
+                        use_attention=use_attention,
+                        scheduled_sampling=scheduled_sampling,
+                        scheduled_sampling_max_ratio=scheduled_sampling_max_ratio,
+                        max_len=max_len,
+                        vocab_size=tokenizer.vocab_size_actual,
+                        hidden_dim=hidden_dim,
+                        embedding_dim=embedding_dim,
+                        pretrained_encoder=pretrained_encoder,
+                        trainable_backbone=trainable_backbone,
+                        val_ratio=val_ratio,
+                        split_seed=split_seed,
+                    ),
                 },
                 best_path_sum,
             )
@@ -811,18 +851,22 @@ def train(
             torch.save(
                 {
                     "model_state": model.state_dict(),
-                    "config": {
-                        "encoder_name": encoder_name,
-                        "decoder_type": decoder_type,
-                        "token_level": token_level,
-                        "use_attention": use_attention,
-                        "scheduled_sampling": scheduled_sampling,
-                        "scheduled_sampling_max_ratio": scheduled_sampling_max_ratio,
-                        "max_len": max_len,
-                        "vocab_size": tokenizer.vocab_size_actual,
-                        "hidden_dim": hidden_dim,
-                        "embedding_dim": embedding_dim,
-                    },
+                    "config": _checkpoint_config(
+                        encoder_name=encoder_name,
+                        decoder_type=decoder_type,
+                        token_level=token_level,
+                        use_attention=use_attention,
+                        scheduled_sampling=scheduled_sampling,
+                        scheduled_sampling_max_ratio=scheduled_sampling_max_ratio,
+                        max_len=max_len,
+                        vocab_size=tokenizer.vocab_size_actual,
+                        hidden_dim=hidden_dim,
+                        embedding_dim=embedding_dim,
+                        pretrained_encoder=pretrained_encoder,
+                        trainable_backbone=trainable_backbone,
+                        val_ratio=val_ratio,
+                        split_seed=split_seed,
+                    ),
                 },
                 best_path_bleu1,
             )
@@ -836,18 +880,22 @@ def train(
             torch.save(
                 {
                     "model_state": model.state_dict(),
-                    "config": {
-                        "encoder_name": encoder_name,
-                        "decoder_type": decoder_type,
-                        "token_level": token_level,
-                        "use_attention": use_attention,
-                        "scheduled_sampling": scheduled_sampling,
-                        "scheduled_sampling_max_ratio": scheduled_sampling_max_ratio,
-                        "max_len": max_len,
-                        "vocab_size": tokenizer.vocab_size_actual,
-                        "hidden_dim": hidden_dim,
-                        "embedding_dim": embedding_dim,
-                    },
+                    "config": _checkpoint_config(
+                        encoder_name=encoder_name,
+                        decoder_type=decoder_type,
+                        token_level=token_level,
+                        use_attention=use_attention,
+                        scheduled_sampling=scheduled_sampling,
+                        scheduled_sampling_max_ratio=scheduled_sampling_max_ratio,
+                        max_len=max_len,
+                        vocab_size=tokenizer.vocab_size_actual,
+                        hidden_dim=hidden_dim,
+                        embedding_dim=embedding_dim,
+                        pretrained_encoder=pretrained_encoder,
+                        trainable_backbone=trainable_backbone,
+                        val_ratio=val_ratio,
+                        split_seed=split_seed,
+                    ),
                 },
                 best_path_bleu2,
             )
@@ -861,18 +909,22 @@ def train(
             torch.save(
                 {
                     "model_state": model.state_dict(),
-                    "config": {
-                        "encoder_name": encoder_name,
-                        "decoder_type": decoder_type,
-                        "token_level": token_level,
-                        "use_attention": use_attention,
-                        "scheduled_sampling": scheduled_sampling,
-                        "scheduled_sampling_max_ratio": scheduled_sampling_max_ratio,
-                        "max_len": max_len,
-                        "vocab_size": tokenizer.vocab_size_actual,
-                        "hidden_dim": hidden_dim,
-                        "embedding_dim": embedding_dim,
-                    },
+                    "config": _checkpoint_config(
+                        encoder_name=encoder_name,
+                        decoder_type=decoder_type,
+                        token_level=token_level,
+                        use_attention=use_attention,
+                        scheduled_sampling=scheduled_sampling,
+                        scheduled_sampling_max_ratio=scheduled_sampling_max_ratio,
+                        max_len=max_len,
+                        vocab_size=tokenizer.vocab_size_actual,
+                        hidden_dim=hidden_dim,
+                        embedding_dim=embedding_dim,
+                        pretrained_encoder=pretrained_encoder,
+                        trainable_backbone=trainable_backbone,
+                        val_ratio=val_ratio,
+                        split_seed=split_seed,
+                    ),
                 },
                 best_path_rougeL,
             )
@@ -886,18 +938,22 @@ def train(
             torch.save(
                 {
                     "model_state": model.state_dict(),
-                    "config": {
-                        "encoder_name": encoder_name,
-                        "decoder_type": decoder_type,
-                        "token_level": token_level,
-                        "use_attention": use_attention,
-                        "scheduled_sampling": scheduled_sampling,
-                        "scheduled_sampling_max_ratio": scheduled_sampling_max_ratio,
-                        "max_len": max_len,
-                        "vocab_size": tokenizer.vocab_size_actual,
-                        "hidden_dim": hidden_dim,
-                        "embedding_dim": embedding_dim,
-                    },
+                    "config": _checkpoint_config(
+                        encoder_name=encoder_name,
+                        decoder_type=decoder_type,
+                        token_level=token_level,
+                        use_attention=use_attention,
+                        scheduled_sampling=scheduled_sampling,
+                        scheduled_sampling_max_ratio=scheduled_sampling_max_ratio,
+                        max_len=max_len,
+                        vocab_size=tokenizer.vocab_size_actual,
+                        hidden_dim=hidden_dim,
+                        embedding_dim=embedding_dim,
+                        pretrained_encoder=pretrained_encoder,
+                        trainable_backbone=trainable_backbone,
+                        val_ratio=val_ratio,
+                        split_seed=split_seed,
+                    ),
                 },
                 best_path_meteor,
             )
@@ -963,6 +1019,9 @@ def load_checkpoint(
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     checkpoint = torch.load(checkpoint_path, map_location=device)
     config = checkpoint["config"]
+    encoder_name = config["encoder_name"]
+    pretrained_encoder = config.get("pretrained_encoder", _is_hf_resnet(encoder_name))
+    trainable_backbone = config.get("trainable_backbone", False)
 
     if tokenizer_path is None:
         tokenizer_path = checkpoint_path.parent / "tokenizer.json"
@@ -970,11 +1029,13 @@ def load_checkpoint(
 
     model = build_model(
         vocab_size=tokenizer.vocab_size_actual,
-        encoder_name=config["encoder_name"],
+        encoder_name=encoder_name,
         decoder_type=config["decoder_type"],
         hidden_dim=config["hidden_dim"],
         embedding_dim=config["embedding_dim"],
         use_attention=config["use_attention"],
+        pretrained_encoder=pretrained_encoder,
+        trainable_backbone=trainable_backbone,
     )
     model.load_state_dict(checkpoint["model_state"])
     model.to(device)
