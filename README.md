@@ -34,4 +34,10 @@ We perform inference using different types of prompts (points, text, and boundin
 
 For a detailed explanation of the tasks, implementation steps, and experiments refer to the dedicated [Week 2 README](./Week2/README.md).
 
+# Week 3: Image Captioning
 
+In Week 3 of the C5 Project, we focus on the Image Captioning task, which aims to generate descriptive sentences from images by combining computer vision and natural language processing.
+
+We implement an encoder-decoder architecture (CNN + RNN), starting from a baseline model and experimenting with different encoders, decoders, and text representations. Models are trained and evaluated on the VizWiz-Captions dataset using metrics such as BLEU, ROUGE-L, and METEOR.
+
+For a detailed explanation of the tasks, implementation steps, and experiments refer to the dedicated [Week 3 README](./Week3/README.md).
