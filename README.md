@@ -41,3 +41,13 @@ In Week 3 of the C5 Project, we focus on the Image Captioning task, which aims t
 We implement an encoder-decoder architecture (CNN + RNN), starting from a baseline model and experimenting with different encoders, decoders, and text representations. Models are trained and evaluated on the VizWiz-Captions dataset using metrics such as BLEU, ROUGE-L, and METEOR.
 
 For a detailed explanation of the tasks, implementation steps, and experiments refer to the dedicated [Week 3 README](./Week3/README.md).
+
+# Week 4: Image Captioning with Transformers
+
+In Week 4 of the C5 Project, we extend the Image Captioning task by leveraging transformer-based architectures. The objective is to explore modern vision-language models and compare them with the previous CNN+RNN approaches developed in Week 3.
+
+We implement and evaluate pre-trained transformer models for image captioning, as well as more advanced end-to-end architectures available in Hugging Face. Additionally, we experiment with different fine-tuning strategies, including freezing the visual encoder and training only the text decoder.
+
+The models are evaluated on the VizWiz-Captions dataset using standard metrics such as BLEU-1, BLEU-2, ROUGE-L, and METEOR. We also provide a comparative analysis between transformer-based methods and the previous approaches.
+
+For a detailed explanation of the tasks, implementation steps, and experiments refer to the dedicated [Week 4 README](./Week4/README.md).
