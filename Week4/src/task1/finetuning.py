@@ -281,11 +281,13 @@ def run_finetuning(args):
             )
 
         if metrics["meteor"] > best_score_meteor:
+            checkpoint_dir = Path(args.best_trained_model_path)
+            checkpoint_dir.mkdir(parents=True, exist_ok=True)
             log_with_time(f"New highest METEOR value achieved! Saving model "
-                          f"checkpoint in {args.best_trained_model_path}...")
+                          f"checkpoint in {checkpoint_dir}...")
             best_score_meteor = metrics["meteor"]
-            torch.save(model, Path(
-                args.best_trained_model_pat) / "best_model.pt")
+            model.save_pretrained(checkpoint_dir)
+            processor.save_pretrained(checkpoint_dir)
 
     if wandb_cfg["enabled"]:
         wandb.finish()
