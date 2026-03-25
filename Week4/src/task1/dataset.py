@@ -130,3 +130,4 @@ def collate_fn(batch: Sequence[Dict]) -> Dict:
         "file_names": [item["file_name"] for item in batch],
         "image_ids": [item["image_id"] for item in batch],
     }
+
