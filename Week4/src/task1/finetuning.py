@@ -1,3 +1,4 @@
+from datetime import datetime
 from pathlib import Path
 
 from tqdm import tqdm
@@ -14,6 +15,11 @@ from src.task1.dataset import (
     collate_fn,
 )
 from src.utils import compute_metrics
+
+
+def log_with_time(message: str):
+    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    print(f"[{timestamp}] {message}")
 
 
 def build_dataloaders(args, processor):
@@ -83,20 +89,20 @@ def set_finetuning(args, model):
 
     # setting finetuning
     if args.finetune_encoder:
-        print("Finetuning encoder...")
+        log_with_time("Finetuning encoder...")
         for p in vision_encoder.parameters():
             p.requires_grad = True
     else:
-        print("Freezing encoder...")
+        log_with_time("Freezing encoder...")
         for p in vision_encoder.parameters():
             p.requires_grad = False
 
     if args.finetune_decoder:
-        print("Finetuning decoder...")
+        log_with_time("Finetuning decoder...")
         for p in text_decoder.parameters():
             p.requires_grad = True
     else:
-        print("Freezing decoder...")
+        log_with_time("Freezing decoder...")
         for p in text_decoder.parameters():
             p.requires_grad = False
 
@@ -115,7 +121,7 @@ def set_finetuning(args, model):
         if parameter.requires_grad
     )
 
-    print(
+    log_with_time(
         "model_params "
         f"total={total_params} "
         f"trainable={trainable_params} "
@@ -222,11 +228,11 @@ def run_finetuning(args):
 
     optimizer = torch.optim.AdamW(param_groups, weight_decay=args.weight_decay)
 
-    print("Computing baseline validation metrics before training...")
+    log_with_time("Computing baseline validation metrics before training...")
     baseline_metrics = evaluate_step(model, processor, val_loader, args, device)
-    print("\n--- Baseline Validation Metrics ---")
+    log_with_time("--- Baseline Validation Metrics ---")
     for k, v in baseline_metrics.items():
-        print(f"  {k}: {v:.4f}")
+        log_with_time(f"{k}: {v:.4f}")
     if wandb_cfg["enabled"]:
         wandb.log(
             {f"val/{k}": v for k, v in baseline_metrics.items()} |
@@ -236,13 +242,13 @@ def run_finetuning(args):
     # training loop
     for epoch in tqdm(range(1, args.epochs + 1), desc="Epochs"):
         train_loss = train_step(train_loader, model, optimizer, device)
-        print(f"Epoch {epoch} train_loss: {train_loss:.4f}")
+        log_with_time(f"Epoch {epoch} train_loss: {train_loss:.4f}")
 
-        print(f"Computing validation metrics for epoch {epoch}...")
+        log_with_time(f"Computing validation metrics for epoch {epoch}...")
         metrics = evaluate_step(model, processor, val_loader, args, device)
-        print("\n--- Validation Metrics ---")
+        log_with_time(f"--- Validation Metrics For Epoch {epoch} ---")
         for k, v in metrics.items():
-            print(f"  {k}: {v:.4f}")
+            log_with_time(f"{k}: {v:.4f}")
 
         if wandb_cfg["enabled"]:
             wandb.log(
