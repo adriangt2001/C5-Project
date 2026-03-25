@@ -3,6 +3,7 @@ from __future__ import annotations
 import random
 from collections import defaultdict
 from dataclasses import dataclass
+from functools import partial
 from pathlib import Path
 from typing import Dict, List, Sequence, Tuple
 import json
@@ -131,3 +132,35 @@ def collate_fn(batch: Sequence[Dict]) -> Dict:
         "image_ids": [item["image_id"] for item in batch],
     }
 
+def train_collate_fn(
+    batch: Sequence[Dict],
+    processor: AutoImageProcessor,
+    max_len: int = 40,
+) -> Dict:
+    captions = [item["caption"] for item in batch]
+    text_inputs = processor.tokenizer(
+        captions,
+        padding=True,
+        truncation=True,
+        max_length=max_len,
+        return_tensors="pt",
+    )
+    labels = text_inputs["input_ids"].clone()
+    labels[labels == processor.tokenizer.pad_token_id] = -100
+
+    return {
+        "pixel_values": torch.stack([item["pixel_values"] for item in batch]),
+        "captions": captions,
+        "references": [item["references"] for item in batch],
+        "file_names": [item["file_name"] for item in batch],
+        "image_ids": [item["image_id"] for item in batch],
+        "input_ids": text_inputs["input_ids"],
+        "attention_mask": text_inputs["attention_mask"],
+        "labels": labels,
+    }
+
+def build_train_collate_fn(
+    processor: AutoImageProcessor,
+    max_len: int = 40,
+):
+    return partial(train_collate_fn, processor=processor, max_len=max_len)

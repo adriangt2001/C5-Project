@@ -1,4 +1,3 @@
-
 from pathlib import Path
 
 from tqdm import tqdm
@@ -7,30 +6,63 @@ from torch.utils.data import DataLoader
 import wandb
 
 from src.task1.models import load_model_and_processor
-from src.task1.dataset import load_annotations, VizWizCaptionDataset, collate_fn
+from src.task1.dataset import (
+    load_annotations,
+    split_train_val,
+    VizWizCaptionDataset,
+    build_train_collate_fn,
+    collate_fn,
+)
+from src.utils import compute_metrics
 
 
-def load_dataset(data_dir: str, processor: object, batch_size: int, num_workers: int):
-    """Load the training dataset."""
+def build_dataloaders(args, processor):
+    """Build train and validation dataloaders for finetuning."""
 
-    data_dir = Path(data_dir)
+    data_dir = Path(args.data_dir)
     samples = load_annotations(data_dir / "annotations" / "train.json")
+    train_samples, val_samples = split_train_val(
+        samples,
+        val_ratio=args.val_ratio,
+        seed=args.split_seed,
+    )
 
-    dataset = VizWizCaptionDataset(
+    max_len = min(processor.tokenizer.model_max_length, 40)
+
+    train_dataset = VizWizCaptionDataset(
         data_dir=data_dir,
-        samples=samples,
+        samples=train_samples,
         processor=processor,
+        max_len=max_len,
         training=True,
     )
+    val_dataset = VizWizCaptionDataset(
+        data_dir=data_dir,
+        samples=val_samples,
+        processor=processor,
+        max_len=max_len,
+        training=False,
+    )
 
-    loader = DataLoader(
-        dataset,
-        batch_size=batch_size,
+    train_loader = DataLoader(
+        train_dataset,
+        batch_size=args.batch_size,
         shuffle=True,
-        num_workers=num_workers,
+        num_workers=args.num_workers,
+        collate_fn=build_train_collate_fn(
+            processor=processor,
+            max_len=train_dataset.max_len,
+        ),
+    )
+    val_loader = DataLoader(
+        val_dataset,
+        batch_size=args.batch_size,
+        shuffle=False,
+        num_workers=args.num_workers,
         collate_fn=collate_fn,
     )
-    return loader
+
+    return train_loader, val_loader
 
 
 def set_finetuning(args, model):
@@ -95,21 +127,62 @@ def set_finetuning(args, model):
 
 
 def train_step(train_loader, model, optimizer, device):
+    model.train()
+    total_loss = 0.0
 
     for batch in train_loader:
-
         pixel_values = batch["pixel_values"].to(device)
         input_ids = batch["input_ids"].to(device)
+        attention_mask = batch["attention_mask"].to(device)
+        labels = batch["labels"].to(device)
 
+        optimizer.zero_grad()
         outputs = model(
             pixel_values=pixel_values,
-            input_ids=input_ids
+            input_ids=input_ids,
+            attention_mask=attention_mask,
+            labels=labels,
         )
 
         loss = outputs.loss
         loss.backward()
         optimizer.step()
-        optimizer.zero_grad()
+        total_loss += loss.item()
+
+    return total_loss / max(len(train_loader), 1)
+
+
+def evaluate_step(model, processor, val_loader, args, device):
+    model.eval()
+    results = []
+
+    with torch.no_grad():
+        for batch in tqdm(val_loader, desc="Validation", leave=False):
+            pixel_values = batch["pixel_values"].to(device)
+            generated_ids = model.generate(
+                pixel_values=pixel_values,
+                max_new_tokens=args.max_new_tokens,
+                num_beams=args.num_beams,
+            )
+            predictions = processor.batch_decode(
+                generated_ids,
+                skip_special_tokens=True,
+            )
+
+            for pred, refs, fname, img_id in zip(
+                predictions,
+                batch["references"],
+                batch["file_names"],
+                batch["image_ids"],
+            ):
+                results.append({
+                    "image_id": img_id,
+                    "file_name": fname,
+                    "prediction": pred.strip(),
+                    "references": refs,
+                })
+
+    return compute_metrics(results)
 
 
 def run_finetuning(args):
@@ -131,17 +204,52 @@ def run_finetuning(args):
 
     vision_encoder, text_decoder = set_finetuning(args, model)
 
-    # load dataset
-    loader = load_dataset(args.data_dir, processor,
-                          args.batch_size, args.num_workers)
+    # load datasets
+    train_loader, val_loader = build_dataloaders(args, processor)
 
     # training configs
-    optimizer = torch.optim.AdamW([
-        {"params": vision_encoder.parameters(), "lr": args.lr_encoder},
-        {"params": text_decoder.parameters(), "lr": args.lr_decoder},
-    ], weight_decay=args.weight_decay)
+    param_groups = []
+    if args.finetune_encoder:
+        param_groups.append({
+            "params": [p for p in vision_encoder.parameters() if p.requires_grad],
+            "lr": args.lr_encoder,
+        })
+    if args.finetune_decoder:
+        param_groups.append({
+            "params": [p for p in text_decoder.parameters() if p.requires_grad],
+            "lr": args.lr_decoder,
+        })
+
+    optimizer = torch.optim.AdamW(param_groups, weight_decay=args.weight_decay)
+
+    print("Computing baseline validation metrics before training...")
+    baseline_metrics = evaluate_step(model, processor, val_loader, args, device)
+    print("\n--- Baseline Validation Metrics ---")
+    for k, v in baseline_metrics.items():
+        print(f"  {k}: {v:.4f}")
+    if wandb_cfg["enabled"]:
+        wandb.log(
+            {f"val/{k}": v for k, v in baseline_metrics.items()} |
+            {"epoch": 0}
+        )
 
     # training loop
-    for epoch in tqdm(range(args.epochs), desc="Epochs"):
-        train_step(loader, model, optimizer, device)
+    for epoch in tqdm(range(1, args.epochs + 1), desc="Epochs"):
+        train_loss = train_step(train_loader, model, optimizer, device)
+        print(f"Epoch {epoch} train_loss: {train_loss:.4f}")
 
+        print(f"Computing validation metrics for epoch {epoch}...")
+        metrics = evaluate_step(model, processor, val_loader, args, device)
+        print("\n--- Validation Metrics ---")
+        for k, v in metrics.items():
+            print(f"  {k}: {v:.4f}")
+
+        if wandb_cfg["enabled"]:
+            wandb.log(
+                {"train/loss": train_loss} |
+                {f"val/{k}": v for k, v in metrics.items()} |
+                {"epoch": epoch}
+            )
+
+    if wandb_cfg["enabled"]:
+        wandb.finish()

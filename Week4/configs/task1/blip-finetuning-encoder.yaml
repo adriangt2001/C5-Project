@@ -16,7 +16,7 @@ finetune_decoder: false
 lr_encoder: 1e-5
 lr_decoder: 5e-5
 weight_decay: 0.01
-args.epochs: 30
+epochs: 30
 
 # logging parameters
 wandb:
