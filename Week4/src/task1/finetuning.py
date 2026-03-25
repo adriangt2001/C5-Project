@@ -152,7 +152,7 @@ def train_step(train_loader, model, optimizer, device):
     model.train()
     total_loss = 0.0
 
-    for batch in train_loader:
+    for batch in tqdm(train_loader, desc="Batch"):
         pixel_values = batch["pixel_values"].to(device)
         input_ids = batch["input_ids"].to(device)
         attention_mask = batch["attention_mask"].to(device)
@@ -248,8 +248,10 @@ def run_finetuning(args):
 
     optimizer = torch.optim.AdamW(param_groups, weight_decay=args.weight_decay)
 
+    # compute baseline metrics
     log_with_time("Computing baseline validation metrics before training...")
-    baseline_metrics = evaluate_step(model, processor, val_loader, args, device)
+    baseline_metrics = evaluate_step(
+        model, processor, val_loader, args, device)
     log_with_time("--- Baseline Validation Metrics ---")
     for k, v in baseline_metrics.items():
         log_with_time(f"{k}: {v:.4f}")
@@ -258,6 +260,7 @@ def run_finetuning(args):
             {f"val/{k}": v for k, v in baseline_metrics.items()} |
             {"epoch": 0}
         )
+    best_score_meteor = baseline_metrics["meteor"]
 
     # training loop
     for epoch in tqdm(range(1, args.epochs + 1), desc="Epochs"):
@@ -276,6 +279,13 @@ def run_finetuning(args):
                 {f"val/{k}": v for k, v in metrics.items()} |
                 {"epoch": epoch}
             )
+
+        if metrics["meteor"] > best_score_meteor:
+            log_with_time(f"New highest METEOR value achieved! Saving model "
+                          f"checkpoint in {args.best_trained_model_path}...")
+            best_score_meteor = metrics["meteor"]
+            torch.save(model, Path(
+                args.best_trained_model_pat) / "best_model.pt")
 
     if wandb_cfg["enabled"]:
         wandb.finish()

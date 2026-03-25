@@ -17,6 +17,7 @@ lr_encoder: 0.00001
 lr_decoder: 0.00005
 weight_decay: 0.01
 epochs: 30
+best_trained_model_path: finetuned_models/encoder
 
 # logging parameters
 wandb:
