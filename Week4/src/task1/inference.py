@@ -10,6 +10,7 @@ from transformers import VisionEncoderDecoderModel, AutoImageProcessor, AutoToke
 from transformers import BlipProcessor, BlipForConditionalGeneration
 from tqdm import tqdm
 import wandb
+import time
 
 from .dataset import load_annotations, VizWizCaptionDataset, collate_fn
 from src.utils import compute_metrics
@@ -80,6 +81,7 @@ def run_inference(args):
     )
 
     results = []
+    start_time = time.time()
     with torch.no_grad():
         for batch in tqdm(loader, desc="Inference"):
             predictions = generate_captions(model, processor, tokenizer, batch, args, device)
@@ -97,14 +99,25 @@ def run_inference(args):
                     "references": refs,
                 })
 
+    total_time = time.time() - start_time
+    fps = len(results) / total_time 
+
+    print(f"Total time: {total_time:.2f}s")
+    print(f"FPS: {fps:.2f} imgs/s")
+
     print("Computing metrics...")
     metrics = compute_metrics(results)
-    print("\n--- Metrics ---")
-    for k, v in metrics.items():
-        print(f"  {k}: {v:.4f}")
 
     if wandb_cfg["enabled"]:
-        wandb.log(metrics)
+        wandb.log({
+            "metrics/bleu1": metrics["bleu1"],
+            "metrics/bleu2": metrics["bleu2"],
+            "metrics/rougeL": metrics["rougeL"],
+            "metrics/meteor": metrics["meteor"],
+            "performance/fps": fps,
+            "performance/total_time_s": total_time,
+            "performance/num_images": len(results),
+        })
         wandb.finish()
         
     output_path = Path(args.output_file)
