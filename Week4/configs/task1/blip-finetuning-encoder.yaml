@@ -6,7 +6,7 @@ num_workers: 4
 val_ratio: 0.1
 split_seed: 42
 checkpoint: null
-#output_file: "results/task1/blip-pretrained.json"
+output_file: "results/task1/blip-finetuning-encoder.json"
 max_new_tokens: 30
 num_beams: 4
 
