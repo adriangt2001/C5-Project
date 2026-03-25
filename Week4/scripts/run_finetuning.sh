@@ -23,4 +23,4 @@ echo "Running inference with config: $CONFIG"
 #mkdir -p results/task1/finetuning-encoder
 
 CUDA_VISIBLE_DEVICES="${CUDA_VISIBLE_DEVICES:-0}" \
-"$PYTHON_BIN" -m src.main inference --config "$CONFIG"
+"$PYTHON_BIN" -m src.main finetuning --config "$CONFIG"
