@@ -204,6 +204,9 @@ def run_finetuning(args):
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
+    if device == "cuda":
+        torch.cuda.init()
+
     # load model and processor
     model, processor, tokenizer = load_model_and_processor(
         args.model_type, args.model_name, device, mode="finetuning")
