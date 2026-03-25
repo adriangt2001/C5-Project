@@ -13,8 +13,8 @@ num_beams: 4
 # training parameters
 finetune_encoder: true
 finetune_decoder: false
-lr_encoder: 1e-5
-lr_decoder: 5e-5
+lr_encoder: 0.00001
+lr_decoder: 0.00005
 weight_decay: 0.01
 epochs: 30
 

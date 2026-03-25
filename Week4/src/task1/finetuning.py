@@ -22,6 +22,22 @@ def log_with_time(message: str):
     print(f"[{timestamp}] {message}")
 
 
+def normalize_finetuning_args(args):
+    """Coerce config values to numeric types expected by PyTorch."""
+
+    args.batch_size = int(args.batch_size)
+    args.num_workers = int(args.num_workers)
+    args.split_seed = int(args.split_seed)
+    args.max_new_tokens = int(args.max_new_tokens)
+    args.num_beams = int(args.num_beams)
+    args.epochs = int(args.epochs)
+    args.val_ratio = float(args.val_ratio)
+    args.lr_encoder = float(args.lr_encoder)
+    args.lr_decoder = float(args.lr_decoder)
+    args.weight_decay = float(args.weight_decay)
+    return args
+
+
 def build_dataloaders(args, processor):
     """Build train and validation dataloaders for finetuning."""
 
@@ -192,6 +208,7 @@ def evaluate_step(model, processor, val_loader, args, device):
 
 
 def run_finetuning(args):
+    args = normalize_finetuning_args(args)
 
     wandb_cfg = args.wandb
     if wandb_cfg["enabled"]:
