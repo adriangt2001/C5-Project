@@ -11,6 +11,7 @@ from tqdm import tqdm
 import wandb
 
 from .dataset import load_annotations, VizWizCaptionDataset, collate_fn
+from src.utils import compute_metrics
 
 def run_inference(args):
 
@@ -86,17 +87,20 @@ def run_inference(args):
                     "references": refs,
                 })
 
+    print("Computing metrics...")
+    metrics = compute_metrics(results)
+    print("\n--- Metrics ---")
+    for k, v in metrics.items():
+        print(f"  {k}: {v:.4f}")
+
     if wandb_cfg["enabled"]:
-        examples = []
-        for r in results[:10]:  
-            examples.append(wandb.Image(
-                str(Path(args.data_dir) / "val" / r["file_name"]),
-                caption=f"pred: {r['prediction']}\nref: {r['references'][0]}"
-            ))
-        wandb.log({"examples": examples})
+        wandb.log(metrics)
         wandb.finish()
         
     output_path = Path(args.output_file)
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    output_path.write_text(json.dumps(results, indent=2))
+    output_path.write_text(json.dumps({
+        "metrics": metrics,
+        "results": results,
+    }, indent=2))
     print(f"Saved {len(results)} predictions → {output_path}")
