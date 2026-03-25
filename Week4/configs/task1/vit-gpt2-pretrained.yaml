@@ -1,0 +1,17 @@
+model_name: "nlpconnect/vit-gpt2-image-captioning"
+model_type: "vit-gpt2"
+data_dir: "data/"
+batch_size: 32
+num_workers: 4
+val_ratio: 0.1
+split_seed: 42
+checkpoint: null
+output_file: "results/task1/pretrained.json"
+max_new_tokens: 30
+num_beams: 4
+
+wandb:
+  project: "C5-Week4"
+  entity: "c5-team2"       
+  name: "vit-gpt2-inference"       
+  enabled: true 

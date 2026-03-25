@@ -7,11 +7,43 @@ import torch
 import yaml
 from torch.utils.data import DataLoader
 from transformers import VisionEncoderDecoderModel, AutoImageProcessor, AutoTokenizer
+from transformers import BlipProcessor, BlipForConditionalGeneration
 from tqdm import tqdm
 import wandb
 
 from .dataset import load_annotations, VizWizCaptionDataset, collate_fn
 from src.utils import compute_metrics
+
+def load_model_and_processor(args, device):
+    if args.model_type == "vit-gpt2":
+        model = VisionEncoderDecoderModel.from_pretrained(args.model_name, use_safetensors=True)
+        processor = AutoImageProcessor.from_pretrained(args.model_name, use_fast=False)
+        tokenizer = AutoTokenizer.from_pretrained(args.model_name)
+
+    elif args.model_type == "blip":
+        processor = BlipProcessor.from_pretrained(args.model_name, use_fast=False)
+        model = BlipForConditionalGeneration.from_pretrained(args.model_name, use_safetensors=True)
+        tokenizer = None  # blip uses the processor for everything
+        
+    if args.checkpoint is not None:
+        print(f"Loading checkpoint: {args.checkpoint}")
+        model.load_state_dict(torch.load(args.checkpoint, map_location=device))
+
+    model.to(device)
+    model.eval()
+    return model, processor, tokenizer
+
+def generate_captions(model, processor, tokenizer, batch, args, device):
+    pixel_values = batch["pixel_values"].to(device)
+
+    if args.model_type == "vit-gpt2":
+        generated_ids = model.generate(pixel_values=pixel_values, max_new_tokens=args.max_new_tokens, num_beams=args.num_beams,)
+        predictions = tokenizer.batch_decode(generated_ids, skip_special_tokens=True)
+    else:
+        generated_ids = model.generate(pixel_values=pixel_values, max_new_tokens=args.max_new_tokens, num_beams=args.num_beams,)
+        predictions = processor.batch_decode(generated_ids, skip_special_tokens=True)
+        
+    return predictions
 
 def run_inference(args):
 
@@ -27,19 +59,7 @@ def run_inference(args):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print(f"Using device: {device}")
 
-    # Had to put use_safetensors=True because of error with pytorch version 
-    model = VisionEncoderDecoderModel.from_pretrained(args.model_name, use_safetensors=True)
-
-    if args.checkpoint is not None:
-        print(f"Loading checkpoint: {args.checkpoint}")
-        model.load_state_dict(torch.load(args.checkpoint, map_location=device))
-
-    model.to(device)
-    model.eval()
-
-    # Using AutoImageProcessor and AutoTokenizer to be more general but they can be changed
-    processor = AutoImageProcessor.from_pretrained(args.model_name, use_fast=False)
-    tokenizer = AutoTokenizer.from_pretrained(args.model_name)
+    model, processor, tokenizer = load_model_and_processor(args, device)
 
     data_dir = Path(args.data_dir)
     samples = load_annotations(data_dir / "annotations" / "val.json") # Our test set
@@ -62,17 +82,7 @@ def run_inference(args):
     results = []
     with torch.no_grad():
         for batch in tqdm(loader, desc="Inference"):
-            pixel_values = batch["pixel_values"].to(device)
-
-            generated_ids = model.generate(
-                pixel_values=pixel_values,
-                max_new_tokens=args.max_new_tokens,
-                num_beams=args.num_beams,
-            )
-
-            predictions = tokenizer.batch_decode(
-                generated_ids, skip_special_tokens=True
-            )
+            predictions = generate_captions(model, processor, tokenizer, batch, args, device)
 
             for pred, refs, fname, img_id in zip(
                 predictions,
