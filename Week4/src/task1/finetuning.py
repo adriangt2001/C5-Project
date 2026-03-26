@@ -152,7 +152,7 @@ def train_step(train_loader, model, optimizer, device):
     model.train()
     total_loss = 0.0
 
-    for batch in tqdm(train_loader, desc="Batch"):
+    for batch in train_loader:
         pixel_values = batch["pixel_values"].to(device)
         input_ids = batch["input_ids"].to(device)
         attention_mask = batch["attention_mask"].to(device)
@@ -276,8 +276,7 @@ def run_finetuning(args):
         if wandb_cfg["enabled"]:
             wandb.log(
                 {"train/loss": train_loss} |
-                {f"val/{k}": v for k, v in metrics.items()} |
-                {"epoch": epoch}
+                {f"val/{k}": v for k, v in metrics.items()}
             )
 
         if metrics["meteor"] > best_score_meteor:
