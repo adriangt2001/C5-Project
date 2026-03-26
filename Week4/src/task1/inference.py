@@ -4,47 +4,32 @@ import json
 from pathlib import Path
 
 import torch
-import yaml
 from torch.utils.data import DataLoader
-from transformers import VisionEncoderDecoderModel, AutoImageProcessor, AutoTokenizer
-from transformers import BlipProcessor, BlipForConditionalGeneration
 from tqdm import tqdm
 import wandb
 import time
 
 from .dataset import load_annotations, VizWizCaptionDataset, collate_fn
 from src.utils import compute_metrics
+from src.task1.models import load_model_and_processor
 
-def load_model_and_processor(args, device):
-    if args.model_type == "vit-gpt2":
-        model = VisionEncoderDecoderModel.from_pretrained(args.model_name, use_safetensors=True)
-        processor = AutoImageProcessor.from_pretrained(args.model_name, use_fast=False)
-        tokenizer = AutoTokenizer.from_pretrained(args.model_name)
-
-    elif args.model_type == "blip":
-        processor = BlipProcessor.from_pretrained(args.model_name, use_fast=False)
-        model = BlipForConditionalGeneration.from_pretrained(args.model_name, use_safetensors=True)
-        tokenizer = None  # blip uses the processor for everything
-        
-    if args.checkpoint is not None:
-        print(f"Loading checkpoint: {args.checkpoint}")
-        model.load_state_dict(torch.load(args.checkpoint, map_location=device))
-
-    model.to(device)
-    model.eval()
-    return model, processor, tokenizer
 
 def generate_captions(model, processor, tokenizer, batch, args, device):
     pixel_values = batch["pixel_values"].to(device)
 
     if args.model_type == "vit-gpt2":
-        generated_ids = model.generate(pixel_values=pixel_values, max_new_tokens=args.max_new_tokens, num_beams=args.num_beams,)
-        predictions = tokenizer.batch_decode(generated_ids, skip_special_tokens=True)
+        generated_ids = model.generate(
+            pixel_values=pixel_values, max_new_tokens=args.max_new_tokens, num_beams=args.num_beams,)
+        predictions = tokenizer.batch_decode(
+            generated_ids, skip_special_tokens=True)
     else:
-        generated_ids = model.generate(pixel_values=pixel_values, max_new_tokens=args.max_new_tokens, num_beams=args.num_beams,)
-        predictions = processor.batch_decode(generated_ids, skip_special_tokens=True)
-        
+        generated_ids = model.generate(
+            pixel_values=pixel_values, max_new_tokens=args.max_new_tokens, num_beams=args.num_beams,)
+        predictions = processor.batch_decode(
+            generated_ids, skip_special_tokens=True)
+
     return predictions
+
 
 def run_inference(args):
 
@@ -54,16 +39,18 @@ def run_inference(args):
             project=wandb_cfg["project"],
             entity=wandb_cfg["entity"],
             name=wandb_cfg["name"],
-            config=vars(args),  
+            config=vars(args),
         )
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print(f"Using device: {device}")
 
-    model, processor, tokenizer = load_model_and_processor(args, device)
+    model, processor, tokenizer = load_model_and_processor(
+        args.model_type, args.model_name, device, mode="inference")
 
     data_dir = Path(args.data_dir)
-    samples = load_annotations(data_dir / "annotations" / "val.json") # Our test set
+    samples = load_annotations(
+        data_dir / "annotations" / "val.json")  # Our test set
 
     dataset = VizWizCaptionDataset(
         data_dir=data_dir,
@@ -84,7 +71,8 @@ def run_inference(args):
     start_time = time.time()
     with torch.no_grad():
         for batch in tqdm(loader, desc="Inference"):
-            predictions = generate_captions(model, processor, tokenizer, batch, args, device)
+            predictions = generate_captions(
+                model, processor, tokenizer, batch, args, device)
 
             for pred, refs, fname, img_id in zip(
                 predictions,
@@ -119,7 +107,7 @@ def run_inference(args):
             "performance/num_images": len(results),
         })
         wandb.finish()
-        
+
     output_path = Path(args.output_file)
     output_path.parent.mkdir(parents=True, exist_ok=True)
     output_path.write_text(json.dumps({
