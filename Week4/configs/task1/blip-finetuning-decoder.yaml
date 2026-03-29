@@ -1,0 +1,27 @@
+model_name: "Salesforce/blip-image-captioning-base"
+model_type: "blip"
+data_dir: "data/"
+batch_size: 32
+num_workers: 4
+val_ratio: 0.1
+split_seed: 42
+checkpoint: null
+output_file: "results/task1/blip-finetuning-decoder.json"
+max_new_tokens: 30
+num_beams: 4
+
+# training parameters
+finetune_encoder: false
+finetune_decoder: true
+lr_encoder: 0.00001
+lr_decoder: 0.00005
+weight_decay: 0.01
+epochs: 30
+best_trained_model_path: finetuned_models/decoder
+
+# logging parameters
+wandb:
+  project: "C5-Week4"
+  entity: "c5-team2"       
+  name: "blip-finetuning-decoder"       
+  enabled: true 
