@@ -1,4 +1,4 @@
-from .inference import run_inference
-from .finetuning import run_finetuning
+from .inference import run_inference as run_inference1
+from .finetuning import run_finetuning as run_finetuning1
 
-__all__ = ["run_inference", "run_finetuning"]
+__all__ = ["run_inference1", "run_finetuning1"]

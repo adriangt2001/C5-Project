@@ -11,7 +11,7 @@ import json
 import torch
 from PIL import Image
 from torch.utils.data import Dataset
-from transformers import  AutoImageProcessor
+from transformers import AutoImageProcessor
 
 # Adapted from Week3/src/dataset.py
 # Main changes:
@@ -20,6 +20,7 @@ from transformers import  AutoImageProcessor
 #   - __getitem__ no longer encodes captions (done by model internally)
 #   - collate_fn removed input_ids and target_ids
 
+
 @dataclass
 class VizWizSample:
     image_id: int
@@ -27,6 +28,7 @@ class VizWizSample:
     split: str
     captions: List[str]
     text_detected: bool
+
 
 # Load annotations
 def load_annotations(annotation_path: Path) -> List[VizWizSample]:
@@ -56,6 +58,7 @@ def load_annotations(annotation_path: Path) -> List[VizWizSample]:
         )
     return samples
 
+
 # train/val split --> 10% of training for validation
 def split_train_val(
     samples: Sequence[VizWizSample],
@@ -74,6 +77,7 @@ def split_train_val(
     val_samples = [samples[idx] for idx in indices[split_at:]]
     return train_samples, val_samples
 
+
 # Our Dataset
 class VizWizCaptionDataset(Dataset):
     def __init__(
@@ -82,12 +86,14 @@ class VizWizCaptionDataset(Dataset):
         samples: Sequence[VizWizSample],
         processor: AutoImageProcessor,
         max_len: int = 40,
+        is_llm: bool = False,
         training: bool = True,
     ) -> None:
         self.data_dir = Path(data_dir)
         self.samples = list(samples)
         self.processor = processor
         self.max_len = max_len
+        self.is_llm = is_llm
         self.training = training
 
     def _resolve_image_path(self, sample: VizWizSample) -> Path:
@@ -107,21 +113,32 @@ class VizWizCaptionDataset(Dataset):
         sample = self.samples[index]
         image_path = self._resolve_image_path(sample)
         image = Image.open(image_path).convert("RGB")
-        
-        inputs = self.processor(images=image, return_tensors="pt")
-        pixel_values = inputs.pixel_values.squeeze(0)
-
         caption = ""
         if sample.captions:
-            caption = random.choice(sample.captions) if self.training else sample.captions[0]
+            caption = (
+                random.choice(sample.captions) if self.training else sample.captions[0]
+            )
 
-        return {
-            "pixel_values": pixel_values,
-            "caption": caption,
-            "references": list(sample.captions),
-            "file_name": sample.file_name,
-            "image_id": sample.image_id,
-        }
+        if self.is_llm:
+            return {
+                "image": image,
+                "caption": caption,
+                "references": list(sample.captions),
+                "file_name": sample.file_name,
+                "image_id": sample.image_id,
+            }
+        else:
+            inputs = self.processor(images=image, return_tensors="pt")
+            pixel_values = inputs.pixel_values.squeeze(0)
+
+            return {
+                "pixel_values": pixel_values,
+                "caption": caption,
+                "references": list(sample.captions),
+                "file_name": sample.file_name,
+                "image_id": sample.image_id,
+            }
+
 
 def collate_fn(batch: Sequence[Dict]) -> Dict:
     return {
@@ -131,6 +148,7 @@ def collate_fn(batch: Sequence[Dict]) -> Dict:
         "file_names": [item["file_name"] for item in batch],
         "image_ids": [item["image_id"] for item in batch],
     }
+
 
 def train_collate_fn(
     batch: Sequence[Dict],
@@ -158,6 +176,7 @@ def train_collate_fn(
         "attention_mask": text_inputs["attention_mask"],
         "labels": labels,
     }
+
 
 def build_train_collate_fn(
     processor: AutoImageProcessor,

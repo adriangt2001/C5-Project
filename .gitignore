@@ -222,6 +222,8 @@ dataset/
 dataset
 datasets/
 datasets
+data/
+data
 results/
 results
 wandb/

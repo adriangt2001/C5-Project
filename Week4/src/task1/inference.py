@@ -9,9 +9,9 @@ from tqdm import tqdm
 import wandb
 import time
 
-from .dataset import load_annotations, VizWizCaptionDataset, collate_fn
+from src.utils.dataset import load_annotations, VizWizCaptionDataset, collate_fn
 from src.utils import compute_metrics
-from src.task1.models import load_model_and_processor
+from src.utils.models import load_model_and_processor
 
 
 def generate_captions(model, processor, tokenizer, batch, args, device):
