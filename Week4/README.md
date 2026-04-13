@@ -48,8 +48,8 @@ The work for **Week 4** is currently organized around **Task 1**, focused on tra
   - **Task 1.d:** Comparison and discussion of the results
 
 - **Task 2:** Evaluate and fine-tune LLMs on VizWiz-Captions
-  - **Task 2.a:** Inference with pre-trained multimodal **Llama 3.2-11B**
-  - **Task 2.b:** Fine-tune decoders **Llama 3.2-1B** and **Llama 3.2-3B** using LoRA.
+  - **Task 2.a:** Inference with pre-trained multimodal **Qwen 3.5 9B**
+  - **Task 2.b:** Fine-tune decoder **Qwen 3.5 0.8B** using LoRA.
   - **Task 2.c:** Report the models  using BLEU-1, BLEU-2, ROUGE-L, and METEOR.
   - **Task 2.d:** Compare and discuss the results
 
@@ -73,14 +73,20 @@ Week4/
 │                                         # Run inference on finetuned BLIP checkpoints
 ├── src/
 │   ├── task1/
+│   │   ├── finetuning.py                 # BLIP finetuning and validation pipeline
+│   │   ├── inference.py                  # Caption generation and metric computation
+│   │   └── __init__.py
+│   ├── task2/
 │   │   ├── dataset.py                    # Dataset loading, splitting, and collate functions
 │   │   ├── finetuning.py                 # BLIP finetuning and validation pipeline
 │   │   ├── inference.py                  # Caption generation and metric computation
 │   │   ├── models.py                     # Hugging Face model and processor loading
 │   │   └── __init__.py
 │   ├── utils/
+│   │   ├── dataset.py                    # Dataset loading, splitting, and collate functions
 │   │   ├── io.py                         # YAML loading utilities
-│   │   └── metrics.py                    # BLEU, ROUGE-L, and METEOR computation
+│   │   ├── metrics.py                    # BLEU, ROUGE-L, and METEOR computation
+│   │   └── models.py                     # Hugging Face model and processor loading
 │   └── main.py                           # Main entry point for Week 4
 └── README.md                             # README for Week 4
 ```
@@ -97,18 +103,20 @@ conda activate c5
 
 ## General Usage
 
-All Week 4 experiments are launched through the same entry point using a task-specific YAML configuration file.
+All Week 4 experiments are launched through the same entry point stating the specific task and using a task-specific YAML configuration file.
 
 ```bash
 cd Week4
-python -m src.main inference --config configs/task1/blip-base-pretrained.yaml
+python -m src.main inference1 --config configs/task1/blip-base-pretrained.yaml # Task 1
+python -m src.main inference2 --config configs/task2/qwen359b-base-pretrained.yaml # Task 2
 ```
 
 For finetuning:
 
 ```bash
 cd Week4
-python -m src.main finetuning --config configs/task1/blip-finetuning-encoder.yaml
+python -m src.main finetuning1 --config configs/task1/blip-finetuning-encoder.yaml # Task 1
+python -m src.main finetuning2 --config configs/task1/vit-qwen-finetuning-decoder.yaml # Task 2
 ```
 
 ## Available Configurations
@@ -118,6 +126,7 @@ python -m src.main finetuning --config configs/task1/blip-finetuning-encoder.yam
 - `configs/task1/vit-gpt2-pretrained.yaml`
 - `configs/task1/blip-base-pretrained.yaml`
 - `configs/task1/blip-large-pretrained.yaml`
+- `configs/task2/qwen359b-base-pretrained.yaml`
 
 ### BLIP fine-tuning
 
@@ -125,6 +134,9 @@ python -m src.main finetuning --config configs/task1/blip-finetuning-encoder.yam
 - `configs/task1/blip-finetuning-decoder.yaml`
 - `configs/task1/blip-finetuning-encoder-decoder.yaml`
 - `configs/task1/blip-finetuning-full.yaml`
+
+### ViT-Qwen3.5 0.8B fine-tuning
+- `configs/task1/vit-qwen-finetuning-decoder.yaml`
 
 ### Inference on fine-tuned checkpoints
 
@@ -166,7 +178,7 @@ bash scripts/run_all_inference_finetuned_models.sh
 
 The pipeline produces:
 
-- **JSON result files** with generated captions and evaluation metrics in `results/task1/`
+- **JSON result files** with generated captions and evaluation metrics in `results/task1/` or `results/task2/`
 - **Fine-tuned BLIP checkpoints** in the directory specified by `best_trained_model_path`
 - **W&B logs** for training and evaluation experiments
 - **Qualitative analysis notebook outputs** in `notebooks/qualitative_evaluation.ipynb`
