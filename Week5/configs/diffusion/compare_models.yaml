@@ -9,4 +9,4 @@ model_names:
 
 num_inference_steps: 30
 seed: 0
-output_dir: "Week5/results/diffusion_generation"
+output_dir: "results/diffusion_generation"
