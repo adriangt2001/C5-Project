@@ -32,6 +32,7 @@ GRID_CELL_SIZE = 512
 GRID_PADDING = 24
 GRID_HEADER_HEIGHT = 140
 GRID_LABEL_HEIGHT = 104
+GRID_MAX_SOURCE_SIZE = 768
 
 
 def _sanitize_filename(value: str, max_length: int = 80) -> str:
@@ -141,6 +142,7 @@ def _build_comparison_grid(saved_images, prompt: str, seed: int, output_dir: Pat
             row * (cell_height + GRID_PADDING)
 
         image = item["image"].copy().convert("RGB")
+        image.thumbnail((GRID_MAX_SOURCE_SIZE, GRID_MAX_SOURCE_SIZE), Image.Resampling.LANCZOS)
         image.thumbnail((cell_width, GRID_CELL_SIZE))
         image_x = origin_x + (cell_width - image.width) // 2
         image_y = origin_y + (GRID_CELL_SIZE - image.height) // 2
