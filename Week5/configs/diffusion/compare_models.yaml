@@ -1,4 +1,4 @@
-prompt: "A cinematic portrait of an astronaut riding a green horse through a misty forest at sunrise."
+prompt: "A can of tomato soup on top of a kitchen counter."
 
 model_names:
   - "black-forest-labs/FLUX.2-klein-base-4B"

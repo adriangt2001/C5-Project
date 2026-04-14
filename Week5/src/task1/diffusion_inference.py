@@ -18,7 +18,8 @@ from PIL import Image, ImageDraw, ImageFont
 from transformers import AutoModel, Mistral3ForConditionalGeneration
 
 
-DEFAULT_OUTPUT_DIR = Path(__file__).resolve().parents[2] / "results" / "diffusion_generation"
+DEFAULT_OUTPUT_DIR = Path(__file__).resolve(
+).parents[2] / "results" / "diffusion_generation"
 DEFAULT_NUM_INFERENCE_STEPS = 50
 DEFAULT_SEED = 0
 GRID_CELL_SIZE = 512
@@ -37,7 +38,8 @@ def _resolve_models(args):
         return list(args.model_names)
     if getattr(args, "model_name", None):
         return [args.model_name]
-    raise ValueError("A diffusion model must be provided via 'model_name' or 'model_names'.")
+    raise ValueError(
+        "A diffusion model must be provided via 'model_name' or 'model_names'.")
 
 
 def _resolve_output_dir(args) -> Path:
@@ -143,10 +145,12 @@ def _generate_with_model(model_name: str, args, device: torch.device):
     pipe_dtype = torch.bfloat16 if is_cuda else torch.float32
     fp16_dtype = torch.float16 if is_cuda else torch.float32
     seed = getattr(args, "seed", DEFAULT_SEED)
-    num_inference_steps = getattr(args, "num_inference_steps", DEFAULT_NUM_INFERENCE_STEPS)
+    num_inference_steps = getattr(
+        args, "num_inference_steps", DEFAULT_NUM_INFERENCE_STEPS)
     generator = _generator_for(device, seed)
 
     if model_name == "stabilityai/sd-turbo":
+        print(f"Generating an image with {model_name}...", flush=True)
         if args.image_prompt:
             pipe = AutoPipelineForImage2Image.from_pretrained(
                 model_name,
@@ -174,8 +178,10 @@ def _generate_with_model(model_name: str, args, device: torch.device):
                 guidance_scale=0.0,
                 generator=generator,
             ).images[0]
+        print(f"Finished generating with {model_name}.", flush=True)
 
     elif model_name == "stabilityai/stable-diffusion-xl-base-1.0":
+        print(f"Generating an image with {model_name}...", flush=True)
         pipe = DiffusionPipeline.from_pretrained(
             model_name,
             **_pipeline_kwargs(fp16_dtype, is_cuda, use_safetensors=True),
@@ -186,8 +192,10 @@ def _generate_with_model(model_name: str, args, device: torch.device):
             num_inference_steps=num_inference_steps,
             generator=generator,
         ).images[0]
+        print(f"Finished generating with {model_name}.", flush=True)
 
     elif model_name == "black-forest-labs/FLUX.1-schnell":
+        print(f"Generating an image with {model_name}...", flush=True)
         pipe = FluxPipeline.from_pretrained(model_name, torch_dtype=pipe_dtype)
         if is_cuda:
             pipe.enable_model_cpu_offload()
@@ -201,8 +209,10 @@ def _generate_with_model(model_name: str, args, device: torch.device):
             max_sequence_length=256,
             generator=generator,
         ).images[0]
+        print(f"Finished generating with {model_name}.", flush=True)
 
     elif model_name == "diffusers/FLUX.2-dev-bnb-4bit":
+        print(f"Generating an image with {model_name}...", flush=True)
         text_encoder = Mistral3ForConditionalGeneration.from_pretrained(
             model_name,
             subfolder="text_encoder",
@@ -232,9 +242,12 @@ def _generate_with_model(model_name: str, args, device: torch.device):
             num_inference_steps=num_inference_steps,
             guidance_scale=4,
         ).images[0]
+        print(f"Finished generating with {model_name}.", flush=True)
 
     elif model_name == "black-forest-labs/FLUX.2-klein-base-4B":
-        pipe = Flux2KleinPipeline.from_pretrained(model_name, torch_dtype=pipe_dtype)
+        print(f"Generating an image with {model_name}...", flush=True)
+        pipe = Flux2KleinPipeline.from_pretrained(
+            model_name, torch_dtype=pipe_dtype)
         if is_cuda:
             pipe.enable_model_cpu_offload()
         else:
@@ -248,6 +261,7 @@ def _generate_with_model(model_name: str, args, device: torch.device):
             num_inference_steps=num_inference_steps,
             generator=generator,
         ).images[0]
+        print(f"Finished generating with {model_name}.", flush=True)
 
     else:
         raise ValueError(f"Unsupported model: {model_name}")
@@ -274,7 +288,8 @@ def run_diffusion_inference(args):
     for model_name in model_names:
         image = _generate_with_model(model_name, args, device)
         model_slug = _sanitize_filename(model_name, max_length=60)
-        output_path = output_dir / f"{model_slug}__seed_{args.seed}__{prompt_slug}.png"
+        output_path = output_dir / \
+            f"{model_slug}__seed_{args.seed}__{prompt_slug}.png"
         image.save(output_path)
         saved_paths.append(output_path)
         saved_images.append(

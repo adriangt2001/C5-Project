@@ -1,0 +1,29 @@
+name: c5_week5
+channels:
+  - conda-forge
+  - defaults
+
+dependencies:
+  - python=3.12
+  - ipykernel
+  - ipython
+  - jupyter_client
+  - jupyter_core
+  - debugpy
+  - matplotlib-inline
+  - nest-asyncio
+  - packaging
+  - pip
+  - platformdirs
+  - prompt-toolkit
+  - psutil
+  - pygments
+  - pyzmq
+  - python-dateutil
+  - setuptools
+  - six
+  - tornado
+  - traitlets
+  - typing_extensions
+  - wcwidth
+  - wheel

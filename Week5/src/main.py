@@ -3,6 +3,10 @@ from src.task1.diffusion_inference import run_diffusion_inference
 
 from src.utils import load_config
 
+from dotenv import load_dotenv
+
+load_dotenv()
+
 
 def args_parser():
     main_parser = argparse.ArgumentParser(
