@@ -1,16 +1,6 @@
-
-
-prompt:
-# prompt = "A cinematic shot of a baby racoon wearing an intricate italian priest robe."
-# prompt = "Realistic macro photograph of a hermit crab using a soda can as its shell, partially emerging from the can, captured with sharp detail and natural colors, on a sunlit beach with soft shadows and a shallow depth of field, with blurred ocean waves in the background. The can has the text `BFL + Diffusers` on it and it has a color gradient that start with #FF5733 at the top and transitions to #33FF57 at the bottom."
-# prompt = "A cat holding a sign that says hello world"
-#         prompt = "An astronaut riding a green horse"
-#         prompt = "A cat holding a sign that says hello world"
-
+prompt: "A cinematic shot of a baby raccoon wearing an intricate Italian priest robe."
 
 model_name: "black-forest-labs/FLUX.2-klein-base-4B"
-# model_name: "diffusers/FLUX.2-dev-bnb-4bit" #quantized text-encoder and DiT. VAE still in bf16
-# model_name: "stabilityai/sd-turbo"
-# model_name: "stabilityai/stable-diffusion-xl-base-1.0"
-
 num_inference_steps: 50
+seed: 0
+output_dir: "Week5/results/diffusion_generation"

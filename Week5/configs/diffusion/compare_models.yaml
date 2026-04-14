@@ -1,0 +1,12 @@
+prompt: "A cinematic portrait of an astronaut riding a green horse through a misty forest at sunrise."
+
+model_names:
+  - "black-forest-labs/FLUX.2-klein-base-4B"
+  - "black-forest-labs/FLUX.1-schnell"
+  - "diffusers/FLUX.2-dev-bnb-4bit"
+  - "stabilityai/sd-turbo"
+  - "stabilityai/stable-diffusion-xl-base-1.0"
+
+num_inference_steps: 30
+seed: 0
+output_dir: "Week5/results/diffusion_generation"
