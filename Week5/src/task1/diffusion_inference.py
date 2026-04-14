@@ -14,9 +14,10 @@ from diffusers import (
     Flux2KleinPipeline,
     Flux2Pipeline,
     FluxPipeline,
+    AutoModel
 )
 from PIL import Image, ImageDraw, ImageFont
-from transformers import AutoModel, Mistral3ForConditionalGeneration
+from transformers import Mistral3ForConditionalGeneration
 
 try:
     import wandb
@@ -142,7 +143,8 @@ def _build_comparison_grid(saved_images, prompt: str, seed: int, output_dir: Pat
             row * (cell_height + GRID_PADDING)
 
         image = item["image"].copy().convert("RGB")
-        image.thumbnail((GRID_MAX_SOURCE_SIZE, GRID_MAX_SOURCE_SIZE), Image.Resampling.LANCZOS)
+        image.thumbnail(
+            (GRID_MAX_SOURCE_SIZE, GRID_MAX_SOURCE_SIZE), Image.Resampling.LANCZOS)
         image.thumbnail((cell_width, GRID_CELL_SIZE))
         image_x = origin_x + (cell_width - image.width) // 2
         image_y = origin_y + (GRID_CELL_SIZE - image.height) // 2
@@ -252,7 +254,7 @@ def _load_model_bundle(model_name: str, args, device: torch.device):
     pipe_dtype = torch.bfloat16 if is_cuda else torch.float32
     fp16_dtype = torch.float16 if is_cuda else torch.float32
 
-    if model_name == "stabilityai/sd-turbo":
+    if model_name in ["stabilityai/sd-turbo", "stabilityai/sdxl-turbo"]:
         if args.image_prompt:
             pipe = AutoPipelineForImage2Image.from_pretrained(
                 model_name,
@@ -359,7 +361,8 @@ def _generate_with_model_bundle(model_bundle, prompt: str, args, device: torch.d
         args, "num_inference_steps", DEFAULT_NUM_INFERENCE_STEPS)
     generator = _generator_for(device, seed)
 
-    print(f"Generating an image with {model_name} for prompt: {prompt}", flush=True)
+    print(
+        f"Generating an image with {model_name} for prompt: {prompt}", flush=True)
 
     if model_bundle["mode"] == "image_to_image":
         image = pipe(
@@ -408,7 +411,8 @@ def _generate_with_model_bundle(model_bundle, prompt: str, args, device: torch.d
             generator=generator,
         ).images[0]
     else:
-        raise ValueError(f"Unsupported generation mode: {model_bundle['mode']}")
+        raise ValueError(
+            f"Unsupported generation mode: {model_bundle['mode']}")
 
     print(f"Finished generating with {model_name}.", flush=True)
     return image
@@ -452,7 +456,8 @@ def run_diffusion_inference(args):
                 prompt_data = prompt_results[prompt]
                 _sync_device(device)
                 start_time = time.perf_counter()
-                image = _generate_with_model_bundle(model_bundle, prompt, args, device)
+                image = _generate_with_model_bundle(
+                    model_bundle, prompt, args, device)
                 _sync_device(device)
                 generation_time_s = time.perf_counter() - start_time
 
