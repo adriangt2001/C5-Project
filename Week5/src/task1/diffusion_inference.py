@@ -31,9 +31,13 @@ DEFAULT_NUM_INFERENCE_STEPS = 50
 DEFAULT_SEED = 0
 GRID_CELL_SIZE = 512
 GRID_PADDING = 24
-GRID_HEADER_HEIGHT = 140
-GRID_LABEL_HEIGHT = 104
+GRID_HEADER_HEIGHT = 220
+GRID_LABEL_HEIGHT = 150
 GRID_MAX_SOURCE_SIZE = 768
+GRID_TITLE_FONT_SIZE = 28
+GRID_PROMPT_FONT_SIZE = 20
+GRID_LABEL_FONT_SIZE = 18
+GRID_TIME_FONT_SIZE = 18
 
 
 def _sanitize_filename(value: str, max_length: int = 80) -> str:
@@ -107,11 +111,32 @@ def _wrap_text(text: str, draw: ImageDraw.ImageDraw, font: ImageFont.ImageFont, 
     return lines
 
 
+def _load_grid_font(size: int):
+    font_candidates = [
+        "/System/Library/Fonts/Supplemental/Arial.ttf",
+        "/System/Library/Fonts/Supplemental/Helvetica.ttc",
+        "/System/Library/Fonts/Supplemental/Arial Unicode.ttf",
+        "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
+    ]
+    for font_path in font_candidates:
+        if Path(font_path).exists():
+            return ImageFont.truetype(font_path, size=size)
+    return ImageFont.load_default()
+
+
+def _line_height(draw: ImageDraw.ImageDraw, font: ImageFont.ImageFont, sample_text: str = "Ag") -> int:
+    bbox = draw.textbbox((0, 0), sample_text, font=font)
+    return bbox[3] - bbox[1]
+
+
 def _build_comparison_grid(saved_images, prompt: str, seed: int, output_dir: Path, prompt_slug: str):
     if not saved_images:
         return None
 
-    font = ImageFont.load_default()
+    title_font = _load_grid_font(GRID_TITLE_FONT_SIZE)
+    prompt_font = _load_grid_font(GRID_PROMPT_FONT_SIZE)
+    label_font = _load_grid_font(GRID_LABEL_FONT_SIZE)
+    time_font = _load_grid_font(GRID_TIME_FONT_SIZE)
     cols = min(3, len(saved_images))
     rows = math.ceil(len(saved_images) / cols)
     cell_width = GRID_CELL_SIZE
@@ -126,14 +151,14 @@ def _build_comparison_grid(saved_images, prompt: str, seed: int, output_dir: Pat
 
     header_x = GRID_PADDING
     header_width = canvas_width - 2 * GRID_PADDING
-    prompt_lines = _wrap_text(f"Prompt: {prompt}", draw, font, header_width)
+    prompt_lines = _wrap_text(f"Prompt: {prompt}", draw, prompt_font, header_width)
     draw.text((header_x, 20), f"Diffusion Model Comparison | seed={seed}", fill=(
-        30, 30, 30), font=font)
+        30, 30, 30), font=title_font)
 
-    current_y = 48
+    current_y = 20 + _line_height(draw, title_font) + 18
     for line in prompt_lines:
-        draw.text((header_x, current_y), line, fill=(60, 60, 60), font=font)
-        current_y += 16
+        draw.text((header_x, current_y), line, fill=(60, 60, 60), font=prompt_font)
+        current_y += _line_height(draw, prompt_font) + 8
 
     for index, item in enumerate(saved_images):
         row = index // cols
@@ -158,17 +183,17 @@ def _build_comparison_grid(saved_images, prompt: str, seed: int, output_dir: Pat
         canvas.paste(image, (image_x, image_y))
 
         model_lines = _wrap_text(
-            item["model_name"], draw, font, cell_width - 12)
+            item["model_name"], draw, label_font, cell_width - 12)
         label_y = origin_y + GRID_CELL_SIZE + 10
         for line in model_lines[:3]:
             draw.text((origin_x + 6, label_y), line,
-                      fill=(40, 40, 40), font=font)
-            label_y += 16
+                      fill=(40, 40, 40), font=label_font)
+            label_y += _line_height(draw, label_font) + 6
         draw.text(
             (origin_x + 6, label_y + 4),
             f"time: {item['generation_time_s']:.2f}s",
             fill=(70, 70, 70),
-            font=font,
+            font=time_font,
         )
 
     grid_path = output_dir / f"comparison__seed_{seed}__{prompt_slug}.png"
