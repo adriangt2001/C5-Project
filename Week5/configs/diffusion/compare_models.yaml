@@ -38,6 +38,8 @@ prompts:
 
 reference_images:
   - data/train/VizWiz_train_00000002.jpg # crushed tomatoes
+  - data/train/VizWiz_train_00000002.jpg # crushed tomatoes
+  - data/train/VizWiz_train_00000002.jpg # crushed tomatoes
   # - data/train/VizWiz_train_00000000.jpg # basil leaves
   # - data/train/VizWiz_train_00001014.jpg # watch
   # - data/train/VizWiz_train_00002000.jpg # mac computer screen

@@ -1,8 +1,7 @@
 prompts:
-  - "A product photo of the same object, keeping the composition and visual style of the reference image."
-  - "A similar image to the reference, preserving the style but improving clarity and lighting."
+  - "a can of crushed tomatoes are on a brown surface, the tomatoes read crushed tomatoes on the brand. Similar in style as the example image provided"
 
-image_prompt: "path/to/reference_image.jpg"
+image_prompt: "data/train/VizWiz_train_00000002.jpg"
 strength: 0.35
 
 model_names:

@@ -15,9 +15,10 @@ from diffusers import (
     Flux2KleinPipeline,
     Flux2Pipeline,
     FluxPipeline,
+    AutoModel
 )
 from PIL import Image, ImageDraw, ImageFont
-from transformers import AutoModel, Mistral3ForConditionalGeneration
+from transformers import Mistral3ForConditionalGeneration
 
 try:
     import wandb
