@@ -107,6 +107,13 @@ def _effective_num_inference_steps(model_bundle, args) -> int:
     return requested_steps
 
 
+def _effective_image_to_image_strength(strength: float, num_inference_steps: int) -> float:
+    if num_inference_steps <= 0:
+        raise ValueError("num_inference_steps must be positive for image-to-image generation.")
+    minimum_strength = 1.0 / num_inference_steps
+    return max(strength, minimum_strength)
+
+
 def _load_image_prompt(image_prompt: Optional[str]) -> Optional[Image.Image]:
     if not image_prompt:
         return None
@@ -555,20 +562,36 @@ def _generate_with_model_bundle(model_bundle, prompt: str, args, device: torch.d
         f"Generating an image with {model_name} for prompt: {prompt}", flush=True)
 
     if model_bundle["mode"] == "image_to_image_turbo":
-        image = pipe(
-            prompt=prompt,
-            image=model_bundle["init_image"],
-            num_inference_steps=min(num_inference_steps, 2),
-            strength=strength,
-            guidance_scale=0.0,
-            generator=generator,
-        ).images[0]
-    elif model_bundle["mode"] == "image_to_image_standard":
+        effective_strength = _effective_image_to_image_strength(
+            strength, num_inference_steps)
+        if effective_strength != strength:
+            print(
+                f"Adjusted strength from {strength} to {effective_strength:.3f} for {model_name} "
+                f"so image-to-image uses at least one denoising step.",
+                flush=True,
+            )
         image = pipe(
             prompt=prompt,
             image=model_bundle["init_image"],
             num_inference_steps=num_inference_steps,
-            strength=strength,
+            strength=effective_strength,
+            guidance_scale=0.0,
+            generator=generator,
+        ).images[0]
+    elif model_bundle["mode"] == "image_to_image_standard":
+        effective_strength = _effective_image_to_image_strength(
+            strength, num_inference_steps)
+        if effective_strength != strength:
+            print(
+                f"Adjusted strength from {strength} to {effective_strength:.3f} for {model_name} "
+                f"so image-to-image uses at least one denoising step.",
+                flush=True,
+            )
+        image = pipe(
+            prompt=prompt,
+            image=model_bundle["init_image"],
+            num_inference_steps=num_inference_steps,
+            strength=effective_strength,
             generator=generator,
         ).images[0]
     elif model_bundle["mode"] == "text_to_image":
