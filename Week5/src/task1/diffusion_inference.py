@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 from pathlib import Path
 import math
 import re
@@ -108,7 +109,8 @@ def _load_reference_image(reference_image_path: Optional[str]) -> Optional[Image
         return None
     image_path = Path(reference_image_path)
     if not image_path.exists():
-        raise FileNotFoundError(f"Reference image not found: {reference_image_path}")
+        raise FileNotFoundError(
+            f"Reference image not found: {reference_image_path}")
     return Image.open(image_path).convert("RGB")
 
 
@@ -127,12 +129,14 @@ def _ensure_supported_image_to_image_model(model_name: str):
 
 def _resize_reference_image(init_image: Image.Image, target_size: int = 1024) -> Image.Image:
     resized_image = init_image.copy()
-    resized_image.thumbnail((target_size, target_size), Image.Resampling.LANCZOS)
+    resized_image.thumbnail((target_size, target_size),
+                            Image.Resampling.LANCZOS)
     width, height = resized_image.size
     width = max(8, (width // 8) * 8)
     height = max(8, (height // 8) * 8)
     if (width, height) != resized_image.size:
-        resized_image = resized_image.resize((width, height), Image.Resampling.LANCZOS)
+        resized_image = resized_image.resize(
+            (width, height), Image.Resampling.LANCZOS)
     return resized_image
 
 
@@ -206,13 +210,15 @@ def _build_comparison_grid(saved_images, prompt: str, seed: int, output_dir: Pat
 
     header_x = GRID_PADDING
     header_width = canvas_width - 2 * GRID_PADDING
-    prompt_lines = _wrap_text(f"Prompt: {prompt}", draw, prompt_font, header_width)
+    prompt_lines = _wrap_text(
+        f"Prompt: {prompt}", draw, prompt_font, header_width)
     draw.text((header_x, 20), f"Diffusion Model Comparison | seed={seed}", fill=(
         30, 30, 30), font=title_font)
 
     current_y = 20 + _line_height(draw, title_font) + 18
     for line in prompt_lines:
-        draw.text((header_x, current_y), line, fill=(60, 60, 60), font=prompt_font)
+        draw.text((header_x, current_y), line,
+                  fill=(60, 60, 60), font=prompt_font)
         current_y += _line_height(draw, prompt_font) + 8
 
     for index, item in enumerate(saved_images):
@@ -238,6 +244,8 @@ def _build_comparison_grid(saved_images, prompt: str, seed: int, output_dir: Pat
         canvas.paste(image, (image_x, image_y))
 
         label_text = item.get("display_name", item["model_name"])
+        if item["model_name"] != "reference_image":
+            label_text = f"model: {label_text}"
         model_lines = _wrap_text(
             label_text, draw, label_font, cell_width - 12)
         label_y = origin_y + GRID_CELL_SIZE + 10
@@ -249,6 +257,12 @@ def _build_comparison_grid(saved_images, prompt: str, seed: int, output_dir: Pat
             draw.text(
                 (origin_x + 6, label_y + 4),
                 f"time: {item['generation_time_s']:.2f}s",
+                fill=(70, 70, 70),
+                font=time_font,
+            )
+            draw.text(
+                (origin_x + 6, label_y + _line_height(draw, time_font) + 10),
+                f"steps: {item['num_inference_steps']}",
                 fill=(70, 70, 70),
                 font=time_font,
             )
@@ -318,7 +332,8 @@ def _log_wandb_results(saved_images, comparison_path, args, prompt: str, prompt_
             log_payload[f"timing/{prompt_slug}/{model_slug}_seconds"] = generation_time_s
         log_payload[f"generation/{prompt_slug}/{model_slug}"] = wandb_image
 
-    generated_images = [item for item in saved_images if item.get("generation_time_s") is not None]
+    generated_images = [item for item in saved_images if item.get(
+        "generation_time_s") is not None]
     if generated_images:
         total_generation_time_s = sum(
             item["generation_time_s"] for item in generated_images)
@@ -335,6 +350,43 @@ def _log_wandb_results(saved_images, comparison_path, args, prompt: str, prompt_
         )
 
     wandb.log(log_payload)
+
+
+def _write_run_summary(output_dir: Path, prompt_results, args) -> Path:
+    summary = {
+        "seed": args.seed,
+        "default_num_inference_steps": getattr(args, "num_inference_steps", DEFAULT_NUM_INFERENCE_STEPS),
+        "num_inference_steps_by_model": getattr(args, "num_inference_steps_by_model", None),
+        "prompts": [],
+    }
+
+    for prompt, prompt_data in prompt_results.items():
+        prompt_summary = {
+            "prompt": prompt,
+            "prompt_slug": prompt_data["prompt_slug"],
+            "output_dir": str(prompt_data["output_dir"]),
+            "reference_image": prompt_data["reference_image_path"],
+            "generations": [],
+        }
+
+        for item in prompt_data["saved_images"]:
+            if item["model_name"] == "reference_image":
+                continue
+            prompt_summary["generations"].append(
+                {
+                    "model_name": item["model_name"],
+                    "generation_time_s": item["generation_time_s"],
+                    "num_inference_steps": item["num_inference_steps"],
+                    "image_path": str(item["path"]),
+                }
+            )
+
+        summary["prompts"].append(prompt_summary)
+
+    summary_path = output_dir / "generation_summary.json"
+    summary_path.write_text(json.dumps(summary, indent=2))
+    print(f"Saved generation summary -> {summary_path}")
+    return summary_path
 
 
 def _load_model_bundle(model_name: str, args, device: torch.device):
@@ -530,8 +582,6 @@ def _generate_with_model_bundle(model_bundle, prompt: str, args, device: torch.d
     else:
         raise ValueError(
             f"Unsupported generation mode: {model_bundle['mode']}")
-
-    print(f"Finished generating with {model_name}.", flush=True)
     return image
 
 
@@ -550,6 +600,7 @@ def run_diffusion_inference(args):
         args.seed = DEFAULT_SEED
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    base_output_dir = _resolve_output_dir(args)
     prompts = _resolve_prompts(args)
     reference_images_by_prompt = _resolve_reference_images(args, prompts)
     model_names = _resolve_models(args)
@@ -591,6 +642,7 @@ def run_diffusion_inference(args):
                         "image": image,
                         "path": output_path,
                         "generation_time_s": generation_time_s,
+                        "num_inference_steps": _resolve_num_inference_steps(args, model_name),
                     }
                 )
                 print(
@@ -603,7 +655,8 @@ def run_diffusion_inference(args):
 
     for prompt in prompts:
         prompt_data = prompt_results[prompt]
-        reference_image = _load_reference_image(prompt_data["reference_image_path"])
+        reference_image = _load_reference_image(
+            prompt_data["reference_image_path"])
         if reference_image is not None:
             prompt_data["saved_images"].insert(
                 0,
@@ -613,6 +666,7 @@ def run_diffusion_inference(args):
                     "image": reference_image,
                     "path": prompt_data["reference_image_path"],
                     "generation_time_s": None,
+                    "num_inference_steps": None,
                 },
             )
         comparison_path = _build_comparison_grid(
@@ -637,5 +691,8 @@ def run_diffusion_inference(args):
 
     if wandb_enabled:
         wandb.finish()
+
+    summary_path = _write_run_summary(base_output_dir, prompt_results, args)
+    all_saved_paths.append(summary_path)
 
     return all_saved_paths
