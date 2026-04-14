@@ -1,0 +1,21 @@
+prompts:
+  - "A product photo of the same object, keeping the composition and visual style of the reference image."
+  - "A similar image to the reference, preserving the style but improving clarity and lighting."
+
+image_prompt: "path/to/reference_image.jpg"
+strength: 0.35
+
+model_names:
+  - "stabilityai/sd-turbo"
+  - "stabilityai/sdxl-turbo"
+  - "stabilityai/stable-diffusion-xl-base-1.0"
+
+num_inference_steps: 30
+seed: 0
+output_dir: "results/diffusion_generation"
+
+wandb:
+  enabled: false
+  project: "c5-week5-diffusion"
+  entity: "c5-team2"
+  name: "image-to-image-compare"

@@ -36,6 +36,20 @@ prompts:
   # - "a VizWiz style picture of a round dial knob on a white washing machine"
 
 
+reference_images:
+  - data/train/VizWiz_train_00000002.jpg # crushed tomatoes
+  # - data/train/VizWiz_train_00000000.jpg # basil leaves
+  # - data/train/VizWiz_train_00001014.jpg # watch
+  # - data/train/VizWiz_train_00002000.jpg # mac computer screen
+  # - data/train/VizWiz_train_00002006.jpg # deodorant
+  # - data/train/VizWiz_train_00000358.jpg # kitchenaid tag
+  # - data/train/VizWiz_train_00002358.jpg # broth box
+  # - data/train/VizWiz_train_00002357.jpg # bathroom
+  # - data/train/VizWiz_train_00002355.jpg # dog
+  # - data/train/VizWiz_train_00002352.jpg # video conversion system
+  # - data/train/VizWiz_train_00002348.jpg # washing machine
+
+
 model_names:
   - "black-forest-labs/FLUX.2-klein-base-4B"
   - "black-forest-labs/FLUX.1-schnell"
@@ -44,7 +58,13 @@ model_names:
   - "stabilityai/sdxl-turbo"
   - "stabilityai/stable-diffusion-xl-base-1.0"
 
-num_inference_steps: 30
+num_inference_steps_by_model:
+  "black-forest-labs/FLUX.2-klein-base-4B": 5
+  "black-forest-labs/FLUX.1-schnell": 5
+  "diffusers/FLUX.2-dev-bnb-4bit": 5
+  "stabilityai/sd-turbo": 60
+  "stabilityai/sdxl-turbo": 60
+  "stabilityai/stable-diffusion-xl-base-1.0": 60
 seed: 0
 output_dir: "results/diffusion_generation"
 

@@ -31,6 +31,9 @@ def args_parser():
         "--image_prompt", type=str, default=None,
         help="Path to an image prompt for image-to-image generation")
     diffusion_inference_parser.add_argument(
+        "--strength", type=float, default=None,
+        help="Image-to-image strength. Lower keeps closer to the reference image")
+    diffusion_inference_parser.add_argument(
         "--seed", type=int, default=None,
         help="Seed used to reproduce generations")
     diffusion_inference_parser.add_argument(
