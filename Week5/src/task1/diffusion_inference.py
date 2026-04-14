@@ -99,6 +99,14 @@ def _resolve_num_inference_steps(args, model_name: str) -> int:
     return getattr(args, "num_inference_steps", DEFAULT_NUM_INFERENCE_STEPS)
 
 
+def _effective_num_inference_steps(model_bundle, args) -> int:
+    requested_steps = _resolve_num_inference_steps(
+        args, model_bundle["model_name"])
+    if model_bundle["mode"] in {"image_to_image_turbo", "text_to_image", "flux_schnell"}:
+        return min(requested_steps, 4 if model_bundle["mode"] == "flux_schnell" else 2)
+    return requested_steps
+
+
 def _load_image_prompt(image_prompt: Optional[str]) -> Optional[Image.Image]:
     if not image_prompt:
         return None
@@ -120,6 +128,7 @@ def _ensure_supported_image_to_image_model(model_name: str):
         "stabilityai/sd-turbo",
         "stabilityai/sdxl-turbo",
         "stabilityai/stable-diffusion-xl-base-1.0",
+        "diffusers/FLUX.2-dev-bnb-4bit"
     }
     if model_name not in supported_models:
         raise ValueError(
@@ -395,9 +404,11 @@ def _load_model_bundle(model_name: str, args, device: torch.device):
     pipe_dtype = torch.bfloat16 if is_cuda else torch.float32
     fp16_dtype = torch.float16 if is_cuda else torch.float32
 
+    if args.image_prompt:
+        _ensure_supported_image_to_image_model(model_name)
+
     if model_name in ["stabilityai/sd-turbo", "stabilityai/sdxl-turbo"]:
         if args.image_prompt:
-            _ensure_supported_image_to_image_model(model_name)
             pipe = AutoPipelineForImage2Image.from_pretrained(
                 model_name,
                 **_pipeline_kwargs(fp16_dtype, is_cuda),
@@ -423,7 +434,6 @@ def _load_model_bundle(model_name: str, args, device: torch.device):
 
     elif model_name == "stabilityai/stable-diffusion-xl-base-1.0":
         if args.image_prompt:
-            _ensure_supported_image_to_image_model(model_name)
             pipe = AutoPipelineForImage2Image.from_pretrained(
                 model_name,
                 **_pipeline_kwargs(fp16_dtype, is_cuda, use_safetensors=True),
@@ -448,8 +458,6 @@ def _load_model_bundle(model_name: str, args, device: torch.device):
             }
 
     elif model_name == "black-forest-labs/FLUX.1-schnell":
-        if args.image_prompt:
-            _ensure_supported_image_to_image_model(model_name)
         pipe = FluxPipeline.from_pretrained(model_name, torch_dtype=pipe_dtype)
         if is_cuda:
             pipe.enable_model_cpu_offload()
@@ -462,8 +470,6 @@ def _load_model_bundle(model_name: str, args, device: torch.device):
         }
 
     elif model_name == "diffusers/FLUX.2-dev-bnb-4bit":
-        if args.image_prompt:
-            _ensure_supported_image_to_image_model(model_name)
         text_encoder = Mistral3ForConditionalGeneration.from_pretrained(
             model_name,
             subfolder="text_encoder",
@@ -493,6 +499,10 @@ def _load_model_bundle(model_name: str, args, device: torch.device):
             "text_encoder": text_encoder,
             "transformer": dit,
         }
+        if args.image_prompt:
+            image = _resize_reference_image(
+                _load_image_prompt(args.image_prompt))
+            bundle["image"] = [image]
 
     elif model_name == "black-forest-labs/FLUX.2-klein-base-4B":
         if args.image_prompt:
@@ -519,7 +529,7 @@ def _generate_with_model_bundle(model_bundle, prompt: str, args, device: torch.d
     model_name = model_bundle["model_name"]
     pipe = model_bundle["pipeline"]
     seed = getattr(args, "seed", DEFAULT_SEED)
-    num_inference_steps = _resolve_num_inference_steps(args, model_name)
+    num_inference_steps = _effective_num_inference_steps(model_bundle, args)
     strength = getattr(args, "strength", DEFAULT_IMAGE_STRENGTH)
     generator = _generator_for(device, seed)
 
@@ -599,6 +609,8 @@ def run_diffusion_inference(args):
         args.num_inference_steps = DEFAULT_NUM_INFERENCE_STEPS
     if getattr(args, "seed", None) is None:
         args.seed = DEFAULT_SEED
+    if getattr(args, "strength", None) is None:
+        args.strength = DEFAULT_IMAGE_STRENGTH
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     base_output_dir = _resolve_output_dir(args)
@@ -643,7 +655,7 @@ def run_diffusion_inference(args):
                         "image": image,
                         "path": output_path,
                         "generation_time_s": generation_time_s,
-                        "num_inference_steps": _resolve_num_inference_steps(args, model_name),
+                        "num_inference_steps": _effective_num_inference_steps(model_bundle, args),
                     }
                 )
                 print(
