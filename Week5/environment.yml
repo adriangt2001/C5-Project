@@ -1,0 +1,25 @@
+name: c5_week5
+channels:
+  - pytorch
+  - nvidia
+  - conda-forge
+dependencies:
+  - python=3.10
+  - pip
+  - pyyaml
+  - pillow
+  - matplotlib
+  - pandas
+  - tqdm
+  - jupyter
+  - pytorch
+  - torchvision
+  - torchaudio
+  - pytorch-cuda=12.1
+  - pip:
+      - diffusers>=0.30.0
+      - transformers>=4.40.0
+      - accelerate>=0.30.0
+      - safetensors>=0.4.3
+      - sentencepiece>=0.2.0
+      - invisible-watermark>=0.2.0

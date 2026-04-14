@@ -1,0 +1,32 @@
+seed: 7
+device: auto
+dtype: float16
+height: 512
+width: 512
+num_images_per_prompt: 1
+guidance_scale: 7.5
+num_inference_steps: 30
+output_dir: outputs/task_a
+
+models:
+  - name: sd_turbo
+    model_id: stabilityai/sd-turbo
+    family: sd
+    guidance_scale: 0.0
+    num_inference_steps: 4
+  - name: sdxl
+    model_id: stabilityai/stable-diffusion-xl-base-1.0
+    family: sdxl
+  - name: sdxl_turbo
+    model_id: stabilityai/sdxl-turbo
+    family: sdxl
+    guidance_scale: 0.0
+    num_inference_steps: 4
+
+prompts:
+  - "A blurry photo of a cereal box on a kitchen counter, partially out of frame, taken with poor lighting, realistic image"
+  - "A dark photo of a bedroom corner with clothes on the floor, realistic image"
+  - "A very dark photo where only part of an object is visible, realistic image"
+  - "A photo taken too close to an object, making it hard to identify, realistic image"
+
+negative_prompt: "blurry face, extra fingers, duplicate objects, distorted hands, text artifacts, watermark, low quality"
