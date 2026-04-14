@@ -110,7 +110,25 @@ def _effective_num_inference_steps(model_bundle, args) -> int:
 def _load_image_prompt(image_prompt: Optional[str]) -> Optional[Image.Image]:
     if not image_prompt:
         return None
-    return Image.open(image_prompt).convert("RGB")
+    image_path = Path(image_prompt)
+    if not image_path.exists():
+        raise FileNotFoundError(f"Image prompt not found: {image_prompt}")
+    if not image_path.is_file():
+        raise ValueError(f"Image prompt path is not a file: {image_prompt}")
+
+    try:
+        with Image.open(image_path) as pil_image:
+            pil_image.load()
+            if pil_image.width <= 0 or pil_image.height <= 0:
+                raise ValueError(
+                    f"Image prompt must have non-zero dimensions, got {pil_image.size} for {image_prompt}"
+                )
+            loaded_image = pil_image.convert("RGB")
+    except Exception as exc:
+        raise ValueError(f"Failed to load image prompt '{image_prompt}': {exc}") from exc
+
+    print(f"Loaded image prompt from {image_path} with size {loaded_image.size}", flush=True)
+    return loaded_image
 
 
 def _load_reference_image(reference_image_path: Optional[str]) -> Optional[Image.Image]:
@@ -418,7 +436,7 @@ def _load_model_bundle(model_name: str, args, device: torch.device):
                 "model_name": model_name,
                 "pipeline": pipe,
                 "mode": "image_to_image_turbo",
-                "init_image": _resize_reference_image(_load_image_prompt(args.image_prompt)),
+                "init_image": _resize_reference_image(args.loaded_image_prompt),
             }
         else:
             pipe = AutoPipelineForText2Image.from_pretrained(
@@ -443,7 +461,7 @@ def _load_model_bundle(model_name: str, args, device: torch.device):
                 "model_name": model_name,
                 "pipeline": pipe,
                 "mode": "image_to_image_standard",
-                "init_image": _resize_reference_image(_load_image_prompt(args.image_prompt)),
+                "init_image": _resize_reference_image(args.loaded_image_prompt),
             }
         else:
             pipe = DiffusionPipeline.from_pretrained(
@@ -611,6 +629,7 @@ def run_diffusion_inference(args):
         args.seed = DEFAULT_SEED
     if getattr(args, "strength", None) is None:
         args.strength = DEFAULT_IMAGE_STRENGTH
+    args.loaded_image_prompt = _load_image_prompt(getattr(args, "image_prompt", None))
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     base_output_dir = _resolve_output_dir(args)
