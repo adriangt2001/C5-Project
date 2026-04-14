@@ -3,6 +3,7 @@ from __future__ import annotations
 from pathlib import Path
 import math
 import re
+import time
 from typing import Optional
 
 import torch
@@ -17,6 +18,11 @@ from diffusers import (
 from PIL import Image, ImageDraw, ImageFont
 from transformers import AutoModel, Mistral3ForConditionalGeneration
 
+try:
+    import wandb
+except ImportError:
+    wandb = None
+
 
 DEFAULT_OUTPUT_DIR = Path(__file__).resolve(
 ).parents[2] / "results" / "diffusion_generation"
@@ -25,7 +31,7 @@ DEFAULT_SEED = 0
 GRID_CELL_SIZE = 512
 GRID_PADDING = 24
 GRID_HEADER_HEIGHT = 140
-GRID_LABEL_HEIGHT = 72
+GRID_LABEL_HEIGHT = 104
 
 
 def _sanitize_filename(value: str, max_length: int = 80) -> str:
@@ -42,10 +48,25 @@ def _resolve_models(args):
         "A diffusion model must be provided via 'model_name' or 'model_names'.")
 
 
-def _resolve_output_dir(args) -> Path:
-    output_dir = Path(getattr(args, "output_dir", DEFAULT_OUTPUT_DIR))
-    output_dir.mkdir(parents=True, exist_ok=True)
-    return output_dir
+def _resolve_prompts(args):
+    if getattr(args, "prompts", None):
+        return [prompt for prompt in args.prompts if prompt]
+    if getattr(args, "prompt", None):
+        return [args.prompt]
+    raise ValueError(
+        "At least one non-empty prompt must be provided via 'prompt' or 'prompts'.")
+
+
+def _resolve_output_dir(args, prompt: Optional[str] = None) -> Path:
+    base_output_dir = Path(getattr(args, "output_dir", DEFAULT_OUTPUT_DIR))
+    base_output_dir.mkdir(parents=True, exist_ok=True)
+    if not prompt:
+        return base_output_dir
+
+    prompt_slug = _sanitize_filename(prompt, max_length=50)
+    prompt_output_dir = base_output_dir / prompt_slug
+    prompt_output_dir.mkdir(parents=True, exist_ok=True)
+    return prompt_output_dir
 
 
 def _load_image_prompt(image_prompt: Optional[str]) -> Optional[Image.Image]:
@@ -94,15 +115,18 @@ def _build_comparison_grid(saved_images, prompt: str, seed: int, output_dir: Pat
     cell_width = GRID_CELL_SIZE
     cell_height = GRID_CELL_SIZE + GRID_LABEL_HEIGHT
     canvas_width = GRID_PADDING * (cols + 1) + cell_width * cols
-    canvas_height = GRID_HEADER_HEIGHT + GRID_PADDING * (rows + 1) + cell_height * rows
+    canvas_height = GRID_HEADER_HEIGHT + \
+        GRID_PADDING * (rows + 1) + cell_height * rows
 
-    canvas = Image.new("RGB", (canvas_width, canvas_height), color=(245, 244, 239))
+    canvas = Image.new("RGB", (canvas_width, canvas_height),
+                       color=(245, 244, 239))
     draw = ImageDraw.Draw(canvas)
 
     header_x = GRID_PADDING
     header_width = canvas_width - 2 * GRID_PADDING
     prompt_lines = _wrap_text(f"Prompt: {prompt}", draw, font, header_width)
-    draw.text((header_x, 20), f"Diffusion Model Comparison | seed={seed}", fill=(30, 30, 30), font=font)
+    draw.text((header_x, 20), f"Diffusion Model Comparison | seed={seed}", fill=(
+        30, 30, 30), font=font)
 
     current_y = 48
     for line in prompt_lines:
@@ -113,7 +137,8 @@ def _build_comparison_grid(saved_images, prompt: str, seed: int, output_dir: Pat
         row = index // cols
         col = index % cols
         origin_x = GRID_PADDING + col * (cell_width + GRID_PADDING)
-        origin_y = GRID_HEADER_HEIGHT + GRID_PADDING + row * (cell_height + GRID_PADDING)
+        origin_y = GRID_HEADER_HEIGHT + GRID_PADDING + \
+            row * (cell_height + GRID_PADDING)
 
         image = item["image"].copy().convert("RGB")
         image.thumbnail((cell_width, GRID_CELL_SIZE))
@@ -128,11 +153,19 @@ def _build_comparison_grid(saved_images, prompt: str, seed: int, output_dir: Pat
         )
         canvas.paste(image, (image_x, image_y))
 
-        model_lines = _wrap_text(item["model_name"], draw, font, cell_width - 12)
+        model_lines = _wrap_text(
+            item["model_name"], draw, font, cell_width - 12)
         label_y = origin_y + GRID_CELL_SIZE + 10
         for line in model_lines[:3]:
-            draw.text((origin_x + 6, label_y), line, fill=(40, 40, 40), font=font)
+            draw.text((origin_x + 6, label_y), line,
+                      fill=(40, 40, 40), font=font)
             label_y += 16
+        draw.text(
+            (origin_x + 6, label_y + 4),
+            f"time: {item['generation_time_s']:.2f}s",
+            fill=(70, 70, 70),
+            font=font,
+        )
 
     grid_path = output_dir / f"comparison__seed_{seed}__{prompt_slug}.png"
     canvas.save(grid_path)
@@ -140,79 +173,133 @@ def _build_comparison_grid(saved_images, prompt: str, seed: int, output_dir: Pat
     return grid_path
 
 
-def _generate_with_model(model_name: str, args, device: torch.device):
+def _sync_device(device: torch.device):
+    if device.type == "cuda":
+        torch.cuda.synchronize()
+
+
+def _get_wandb_config(args):
+    return getattr(args, "wandb", {"enabled": False})
+
+
+def _init_wandb(args):
+    wandb_cfg = _get_wandb_config(args)
+    if not wandb_cfg.get("enabled", False):
+        return False
+    if wandb is None:
+        raise ImportError(
+            "wandb logging is enabled in the config, but the 'wandb' package is not installed.")
+
+    wandb.init(
+        project=wandb_cfg["project"],
+        entity=wandb_cfg["entity"],
+        name=wandb_cfg["name"],
+        config={
+            "prompts": _resolve_prompts(args),
+            "model_names": _resolve_models(args),
+            "num_inference_steps": args.num_inference_steps,
+            "seed": args.seed,
+            "output_dir": str(Path(getattr(args, "output_dir", DEFAULT_OUTPUT_DIR))),
+            "image_prompt": args.image_prompt,
+        },
+    )
+    return True
+
+
+def _log_wandb_results(saved_images, comparison_path, args, prompt: str, prompt_slug: str):
+    wandb_cfg = _get_wandb_config(args)
+    if not wandb_cfg.get("enabled", False):
+        return
+
+    table = wandb.Table(
+        columns=["prompt", "model_name", "generation_time_s", "image"])
+    log_payload = {}
+    for item in saved_images:
+        image_caption = (
+            f"model={item['model_name']} | prompt={prompt} | "
+            f"seed={args.seed} | time={item['generation_time_s']:.2f}s"
+        )
+        wandb_image = wandb.Image(str(item["path"]), caption=image_caption)
+        table.add_data(prompt, item["model_name"],
+                       item["generation_time_s"], wandb_image)
+
+        model_slug = _sanitize_filename(item["model_name"], max_length=60)
+        log_payload[f"timing/{prompt_slug}/{model_slug}_seconds"] = item["generation_time_s"]
+        log_payload[f"generation/{prompt_slug}/{model_slug}"] = wandb_image
+
+    if saved_images:
+        total_generation_time_s = sum(
+            item["generation_time_s"] for item in saved_images)
+        avg_generation_time_s = total_generation_time_s / len(saved_images)
+        log_payload[f"timing/{prompt_slug}/total_generation_time_s"] = total_generation_time_s
+        log_payload[f"timing/{prompt_slug}/avg_generation_time_s"] = avg_generation_time_s
+        log_payload[f"timing/{prompt_slug}/num_models"] = len(saved_images)
+        log_payload[f"generations/{prompt_slug}/table"] = table
+
+    if comparison_path is not None:
+        log_payload[f"generation/{prompt_slug}/comparison_grid"] = wandb.Image(
+            str(comparison_path),
+            caption=f"prompt={prompt} | seed={args.seed}",
+        )
+
+    wandb.log(log_payload)
+
+
+def _load_model_bundle(model_name: str, args, device: torch.device):
     is_cuda = device.type == "cuda"
     pipe_dtype = torch.bfloat16 if is_cuda else torch.float32
     fp16_dtype = torch.float16 if is_cuda else torch.float32
-    seed = getattr(args, "seed", DEFAULT_SEED)
-    num_inference_steps = getattr(
-        args, "num_inference_steps", DEFAULT_NUM_INFERENCE_STEPS)
-    generator = _generator_for(device, seed)
 
     if model_name == "stabilityai/sd-turbo":
-        print(f"Generating an image with {model_name}...", flush=True)
         if args.image_prompt:
             pipe = AutoPipelineForImage2Image.from_pretrained(
                 model_name,
                 **_pipeline_kwargs(fp16_dtype, is_cuda),
             )
             pipe = pipe.to(device)
-            init_image = _load_image_prompt(args.image_prompt)
-            image = pipe(
-                prompt=args.prompt,
-                image=init_image,
-                num_inference_steps=min(num_inference_steps, 2),
-                strength=0.5,
-                guidance_scale=0.0,
-                generator=generator,
-            ).images[0]
+            bundle = {
+                "model_name": model_name,
+                "pipeline": pipe,
+                "mode": "image_to_image",
+                "init_image": _load_image_prompt(args.image_prompt),
+            }
         else:
             pipe = AutoPipelineForText2Image.from_pretrained(
                 model_name,
                 **_pipeline_kwargs(fp16_dtype, is_cuda),
             )
             pipe = pipe.to(device)
-            image = pipe(
-                prompt=args.prompt,
-                num_inference_steps=num_inference_steps,
-                guidance_scale=0.0,
-                generator=generator,
-            ).images[0]
-        print(f"Finished generating with {model_name}.", flush=True)
+            bundle = {
+                "model_name": model_name,
+                "pipeline": pipe,
+                "mode": "text_to_image",
+            }
 
     elif model_name == "stabilityai/stable-diffusion-xl-base-1.0":
-        print(f"Generating an image with {model_name}...", flush=True)
         pipe = DiffusionPipeline.from_pretrained(
             model_name,
             **_pipeline_kwargs(fp16_dtype, is_cuda, use_safetensors=True),
         )
         pipe = pipe.to(device)
-        image = pipe(
-            prompt=args.prompt,
-            num_inference_steps=num_inference_steps,
-            generator=generator,
-        ).images[0]
-        print(f"Finished generating with {model_name}.", flush=True)
+        bundle = {
+            "model_name": model_name,
+            "pipeline": pipe,
+            "mode": "sdxl",
+        }
 
     elif model_name == "black-forest-labs/FLUX.1-schnell":
-        print(f"Generating an image with {model_name}...", flush=True)
         pipe = FluxPipeline.from_pretrained(model_name, torch_dtype=pipe_dtype)
         if is_cuda:
             pipe.enable_model_cpu_offload()
         else:
             pipe = pipe.to(device)
-
-        image = pipe(
-            prompt=args.prompt,
-            guidance_scale=0.0,
-            num_inference_steps=min(num_inference_steps, 4),
-            max_sequence_length=256,
-            generator=generator,
-        ).images[0]
-        print(f"Finished generating with {model_name}.", flush=True)
+        bundle = {
+            "model_name": model_name,
+            "pipeline": pipe,
+            "mode": "flux_schnell",
+        }
 
     elif model_name == "diffusers/FLUX.2-dev-bnb-4bit":
-        print(f"Generating an image with {model_name}...", flush=True)
         text_encoder = Mistral3ForConditionalGeneration.from_pretrained(
             model_name,
             subfolder="text_encoder",
@@ -235,80 +322,182 @@ def _generate_with_model(model_name: str, args, device: torch.device):
             pipe.enable_model_cpu_offload()
         else:
             pipe = pipe.to(device)
-
-        image = pipe(
-            prompt=args.prompt,
-            generator=generator,
-            num_inference_steps=num_inference_steps,
-            guidance_scale=4,
-        ).images[0]
-        print(f"Finished generating with {model_name}.", flush=True)
+        bundle = {
+            "model_name": model_name,
+            "pipeline": pipe,
+            "mode": "flux2_dev",
+            "text_encoder": text_encoder,
+            "transformer": dit,
+        }
 
     elif model_name == "black-forest-labs/FLUX.2-klein-base-4B":
-        print(f"Generating an image with {model_name}...", flush=True)
         pipe = Flux2KleinPipeline.from_pretrained(
             model_name, torch_dtype=pipe_dtype)
         if is_cuda:
             pipe.enable_model_cpu_offload()
         else:
             pipe = pipe.to(device)
+        bundle = {
+            "model_name": model_name,
+            "pipeline": pipe,
+            "mode": "flux2_klein",
+        }
 
+    else:
+        raise ValueError(f"Unsupported model: {model_name}")
+
+    return bundle
+
+
+def _generate_with_model_bundle(model_bundle, prompt: str, args, device: torch.device):
+    model_name = model_bundle["model_name"]
+    pipe = model_bundle["pipeline"]
+    seed = getattr(args, "seed", DEFAULT_SEED)
+    num_inference_steps = getattr(
+        args, "num_inference_steps", DEFAULT_NUM_INFERENCE_STEPS)
+    generator = _generator_for(device, seed)
+
+    print(f"Generating an image with {model_name} for prompt: {prompt}", flush=True)
+
+    if model_bundle["mode"] == "image_to_image":
         image = pipe(
-            prompt=args.prompt,
+            prompt=prompt,
+            image=model_bundle["init_image"],
+            num_inference_steps=min(num_inference_steps, 2),
+            strength=0.5,
+            guidance_scale=0.0,
+            generator=generator,
+        ).images[0]
+    elif model_bundle["mode"] == "text_to_image":
+        image = pipe(
+            prompt=prompt,
+            num_inference_steps=num_inference_steps,
+            guidance_scale=0.0,
+            generator=generator,
+        ).images[0]
+    elif model_bundle["mode"] == "sdxl":
+        image = pipe(
+            prompt=prompt,
+            num_inference_steps=num_inference_steps,
+            generator=generator,
+        ).images[0]
+    elif model_bundle["mode"] == "flux_schnell":
+        image = pipe(
+            prompt=prompt,
+            guidance_scale=0.0,
+            num_inference_steps=min(num_inference_steps, 4),
+            max_sequence_length=256,
+            generator=generator,
+        ).images[0]
+    elif model_bundle["mode"] == "flux2_dev":
+        image = pipe(
+            prompt=prompt,
+            generator=generator,
+            num_inference_steps=num_inference_steps,
+            guidance_scale=4,
+        ).images[0]
+    elif model_bundle["mode"] == "flux2_klein":
+        image = pipe(
+            prompt=prompt,
             height=1024,
             width=1024,
             guidance_scale=4.0,
             num_inference_steps=num_inference_steps,
             generator=generator,
         ).images[0]
-        print(f"Finished generating with {model_name}.", flush=True)
-
     else:
-        raise ValueError(f"Unsupported model: {model_name}")
+        raise ValueError(f"Unsupported generation mode: {model_bundle['mode']}")
 
+    print(f"Finished generating with {model_name}.", flush=True)
     return image
 
 
-def run_diffusion_inference(args):
-    if not getattr(args, "prompt", None):
-        raise ValueError("A non-empty prompt must be provided.")
+def _release_model_bundle(model_bundle, device: torch.device):
+    for key in ("pipeline", "text_encoder", "transformer", "init_image"):
+        if key in model_bundle:
+            del model_bundle[key]
+    if device.type == "cuda":
+        torch.cuda.empty_cache()
 
+
+def run_diffusion_inference(args):
     if getattr(args, "num_inference_steps", None) is None:
         args.num_inference_steps = DEFAULT_NUM_INFERENCE_STEPS
     if getattr(args, "seed", None) is None:
         args.seed = DEFAULT_SEED
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    output_dir = _resolve_output_dir(args)
+    prompts = _resolve_prompts(args)
     model_names = _resolve_models(args)
-    prompt_slug = _sanitize_filename(args.prompt, max_length=50)
+    wandb_enabled = _init_wandb(args)
 
-    saved_paths = []
-    saved_images = []
+    prompt_results = {}
+    for prompt in prompts:
+        prompt_slug = _sanitize_filename(prompt, max_length=50)
+        prompt_results[prompt] = {
+            "prompt_slug": prompt_slug,
+            "output_dir": _resolve_output_dir(args, prompt),
+            "saved_paths": [],
+            "saved_images": [],
+        }
+
+    all_saved_paths = []
     for model_name in model_names:
-        image = _generate_with_model(model_name, args, device)
-        model_slug = _sanitize_filename(model_name, max_length=60)
-        output_path = output_dir / \
-            f"{model_slug}__seed_{args.seed}__{prompt_slug}.png"
-        image.save(output_path)
-        saved_paths.append(output_path)
-        saved_images.append(
-            {
-                "model_name": model_name,
-                "image": image,
-                "path": output_path,
-            }
+        print(f"Loading model once for all prompts: {model_name}", flush=True)
+        model_bundle = _load_model_bundle(model_name, args, device)
+        try:
+            for prompt in prompts:
+                prompt_data = prompt_results[prompt]
+                _sync_device(device)
+                start_time = time.perf_counter()
+                image = _generate_with_model_bundle(model_bundle, prompt, args, device)
+                _sync_device(device)
+                generation_time_s = time.perf_counter() - start_time
+
+                model_slug = _sanitize_filename(model_name, max_length=60)
+                output_path = prompt_data["output_dir"] / f"{model_slug}.png"
+                image.save(output_path)
+                all_saved_paths.append(output_path)
+                prompt_data["saved_paths"].append(output_path)
+                prompt_data["saved_images"].append(
+                    {
+                        "model_name": model_name,
+                        "image": image,
+                        "path": output_path,
+                        "generation_time_s": generation_time_s,
+                    }
+                )
+                print(
+                    f"Saved generation for {model_name} -> {output_path} ({generation_time_s:.2f}s)",
+                    flush=True,
+                )
+        finally:
+            _release_model_bundle(model_bundle, device)
+            print(f"Released model resources for {model_name}", flush=True)
+
+    for prompt in prompts:
+        prompt_data = prompt_results[prompt]
+        comparison_path = _build_comparison_grid(
+            prompt_data["saved_images"],
+            prompt=prompt,
+            seed=args.seed,
+            output_dir=prompt_data["output_dir"],
+            prompt_slug=prompt_data["prompt_slug"],
         )
-        print(f"Saved generation for {model_name} -> {output_path}")
+        if comparison_path is not None:
+            all_saved_paths.append(comparison_path)
+            prompt_data["saved_paths"].append(comparison_path)
 
-    comparison_path = _build_comparison_grid(
-        saved_images,
-        prompt=args.prompt,
-        seed=args.seed,
-        output_dir=output_dir,
-        prompt_slug=prompt_slug,
-    )
-    if comparison_path is not None:
-        saved_paths.append(comparison_path)
+        if wandb_enabled:
+            _log_wandb_results(
+                prompt_data["saved_images"],
+                comparison_path,
+                args,
+                prompt,
+                prompt_data["prompt_slug"],
+            )
 
-    return saved_paths
+    if wandb_enabled:
+        wandb.finish()
+
+    return all_saved_paths

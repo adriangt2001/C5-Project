@@ -1,4 +1,8 @@
-prompt: "A can of tomato soup on top of a kitchen counter."
+prompts:
+  - "A can of tomato soup on top of a kitchen counter."
+  - "A cinematic portrait of an astronaut riding a green horse through a misty forest at sunrise."
+  - "A realistic macro photograph of a hermit crab using a soda can as its shell on a sunlit beach."
+  - "A cat holding a sign that says hello world."
 
 model_names:
   - "black-forest-labs/FLUX.2-klein-base-4B"
@@ -10,3 +14,9 @@ model_names:
 num_inference_steps: 30
 seed: 0
 output_dir: "results/diffusion_generation"
+
+wandb:
+  enabled: false
+  project: "c5-week5-diffusion"
+  entity: "c5-team2"
+  name: "compare-diffusion-models"
