@@ -12,4 +12,4 @@
 #SBATCH -e logs/%x_%u_%j.err # File to which STDERR will be written
 
 
-python -m src.main --config configs/diffusion/compare_models.yaml diffusion_inference
+python -m src.main --config configs/diffusion/compare_models_sd_5steps.yaml diffusion_inference
