@@ -42,6 +42,8 @@ Week2/src/task_e/sam_vit_b_01ec64.pth
 Week2/src/task_g/results
 Week3/runs
 Week3/runs_final_test
+Week5/outputs
+Week5/inputs
 
 # Installer logs
 pip-log.txt
