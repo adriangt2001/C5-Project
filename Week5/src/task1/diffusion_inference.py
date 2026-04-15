@@ -12,6 +12,7 @@ from diffusers import (
     AutoPipelineForImage2Image,
     AutoPipelineForText2Image,
     DiffusionPipeline,
+    StableDiffusion3Pipeline,
     Flux2KleinPipeline,
     Flux2Pipeline,
     FluxPipeline,
@@ -109,7 +110,8 @@ def _effective_num_inference_steps(model_bundle, args) -> int:
 
 def _effective_image_to_image_strength(strength: float, num_inference_steps: int) -> float:
     if num_inference_steps <= 0:
-        raise ValueError("num_inference_steps must be positive for image-to-image generation.")
+        raise ValueError(
+            "num_inference_steps must be positive for image-to-image generation.")
     minimum_strength = 1.0 / num_inference_steps
     return max(strength, minimum_strength)
 
@@ -132,9 +134,11 @@ def _load_image_prompt(image_prompt: Optional[str]) -> Optional[Image.Image]:
                 )
             loaded_image = pil_image.convert("RGB")
     except Exception as exc:
-        raise ValueError(f"Failed to load image prompt '{image_prompt}': {exc}") from exc
+        raise ValueError(
+            f"Failed to load image prompt '{image_prompt}': {exc}") from exc
 
-    print(f"Loaded image prompt from {image_path} with size {loaded_image.size}", flush=True)
+    print(
+        f"Loaded image prompt from {image_path} with size {loaded_image.size}", flush=True)
     return loaded_image
 
 
@@ -482,6 +486,32 @@ def _load_model_bundle(model_name: str, args, device: torch.device):
                 "mode": "sdxl",
             }
 
+    elif model_name in ["stabilityai/stable-diffusion-3.5-medium",
+                        "stabilityai/stable-diffusion-3.5-large"]:
+        pipe = StableDiffusion3Pipeline.from_pretrained(
+            model_name,
+            **_pipeline_kwargs(fp16_dtype, is_cuda)
+        )
+        pipe = pipe.to(device)
+
+        bundle = {
+            "model_name": model_name,
+            "pipeline": pipe,
+            "mode": "sd35",
+        }
+
+    elif model_name == "stabilityai/stable-diffusion-3.5-large-turbo":
+        pipe = StableDiffusion3Pipeline.from_pretrained(
+            model_name,
+            **_pipeline_kwargs(fp16_dtype, is_cuda)
+        )
+        pipe = pipe.to(device)
+        bundle = {
+            "model_name": model_name,
+            "pipeline": pipe,
+            "mode": "sd35-turbo",
+        }
+
     elif model_name == "black-forest-labs/FLUX.1-schnell":
         pipe = FluxPipeline.from_pretrained(model_name, torch_dtype=pipe_dtype)
         if is_cuda:
@@ -607,6 +637,20 @@ def _generate_with_model_bundle(model_bundle, prompt: str, args, device: torch.d
             num_inference_steps=num_inference_steps,
             generator=generator,
         ).images[0]
+    elif model_bundle["mode"] == "sd35":
+        image = pipe(
+            prompt=prompt,
+            num_inference_steps=num_inference_steps,
+            guidance_scale=4.5,
+            generator=generator,
+        ).images[0]
+    elif model_bundle["mode"] == "sd35-turbo":
+        image = pipe(
+            prompt=prompt,
+            num_inference_steps=num_inference_steps,
+            guidance_scale=0,
+            generator=generator,
+        ).images[0]
     elif model_bundle["mode"] == "flux_schnell":
         image = pipe(
             prompt=prompt,
@@ -652,7 +696,8 @@ def run_diffusion_inference(args):
         args.seed = DEFAULT_SEED
     if getattr(args, "strength", None) is None:
         args.strength = DEFAULT_IMAGE_STRENGTH
-    args.loaded_image_prompt = _load_image_prompt(getattr(args, "image_prompt", None))
+    args.loaded_image_prompt = _load_image_prompt(
+        getattr(args, "image_prompt", None))
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     base_output_dir = _resolve_output_dir(args)
