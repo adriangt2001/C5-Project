@@ -11,7 +11,9 @@ import torch
 from diffusers import (
     AutoPipelineForImage2Image,
     AutoPipelineForText2Image,
+    BitsAndBytesConfig,
     DiffusionPipeline,
+    SD3Transformer2DModel,
     StableDiffusion3Pipeline,
     Flux2KleinPipeline,
     Flux2Pipeline,
@@ -98,6 +100,13 @@ def _resolve_num_inference_steps(args, model_name: str) -> int:
     if model_name in steps_by_model:
         return steps_by_model[model_name]
     return getattr(args, "num_inference_steps", DEFAULT_NUM_INFERENCE_STEPS)
+
+
+def _resolve_quantization(args, model_name: str) -> Optional[str]:
+    quantization_by_model = getattr(args, "quantization_by_model", None) or {}
+    if model_name in quantization_by_model:
+        return quantization_by_model[model_name]
+    return getattr(args, "quantization", None)
 
 
 def _effective_num_inference_steps(model_bundle, args) -> int:
@@ -338,6 +347,8 @@ def _init_wandb(args):
             "model_names": _resolve_models(args),
             "num_inference_steps": args.num_inference_steps,
             "num_inference_steps_by_model": getattr(args, "num_inference_steps_by_model", None),
+            "quantization": getattr(args, "quantization", None),
+            "quantization_by_model": getattr(args, "quantization_by_model", None),
             "seed": args.seed,
             "output_dir": str(Path(getattr(args, "output_dir", DEFAULT_OUTPUT_DIR))),
             "image_prompt": args.image_prompt,
@@ -396,6 +407,8 @@ def _write_run_summary(output_dir: Path, prompt_results, args) -> Path:
         "seed": args.seed,
         "default_num_inference_steps": getattr(args, "num_inference_steps", DEFAULT_NUM_INFERENCE_STEPS),
         "num_inference_steps_by_model": getattr(args, "num_inference_steps_by_model", None),
+        "quantization": getattr(args, "quantization", None),
+        "quantization_by_model": getattr(args, "quantization_by_model", None),
         "prompts": [],
     }
 
@@ -416,6 +429,7 @@ def _write_run_summary(output_dir: Path, prompt_results, args) -> Path:
                     "model_name": item["model_name"],
                     "generation_time_s": item["generation_time_s"],
                     "num_inference_steps": item["num_inference_steps"],
+                    "quantization": item.get("quantization"),
                     "image_path": str(item["path"]),
                 }
             )
@@ -432,6 +446,7 @@ def _load_model_bundle(model_name: str, args, device: torch.device):
     is_cuda = device.type == "cuda"
     pipe_dtype = torch.bfloat16 if is_cuda else torch.float32
     fp16_dtype = torch.float16 if is_cuda else torch.float32
+    quantization_mode = _resolve_quantization(args, model_name)
 
     if args.image_prompt:
         _ensure_supported_image_to_image_model(model_name)
@@ -488,28 +503,84 @@ def _load_model_bundle(model_name: str, args, device: torch.device):
 
     elif model_name in ["stabilityai/stable-diffusion-3.5-medium",
                         "stabilityai/stable-diffusion-3.5-large"]:
-        pipe = StableDiffusion3Pipeline.from_pretrained(
-            model_name,
-            **_pipeline_kwargs(fp16_dtype, is_cuda)
-        )
-        pipe = pipe.to(device)
+        if quantization_mode == "bitsandbytes_8bit":
+            if not is_cuda:
+                raise ValueError(
+                    "bitsandbytes 8-bit quantization for Stable Diffusion 3.5 requires CUDA."
+                )
+            quantization_config = BitsAndBytesConfig(
+                load_in_8bit=True,
+                llm_int8_skip_modules=["proj_out"],
+            )
+            transformer_8bit = SD3Transformer2DModel.from_pretrained(
+                model_name,
+                subfolder="transformer",
+                quantization_config=quantization_config,
+                torch_dtype=pipe_dtype,
+            )
+            pipe = StableDiffusion3Pipeline.from_pretrained(
+                model_name,
+                transformer=transformer_8bit,
+                torch_dtype=pipe_dtype,
+            )
+            pipe.enable_model_cpu_offload()
+        elif quantization_mode is None:
+            pipe = StableDiffusion3Pipeline.from_pretrained(
+                model_name,
+                torch_dtype=pipe_dtype,
+            )
+            pipe = pipe.to(device)
+        else:
+            raise ValueError(
+                f"Unsupported quantization mode '{quantization_mode}' for {model_name}. "
+                "Use 'bitsandbytes_8bit' or omit quantization."
+            )
 
         bundle = {
             "model_name": model_name,
             "pipeline": pipe,
             "mode": "sd35",
+            "quantization": quantization_mode,
         }
 
     elif model_name == "stabilityai/stable-diffusion-3.5-large-turbo":
-        pipe = StableDiffusion3Pipeline.from_pretrained(
-            model_name,
-            **_pipeline_kwargs(fp16_dtype, is_cuda)
-        )
-        pipe = pipe.to(device)
+        if quantization_mode == "bitsandbytes_8bit":
+            if not is_cuda:
+                raise ValueError(
+                    "bitsandbytes 8-bit quantization for Stable Diffusion 3.5 requires CUDA."
+                )
+            quantization_config = BitsAndBytesConfig(
+                load_in_8bit=True,
+                llm_int8_skip_modules=["proj_out"],
+            )
+            transformer_8bit = SD3Transformer2DModel.from_pretrained(
+                model_name,
+                subfolder="transformer",
+                quantization_config=quantization_config,
+                torch_dtype=pipe_dtype,
+            )
+            pipe = StableDiffusion3Pipeline.from_pretrained(
+                model_name,
+                transformer=transformer_8bit,
+                torch_dtype=pipe_dtype,
+            )
+            pipe.enable_model_cpu_offload()
+        elif quantization_mode is None:
+            pipe = StableDiffusion3Pipeline.from_pretrained(
+                model_name,
+                torch_dtype=pipe_dtype,
+            )
+            pipe = pipe.to(device)
+        else:
+            raise ValueError(
+                f"Unsupported quantization mode '{quantization_mode}' for {model_name}. "
+                "Use 'bitsandbytes_8bit' or omit quantization."
+            )
         bundle = {
             "model_name": model_name,
             "pipeline": pipe,
             "mode": "sd35-turbo",
+            "quantization": quantization_mode,
         }
 
     elif model_name == "black-forest-labs/FLUX.1-schnell":
@@ -743,6 +814,7 @@ def run_diffusion_inference(args):
                         "path": output_path,
                         "generation_time_s": generation_time_s,
                         "num_inference_steps": _effective_num_inference_steps(model_bundle, args),
+                        "quantization": model_bundle.get("quantization"),
                     }
                 )
                 print(
