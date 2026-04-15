@@ -161,6 +161,25 @@ def _load_reference_image(reference_image_path: Optional[str]) -> Optional[Image
     return Image.open(image_path).convert("RGB")
 
 
+def _load_generated_image(image_path: Path) -> Image.Image:
+    if not image_path.exists():
+        raise FileNotFoundError(f"Generated image not found: {image_path}")
+    return Image.open(image_path).convert("RGB")
+
+
+def _load_existing_summary(output_dir: Path):
+    summary_path = output_dir / "generation_summary.json"
+    if not summary_path.exists():
+        return {}
+    summary = json.loads(summary_path.read_text())
+    summary_lookup = {}
+    for prompt_entry in summary.get("prompts", []):
+        prompt = prompt_entry["prompt"]
+        for generation in prompt_entry.get("generations", []):
+            summary_lookup[(prompt, generation["model_name"])] = generation
+    return summary_lookup
+
+
 def _ensure_supported_image_to_image_model(model_name: str):
     supported_models = {
         "stabilityai/sd-turbo",
@@ -760,6 +779,71 @@ def _release_model_bundle(model_bundle, device: torch.device):
         torch.cuda.empty_cache()
 
 
+def _rebuild_grids_only(args, base_output_dir: Path, prompts, reference_images_by_prompt, model_names):
+    all_saved_paths = []
+    prompt_results = {}
+    summary_lookup = _load_existing_summary(base_output_dir)
+
+    for prompt in prompts:
+        prompt_slug = _sanitize_filename(prompt, max_length=50)
+        output_dir = _resolve_output_dir(args, prompt)
+        saved_images = []
+
+        reference_image = _load_reference_image(reference_images_by_prompt[prompt])
+        if reference_image is not None:
+            saved_images.append(
+                {
+                    "model_name": "reference_image",
+                    "display_name": "example image of the VizWiz dataset (not used as input)",
+                    "image": reference_image,
+                    "path": reference_images_by_prompt[prompt],
+                    "generation_time_s": None,
+                    "num_inference_steps": None,
+                    "quantization": None,
+                }
+            )
+
+        for model_name in model_names:
+            model_slug = _sanitize_filename(model_name, max_length=60)
+            image_path = output_dir / f"{model_slug}.png"
+            generation_metadata = summary_lookup.get((prompt, model_name), {})
+            saved_images.append(
+                {
+                    "model_name": model_name,
+                    "image": _load_generated_image(image_path),
+                    "path": image_path,
+                    "generation_time_s": generation_metadata.get("generation_time_s"),
+                    "num_inference_steps": generation_metadata.get(
+                        "num_inference_steps", _resolve_num_inference_steps(args, model_name)
+                    ),
+                    "quantization": generation_metadata.get(
+                        "quantization", _resolve_quantization(args, model_name)
+                    ),
+                }
+            )
+
+        comparison_path = _build_comparison_grid(
+            saved_images,
+            prompt=prompt,
+            seed=args.seed,
+            output_dir=output_dir,
+            prompt_slug=prompt_slug,
+        )
+        if comparison_path is not None:
+            all_saved_paths.append(comparison_path)
+
+        prompt_results[prompt] = {
+            "prompt_slug": prompt_slug,
+            "output_dir": output_dir,
+            "saved_images": saved_images,
+            "reference_image_path": reference_images_by_prompt[prompt],
+        }
+
+    summary_path = _write_run_summary(base_output_dir, prompt_results, args)
+    all_saved_paths.append(summary_path)
+    return all_saved_paths
+
+
 def run_diffusion_inference(args):
     if getattr(args, "num_inference_steps", None) is None:
         args.num_inference_steps = DEFAULT_NUM_INFERENCE_STEPS
@@ -775,6 +859,16 @@ def run_diffusion_inference(args):
     prompts = _resolve_prompts(args)
     reference_images_by_prompt = _resolve_reference_images(args, prompts)
     model_names = _resolve_models(args)
+
+    if getattr(args, "grids_only", False):
+        return _rebuild_grids_only(
+            args,
+            base_output_dir=base_output_dir,
+            prompts=prompts,
+            reference_images_by_prompt=reference_images_by_prompt,
+            model_names=model_names,
+        )
+
     wandb_enabled = _init_wandb(args)
 
     prompt_results = {}

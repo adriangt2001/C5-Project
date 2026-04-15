@@ -24,30 +24,31 @@ prompts:
   - "low quality picture of a round dial knob on a white washing machine"
   
 
-
 reference_images:
   - data/train/VizWiz_train_00000002.jpg # crushed tomatoes
+  - data/train/VizWiz_train_00000000.jpg # basil leaves
+  - data/train/VizWiz_train_00001014.jpg # watch
+  - data/train/VizWiz_train_00002000.jpg # mac computer screen
+  - data/train/VizWiz_train_00002006.jpg # deodorant
+  - data/train/VizWiz_train_00000358.jpg # kitchenaid tag
+  - data/train/VizWiz_train_00002358.jpg # broth box
+  - data/train/VizWiz_train_00002357.jpg # bathroom
+  - data/train/VizWiz_train_00002355.jpg # dog
+  - data/train/VizWiz_train_00002352.jpg # video conversion system
+  - data/train/VizWiz_train_00002348.jpg # washing machine
+  
   - data/train/VizWiz_train_00000002.jpg # crushed tomatoes
   - data/train/VizWiz_train_00000000.jpg # basil leaves
-  - data/train/VizWiz_train_00000000.jpg # basil leaves
-  - data/train/VizWiz_train_00001014.jpg # watch
   - data/train/VizWiz_train_00001014.jpg # watch
   - data/train/VizWiz_train_00002000.jpg # mac computer screen
-  - data/train/VizWiz_train_00002000.jpg # mac computer screen
-  - data/train/VizWiz_train_00002006.jpg # deodorant
   - data/train/VizWiz_train_00002006.jpg # deodorant
   - data/train/VizWiz_train_00000358.jpg # kitchenaid tag
-  - data/train/VizWiz_train_00000358.jpg # kitchenaid tag
-  - data/train/VizWiz_train_00002358.jpg # broth box
   - data/train/VizWiz_train_00002358.jpg # broth box
   - data/train/VizWiz_train_00002357.jpg # bathroom
-  - data/train/VizWiz_train_00002357.jpg # bathroom
-  - data/train/VizWiz_train_00002355.jpg # dog
   - data/train/VizWiz_train_00002355.jpg # dog
   - data/train/VizWiz_train_00002352.jpg # video conversion system
-  - data/train/VizWiz_train_00002352.jpg # video conversion system
   - data/train/VizWiz_train_00002348.jpg # washing machine
-  - data/train/VizWiz_train_00002348.jpg # washing machine
+
 
 
 model_names:

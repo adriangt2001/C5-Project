@@ -1,0 +1,25 @@
+prompts:
+  - "A cinematic portrait of a fox in a tailored blue coat, soft studio lighting, highly detailed fur."
+  - "A product photo of a can of crushed tomatoes on a brown surface."
+
+model_names:
+  - "stabilityai/stable-diffusion-3.5-large"
+  - "stabilityai/stable-diffusion-3.5-large-turbo"
+
+num_inference_steps: 28
+num_inference_steps_by_model:
+  "stabilityai/stable-diffusion-3.5-large": 28
+  "stabilityai/stable-diffusion-3.5-large-turbo": 4
+
+quantization_by_model:
+  "stabilityai/stable-diffusion-3.5-large": "bitsandbytes_8bit"
+  "stabilityai/stable-diffusion-3.5-large-turbo": "bitsandbytes_8bit"
+
+seed: 0
+output_dir: "results/diffusion_generation"
+
+wandb:
+  enabled: false
+  project: "c5-week5-diffusion"
+  entity: "c5-team2"
+  name: "sd35-large-8bit-compare"

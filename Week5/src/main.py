@@ -39,6 +39,9 @@ def args_parser():
     diffusion_inference_parser.add_argument(
         "--output_dir", type=str, default=None,
         help="Directory where generated images will be stored")
+    diffusion_inference_parser.add_argument(
+        "--grids_only", action="store_true",
+        help="Only rebuild comparison grids from already generated images")
     diffusion_inference_parser.set_defaults(func=run_diffusion_inference)
 
     return main_parser.parse_args()
@@ -48,7 +51,11 @@ def main(args):
     if hasattr(args, "config") and args.config:
         yaml_config = load_config(args.config)
         for key, value in yaml_config.items():
-            if not hasattr(args, key) or getattr(args, key) is None:
+            if (
+                not hasattr(args, key)
+                or getattr(args, key) is None
+                or (isinstance(value, bool) and getattr(args, key) is False)
+            ):
                 setattr(args, key, value)
     args.func(args)
 
