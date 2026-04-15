@@ -48,8 +48,18 @@ def generate_for_model(model_cfg, args):
     load_time_seconds = time.perf_counter() - load_start
     estimated_model_size_mb = estimate_pipeline_size_mb(pipeline)
 
-    model_guidance = model_cfg.get("guidance_scale", args.guidance_scale)
-    model_steps = model_cfg.get("num_inference_steps", args.num_inference_steps)
+    # Get model-specific parameters (required for each model)
+    model_guidance = model_cfg["guidance_scale"]
+    model_steps = model_cfg["num_inference_steps"]
+    model_height = model_cfg["height"]
+    model_width = model_cfg["width"]
+
+    print(f"\n🚀 Loading model: {model_name}")
+    print(f"   Model ID: {model_cfg['model_id']}")
+    print(f"   Family: {model_cfg.get('family', 'sd')}")
+    print(f"   Parameters: guidance_scale={model_guidance}, steps={model_steps}, height={model_height}, width={model_width}")
+    print(f"   Estimated size: {estimated_model_size_mb:.1f} MB")
+    print(f"   Load time: {load_time_seconds:.2f} seconds")
 
     samples = []
     prompt_times = []
@@ -59,8 +69,8 @@ def generate_for_model(model_cfg, args):
         result = pipeline(
             prompt=prompt,
             negative_prompt=getattr(args, "negative_prompt", None),
-            height=args.height,
-            width=args.width,
+            height=model_height,
+            width=model_width,
             guidance_scale=model_guidance,
             num_inference_steps=model_steps,
             num_images_per_prompt=args.num_images_per_prompt,
@@ -77,7 +87,7 @@ def generate_for_model(model_cfg, args):
             image_paths.append(str(image_path))
 
         if result.images:
-            grid = make_image_grid(result.images)
+            grid = make_image_grid(result.images, title=prompt)
             grid.save(model_dir / f"prompt_{prompt_idx:02d}_grid.png")
 
         samples.append(
@@ -86,6 +96,8 @@ def generate_for_model(model_cfg, args):
                 "prompt": prompt,
                 "guidance_scale": model_guidance,
                 "num_inference_steps": model_steps,
+                "height": model_height,
+                "width": model_width,
                 "generation_time_seconds": generation_time_seconds,
                 "image_paths": image_paths,
             }

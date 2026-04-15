@@ -1,32 +1,39 @@
 seed: 7
 device: auto
 dtype: float16
-height: 512
-width: 512
-num_images_per_prompt: 1
-guidance_scale: 7.5
-num_inference_steps: 30
+num_images_per_prompt: 4  # start here for debugging
 output_dir: outputs/task_a
 
 models:
   - name: sd_turbo
     model_id: stabilityai/sd-turbo
     family: sd
+    height: 512
+    width: 512
     guidance_scale: 0.0
     num_inference_steps: 4
+
   - name: sdxl
     model_id: stabilityai/stable-diffusion-xl-base-1.0
     family: sdxl
+    height: 1024
+    width: 1024
+    guidance_scale: 6.0
+    num_inference_steps: 30
+
   - name: sdxl_turbo
     model_id: stabilityai/sdxl-turbo
     family: sdxl
+    height: 1024
+    width: 1024
     guidance_scale: 0.0
     num_inference_steps: 4
 
 prompts:
-  - "A blurry photo of a cereal box on a kitchen counter, partially out of frame, taken with poor lighting, realistic image"
-  - "A dark photo of a bedroom corner with clothes on the floor, realistic image"
-  - "A very dark photo where only part of an object is visible, realistic image"
-  - "A photo taken too close to an object, making it hard to identify, realistic image"
+  - “A blurry, poorly framed photo of a cereal box on a kitchen counter, taken by a visually impaired person, with the object partially out of frame, cluttered background, and harsh indoor lighting”
+  - “A low-quality, shaky image of a can of food on a wooden table, taken by a visually impaired person, with motion blur, poor focus, and part of the object cut off
+  - “A blurry image of a book cover, taken by a visually impaired person, with the camera focused on the background instead of the book, under dim lighting and with the book partially out of frame”
+  - “A poorly lit, low-resolution image of a food package, taken by a visually impaired person, with unreadable text, glare from flash, and clutter obscuring parts of the object”
+  - “A blurry photo of a laptop with the screen barely visible, taken by a visually impaired person, with incorrect framing, strong glare, and the camera pointing slightly away from the screen”
 
-negative_prompt: "blurry face, extra fingers, duplicate objects, distorted hands, text artifacts, watermark, low quality"
+negative_prompt: “high quality, sharp focus, professional photography, studio lighting, centered composition, clean background, highly detailed, HDR, 4k, well-lit”
