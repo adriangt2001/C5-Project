@@ -6,6 +6,7 @@
   "seed": 42,
   "num_inference_steps": 60,
   "guidance_scale": 4,
+  "prompt_prefix": "low quality picture of a ",
   "height": 1024,
   "width": 1024,
   "skip_existing": true

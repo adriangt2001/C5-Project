@@ -4,8 +4,9 @@
   "output_dir": "Week5/results/flux_run_shard_2",
   "device": "auto",
   "seed": 42,
-  "num_inference_steps": 28,
-  "guidance_scale": 3.5,
+  "num_inference_steps": 60,
+  "guidance_scale": 4,
+  "prompt_prefix": "low quality picture of a ",
   "height": 1024,
   "width": 1024,
   "skip_existing": true

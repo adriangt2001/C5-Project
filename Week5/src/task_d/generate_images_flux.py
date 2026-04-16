@@ -143,6 +143,13 @@ def load_prompts(args) -> list[dict]:
     return prompt_records
 
 
+def build_model_prompt(caption: str, prompt_prefix: str | None) -> str:
+    prefix = (prompt_prefix or "").strip()
+    if not prefix:
+        return caption
+    return f"{prefix}{caption}"
+
+
 def load_pipeline(model_id: str, device: torch.device, torch_dtype: torch.dtype) -> Flux2Pipeline:
     text_encoder = Mistral3ForConditionalGeneration.from_pretrained(
         model_id,
@@ -205,6 +212,7 @@ def run_task_d_flux(args) -> None:
         "num_prompts": len(prompt_records),
         "num_inference_steps": args.num_inference_steps,
         "guidance_scale": args.guidance_scale,
+        "prompt_prefix": getattr(args, "prompt_prefix", ""),
         "height": args.height,
         "width": args.width,
         "output_dir": str(output_dir),
@@ -212,8 +220,9 @@ def run_task_d_flux(args) -> None:
     append_jsonl(report_path, run_metadata)
 
     for idx, record in enumerate(prompt_records):
-        prompt = record["prompt"]
-        prompt_slug = sanitize_filename(prompt, max_length=50)
+        caption = record["prompt"]
+        model_prompt = build_model_prompt(caption, getattr(args, "prompt_prefix", ""))
+        prompt_slug = sanitize_filename(caption, max_length=50)
         image_path = images_dir / f"{idx:05d}_{prompt_slug}.png"
         image_seed = args.seed + idx
 
@@ -224,7 +233,8 @@ def run_task_d_flux(args) -> None:
                     "event": "skipped_existing",
                     "timestamp_utc": datetime.now(timezone.utc).isoformat(),
                     "index": idx,
-                    "prompt": prompt,
+                    "caption": caption,
+                    "model_prompt": model_prompt,
                     "theme": record["theme"],
                     "source_file_name": record["source_file_name"],
                     "seed": image_seed,
@@ -241,7 +251,7 @@ def run_task_d_flux(args) -> None:
             generator = make_generator(device, image_seed)
             sync_device(device)
             result = pipeline(
-                prompt=prompt,
+                prompt=model_prompt,
                 height=args.height,
                 width=args.width,
                 guidance_scale=args.guidance_scale,
@@ -262,7 +272,8 @@ def run_task_d_flux(args) -> None:
             "timestamp_utc": datetime.now(timezone.utc).isoformat(),
             "status": status,
             "index": idx,
-            "prompt": prompt,
+            "caption": caption,
+            "model_prompt": model_prompt,
             "theme": record["theme"],
             "source_file_name": record["source_file_name"],
             "seed": image_seed,
@@ -305,6 +316,7 @@ if __name__ == "__main__":
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--num_inference_steps", type=int, default=28)
     parser.add_argument("--guidance_scale", type=float, default=3.5)
+    parser.add_argument("--prompt_prefix", type=str, default="")
     parser.add_argument("--height", type=int, default=1024)
     parser.add_argument("--width", type=int, default=1024)
     parser.add_argument("--limit", type=int, default=None)
