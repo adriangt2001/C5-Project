@@ -14,7 +14,8 @@ from transformers import Mistral3ForConditionalGeneration
 
 
 DEFAULT_MODEL_ID = "diffusers/FLUX.2-dev-bnb-4bit"
-DEFAULT_OUTPUT_DIR = Path(__file__).resolve().parents[2] / "results" / "flux2_dev_generation"
+DEFAULT_OUTPUT_DIR = Path(__file__).resolve(
+).parents[2] / "results" / "flux2_dev_generation"
 
 
 def sanitize_filename(value: str, max_length: int = 80) -> str:
@@ -118,7 +119,8 @@ def load_prompts(args) -> list[dict]:
                         )
 
         else:
-            raise ValueError(f"Unsupported prompts JSON structure in {args.prompts_json}")
+            raise ValueError(
+                f"Unsupported prompts JSON structure in {args.prompts_json}")
 
     if args.prompts:
         for idx, prompt in enumerate(args.prompts):
@@ -179,12 +181,13 @@ def sync_device(device: torch.device) -> None:
         torch.cuda.synchronize()
 
 
-def run_task_d(args) -> None:
+def run_task_d_flux(args) -> None:
     output_dir = Path(args.output_dir)
     images_dir = output_dir / "images"
     images_dir.mkdir(parents=True, exist_ok=True)
 
-    report_path = Path(args.report_path) if args.report_path else output_dir / "generation_report.jsonl"
+    report_path = Path(
+        args.report_path) if args.report_path else output_dir / "generation_report.jsonl"
     prompt_records = load_prompts(args)
 
     device = resolve_device(args.device)
@@ -270,9 +273,11 @@ def run_task_d(args) -> None:
         append_jsonl(report_path, report_record)
 
         if status == "success":
-            print(f"[{idx + 1}/{len(prompt_records)}] saved {image_path.name} in {elapsed:.2f}s", flush=True)
+            print(
+                f"[{idx + 1}/{len(prompt_records)}] saved {image_path.name} in {elapsed:.2f}s", flush=True)
         else:
-            print(f"[{idx + 1}/{len(prompt_records)}] failed in {elapsed:.2f}s: {error_message}", flush=True)
+            print(
+                f"[{idx + 1}/{len(prompt_records)}] failed in {elapsed:.2f}s: {error_message}", flush=True)
 
     append_jsonl(
         report_path,
@@ -288,11 +293,13 @@ def run_task_d(args) -> None:
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Generate images with diffusers/FLUX.2-dev-bnb-4bit.")
+    parser = argparse.ArgumentParser(
+        description="Generate images with diffusers/FLUX.2-dev-bnb-4bit.")
     parser.add_argument("--model_id", type=str, default=DEFAULT_MODEL_ID)
     parser.add_argument("--prompts", nargs="*", default=None)
     parser.add_argument("--prompts_json", type=str, default=None)
-    parser.add_argument("--output_dir", type=str, default=str(DEFAULT_OUTPUT_DIR))
+    parser.add_argument("--output_dir", type=str,
+                        default=str(DEFAULT_OUTPUT_DIR))
     parser.add_argument("--report_path", type=str, default=None)
     parser.add_argument("--device", type=str, default="auto")
     parser.add_argument("--seed", type=int, default=42)
@@ -302,4 +309,4 @@ if __name__ == "__main__":
     parser.add_argument("--width", type=int, default=1024)
     parser.add_argument("--limit", type=int, default=None)
     parser.add_argument("--skip_existing", action="store_true")
-    run_task_d(parser.parse_args())
+    run_task_d_flux(parser.parse_args())
