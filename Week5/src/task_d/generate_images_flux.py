@@ -16,6 +16,7 @@ from transformers import Mistral3ForConditionalGeneration
 DEFAULT_MODEL_ID = "diffusers/FLUX.2-dev-bnb-4bit"
 DEFAULT_OUTPUT_DIR = Path(__file__).resolve(
 ).parents[2] / "results" / "flux2_dev_generation"
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
 
 
 def sanitize_filename(value: str, max_length: int = 80) -> str:
@@ -35,6 +36,20 @@ def append_jsonl(path: Path, record: dict) -> None:
         f.flush()
 
 
+def log(message: str) -> None:
+    timestamp = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S UTC")
+    print(f"[{timestamp}] {message}", flush=True)
+
+
+def resolve_path(path_value: str | None) -> Path | None:
+    if not path_value:
+        return None
+    path = Path(path_value)
+    if path.is_absolute():
+        return path
+    return PROJECT_ROOT / path
+
+
 def resolve_device(device_arg: str) -> torch.device:
     if device_arg == "auto":
         return torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -46,7 +61,14 @@ def load_prompts(args) -> list[dict]:
     rng = random.Random(args.seed)
 
     if args.prompts_json:
-        payload = read_json(Path(args.prompts_json))
+        prompts_json_path = resolve_path(args.prompts_json)
+        log(f"Loading prompts from JSON: {prompts_json_path}")
+        if prompts_json_path is None or not prompts_json_path.exists():
+            raise FileNotFoundError(
+                f"Prompts JSON file not found: {args.prompts_json} "
+                f"(resolved to {prompts_json_path})"
+            )
+        payload = read_json(prompts_json_path)
 
         if isinstance(payload, list):
             for idx, item in enumerate(payload):
@@ -123,6 +145,7 @@ def load_prompts(args) -> list[dict]:
                 f"Unsupported prompts JSON structure in {args.prompts_json}")
 
     if args.prompts:
+        log(f"Loading {len(args.prompts)} prompts from --prompts")
         for idx, prompt in enumerate(args.prompts):
             if prompt.strip():
                 prompt_records.append(
@@ -135,10 +158,18 @@ def load_prompts(args) -> list[dict]:
                 )
 
     if not prompt_records:
-        raise ValueError("Provide prompts via --prompts or --prompts_json.")
+        raise ValueError(
+            "No prompts were loaded. "
+            f"prompts_json={getattr(args, 'prompts_json', None)!r}, "
+            f"num_prompts_cli={len(getattr(args, 'prompts', []) or [])}. "
+            "Provide prompts via --prompts or --prompts_json."
+        )
 
     if args.limit is not None:
         prompt_records = prompt_records[: args.limit]
+        log(f"Applied prompt limit: {args.limit}")
+
+    log(f"Loaded {len(prompt_records)} prompts")
 
     return prompt_records
 
@@ -189,20 +220,29 @@ def sync_device(device: torch.device) -> None:
 
 
 def run_task_d_flux(args) -> None:
-    output_dir = Path(args.output_dir)
+    output_dir = resolve_path(args.output_dir) or DEFAULT_OUTPUT_DIR
     images_dir = output_dir / "images"
     images_dir.mkdir(parents=True, exist_ok=True)
 
-    report_path = Path(
-        args.report_path) if args.report_path else output_dir / "generation_report.jsonl"
+    report_path = resolve_path(args.report_path) if args.report_path else output_dir / "generation_report.jsonl"
+    log("Starting FLUX image generation task")
+    log(f"Resolved output directory: {output_dir}")
+    log(f"Resolved report path: {report_path}")
+    log(
+        "Generation config: "
+        f"model_id={args.model_id}, device={args.device}, seed={args.seed}, "
+        f"steps={args.num_inference_steps}, guidance_scale={args.guidance_scale}, "
+        f"height={args.height}, width={args.width}, prompt_prefix={getattr(args, 'prompt_prefix', '')!r}"
+    )
     prompt_records = load_prompts(args)
 
     device = resolve_device(args.device)
     torch_dtype = torch.bfloat16 if device.type == "cuda" else torch.float32
 
-    print(f"Loading model {args.model_id} on {device}...", flush=True)
+    log(f"Resolved device: {device}")
+    log(f"Loading model {args.model_id} on {device}")
     pipeline = load_pipeline(args.model_id, device, torch_dtype)
-    print(f"Loaded {args.model_id}", flush=True)
+    log(f"Loaded model {args.model_id}")
 
     run_metadata = {
         "event": "run_started",
@@ -218,6 +258,7 @@ def run_task_d_flux(args) -> None:
         "output_dir": str(output_dir),
     }
     append_jsonl(report_path, run_metadata)
+    log(f"Wrote run start metadata to {report_path}")
 
     for idx, record in enumerate(prompt_records):
         caption = record["prompt"]
@@ -225,6 +266,24 @@ def run_task_d_flux(args) -> None:
         prompt_slug = sanitize_filename(caption, max_length=50)
         image_path = images_dir / f"{idx:05d}_{prompt_slug}.png"
         image_seed = args.seed + idx
+        log(
+            f"Starting prompt {idx + 1}/{len(prompt_records)} | "
+            f"theme={record['theme']} | file={record['source_file_name']} | seed={image_seed}"
+        )
+        append_jsonl(
+            report_path,
+            {
+                "event": "generation_started",
+                "timestamp_utc": datetime.now(timezone.utc).isoformat(),
+                "index": idx,
+                "caption": caption,
+                "model_prompt": model_prompt,
+                "theme": record["theme"],
+                "source_file_name": record["source_file_name"],
+                "seed": image_seed,
+                "target_image_path": str(image_path),
+            },
+        )
 
         if args.skip_existing and image_path.exists():
             append_jsonl(
@@ -241,6 +300,7 @@ def run_task_d_flux(args) -> None:
                     "image_path": str(image_path),
                 },
             )
+            log(f"Skipping existing image: {image_path}")
             continue
 
         start = time.perf_counter()
@@ -284,11 +344,9 @@ def run_task_d_flux(args) -> None:
         append_jsonl(report_path, report_record)
 
         if status == "success":
-            print(
-                f"[{idx + 1}/{len(prompt_records)}] saved {image_path.name} in {elapsed:.2f}s", flush=True)
+            log(f"[{idx + 1}/{len(prompt_records)}] saved {image_path.name} in {elapsed:.2f}s")
         else:
-            print(
-                f"[{idx + 1}/{len(prompt_records)}] failed in {elapsed:.2f}s: {error_message}", flush=True)
+            log(f"[{idx + 1}/{len(prompt_records)}] failed in {elapsed:.2f}s: {error_message}")
 
     append_jsonl(
         report_path,
@@ -299,8 +357,8 @@ def run_task_d_flux(args) -> None:
             "num_prompts": len(prompt_records),
         },
     )
-    print(f"Finished. Images are in {images_dir}", flush=True)
-    print(f"Report written incrementally to {report_path}", flush=True)
+    log(f"Finished. Images are in {images_dir}")
+    log(f"Report written incrementally to {report_path}")
 
 
 if __name__ == "__main__":

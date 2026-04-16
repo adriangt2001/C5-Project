@@ -50,8 +50,9 @@ def main():
 
     config = load_config(args.config)
     for key, value in config.items():
-        if not hasattr(args, key):
-            setattr(args, key, value)
+        if key in {"config", "func"}:
+            continue
+        setattr(args, key, value)
 
     args.func(args)
 
