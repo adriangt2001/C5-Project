@@ -175,7 +175,7 @@ def load_prompts(args) -> list[dict]:
 
 
 def build_model_prompt(caption: str, prompt_prefix: str | None) -> str:
-    prefix = (prompt_prefix or "").strip()
+    prefix = prompt_prefix or ""
     if not prefix:
         return caption
     return f"{prefix}{caption}"
@@ -224,7 +224,8 @@ def run_task_d_flux(args) -> None:
     images_dir = output_dir / "images"
     images_dir.mkdir(parents=True, exist_ok=True)
 
-    report_path = resolve_path(args.report_path) if args.report_path else output_dir / "generation_report.jsonl"
+    report_path = resolve_path(
+        args.report_path) if args.report_path else output_dir / "generation_report.jsonl"
     log("Starting FLUX image generation task")
     log(f"Resolved output directory: {output_dir}")
     log(f"Resolved report path: {report_path}")
@@ -262,7 +263,8 @@ def run_task_d_flux(args) -> None:
 
     for idx, record in enumerate(prompt_records):
         caption = record["prompt"]
-        model_prompt = build_model_prompt(caption, getattr(args, "prompt_prefix", ""))
+        model_prompt = build_model_prompt(
+            caption, getattr(args, "prompt_prefix", ""))
         prompt_slug = sanitize_filename(caption, max_length=50)
         image_path = images_dir / f"{idx:05d}_{prompt_slug}.png"
         image_seed = args.seed + idx

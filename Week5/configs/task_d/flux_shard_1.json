@@ -1,7 +1,7 @@
 {
   "model_id": "diffusers/FLUX.2-dev-bnb-4bit",
-  "prompts_json": "Week5/data/generated/shards/captions_shard_1_of_3.json",
-  "output_dir": "Week5/results/flux_run_shard_1",
+  "prompts_json": "data/generated/shards/captions_shard_1_of_3.json",
+  "output_dir": "results/flux_run_shard_1",
   "device": "auto",
   "seed": 42,
   "num_inference_steps": 60,
