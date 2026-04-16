@@ -1,0 +1,198 @@
+{
+  "source_annotations_path": "Week5/src/task_c/annotations/train_filtered.json",
+  "seed": 7,
+  "samples_per_weight": 2,
+  "drop_fallback": true,
+  "unique_captions": true,
+  "num_sampled_images": 24,
+  "num_captions": 24,
+  "theme_summary": [
+    {
+      "theme": "clothing_body",
+      "available_images": 3146,
+      "available_captions": 14125,
+      "sampled_captions": 4
+    },
+    {
+      "theme": "documents_text",
+      "available_images": 6455,
+      "available_captions": 29958,
+      "sampled_captions": 4
+    },
+    {
+      "theme": "food_drink",
+      "available_images": 3937,
+      "available_captions": 18506,
+      "sampled_captions": 2
+    },
+    {
+      "theme": "household_objects",
+      "available_images": 3213,
+      "available_captions": 15226,
+      "sampled_captions": 2
+    },
+    {
+      "theme": "other",
+      "available_images": 742,
+      "available_captions": 3338,
+      "sampled_captions": 4
+    },
+    {
+      "theme": "outdoor_transport",
+      "available_images": 826,
+      "available_captions": 3929,
+      "sampled_captions": 4
+    },
+    {
+      "theme": "quality_unclear",
+      "available_images": 2097,
+      "available_captions": 2880,
+      "sampled_captions": 0
+    },
+    {
+      "theme": "screens_devices",
+      "available_images": 3015,
+      "available_captions": 14034,
+      "sampled_captions": 4
+    }
+  ],
+  "captions_by_theme": {
+    "clothing_body": [
+      {
+        "file_name": "VizWiz_train_00015454.jpg",
+        "caption": "A person holding up a light blue green shirt and pink pants."
+      },
+      {
+        "file_name": "VizWiz_train_00001490.jpg",
+        "caption": "A hand touching what appears to be some kind of doughnut shape device."
+      },
+      {
+        "file_name": "VizWiz_train_00013358.jpg",
+        "caption": "A gray striped fabric surface with a brown surface next to it."
+      },
+      {
+        "file_name": "VizWiz_train_00005495.jpg",
+        "caption": "I am looking at a picture of a grey colored long sleeve shirt."
+      }
+    ],
+    "documents_text": [
+      {
+        "file_name": "VizWiz_train_00020757.jpg",
+        "caption": "A closed black travel bag on a countertop."
+      },
+      {
+        "file_name": "VizWiz_train_00013660.jpg",
+        "caption": "A \"No\" sign is being shown over a picture of a man farting."
+      },
+      {
+        "file_name": "VizWiz_train_00002474.jpg",
+        "caption": "Canadian Tire five cent bill laying on dark surface"
+      },
+      {
+        "file_name": "VizWiz_train_00009428.jpg",
+        "caption": "A packet of Betty Crocker Sugar Cookie mix with a flower-shaped cookie with icing and sprinkles on the cover."
+      }
+    ],
+    "food_drink": [
+      {
+        "file_name": "VizWiz_train_00013197.jpg",
+        "caption": "A counter top with a plastic bag, a marble cutting board and a can of corn sitting on top of said board."
+      },
+      {
+        "file_name": "VizWiz_train_00005813.jpg",
+        "caption": "Photo is of a red-orange beverage in a glass jar."
+      }
+    ],
+    "household_objects": [
+      {
+        "file_name": "VizWiz_train_00000954.jpg",
+        "caption": "Metal pieces inside a worn out room with rust all over the place"
+      },
+      {
+        "file_name": "VizWiz_train_00002250.jpg",
+        "caption": "A box of food is shown with the expiration date and QR code."
+      }
+    ],
+    "other": [
+      {
+        "file_name": "VizWiz_train_00012377.jpg",
+        "caption": "A pink butterfly eraser on top of a pencil"
+      },
+      {
+        "file_name": "VizWiz_train_00011678.jpg",
+        "caption": "A red and black duffle bag is on a brown bed"
+      },
+      {
+        "file_name": "VizWiz_train_00002226.jpg",
+        "caption": "A brown dog laying in the yard behind a brick house."
+      },
+      {
+        "file_name": "VizWiz_train_00006637.jpg",
+        "caption": "A horizontal view of a picture of the Last Supper"
+      }
+    ],
+    "outdoor_transport": [
+      {
+        "file_name": "VizWiz_train_00002434.jpg",
+        "caption": "A brown sheet is set on top of queen size bed and a small white table is placed next to the bed."
+      },
+      {
+        "file_name": "VizWiz_train_00013734.jpg",
+        "caption": "Ice cream lid against a grey background, lid is yellow with red writing and blue outer edge."
+      },
+      {
+        "file_name": "VizWiz_train_00011157.jpg",
+        "caption": "A cream dog curled up on carpeting in a room."
+      },
+      {
+        "file_name": "VizWiz_train_00001481.jpg",
+        "caption": "A blue cutting board with white circles on it that are some sort of object."
+      }
+    ],
+    "quality_unclear": [],
+    "screens_devices": [
+      {
+        "file_name": "VizWiz_train_00011286.jpg",
+        "caption": "A close up of a computer keyboard with white keys."
+      },
+      {
+        "file_name": "VizWiz_train_00018969.jpg",
+        "caption": "Laptop with white keys sitting on a desk with another laptop on another desk behind it."
+      },
+      {
+        "file_name": "VizWiz_train_00001344.jpg",
+        "caption": "Two fingers are holding a Banquet packaged, prepared meal in a box."
+      },
+      {
+        "file_name": "VizWiz_train_00002037.jpg",
+        "caption": "Wooden desks with Apple products displayed on top"
+      }
+    ]
+  },
+  "captions": [
+    "A counter top with a plastic bag, a marble cutting board and a can of corn sitting on top of said board.",
+    "Photo is of a red-orange beverage in a glass jar.",
+    "A close up of a computer keyboard with white keys.",
+    "Laptop with white keys sitting on a desk with another laptop on another desk behind it.",
+    "Two fingers are holding a Banquet packaged, prepared meal in a box.",
+    "Wooden desks with Apple products displayed on top",
+    "A closed black travel bag on a countertop.",
+    "A \"No\" sign is being shown over a picture of a man farting.",
+    "Canadian Tire five cent bill laying on dark surface",
+    "A packet of Betty Crocker Sugar Cookie mix with a flower-shaped cookie with icing and sprinkles on the cover.",
+    "A person holding up a light blue green shirt and pink pants.",
+    "A hand touching what appears to be some kind of doughnut shape device.",
+    "A gray striped fabric surface with a brown surface next to it.",
+    "I am looking at a picture of a grey colored long sleeve shirt.",
+    "Metal pieces inside a worn out room with rust all over the place",
+    "A box of food is shown with the expiration date and QR code.",
+    "A pink butterfly eraser on top of a pencil",
+    "A red and black duffle bag is on a brown bed",
+    "A brown dog laying in the yard behind a brick house.",
+    "A horizontal view of a picture of the Last Supper",
+    "A brown sheet is set on top of queen size bed and a small white table is placed next to the bed.",
+    "Ice cream lid against a grey background, lid is yellow with red writing and blue outer edge.",
+    "A cream dog curled up on carpeting in a room.",
+    "A blue cutting board with white circles on it that are some sort of object."
+  ]
+}
