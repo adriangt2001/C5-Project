@@ -1,0 +1,22 @@
+model_option: sd15
+
+captions_path: src/task_d/captions.json
+
+# If omitted, images and metadata are saved to outputs/<model_name>
+# output_dir: outputs/my_sd15_run
+
+prompt_prefix: "a poorly framed, accidental photo of "
+prompt_suffix: ", subject partially cut off, unclear subject, taken with a cheap phone camera, out of focus, extremely blurry, severe motion blur, camera shake, low light, ISO 12800, heavy noise, jpeg artifacts, underexposed, washed out colors, obstructed view"
+device: auto
+dtype: float16
+seed: 42
+limit: null
+skip_existing: true
+
+negative_prompt: "sharp, high quality, detailed, professional, DSLR, 4k, HDR"
+
+# Optional overrides for this preset:
+# height: 512
+# width: 512
+# guidance_scale: 7.5
+# num_inference_steps: 30

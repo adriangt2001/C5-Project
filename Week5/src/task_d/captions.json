@@ -1,0 +1,4836 @@
+{
+  "source_annotations_path": "Week5/src/task_c/annotations/train_filtered.json",
+  "seed": 42,
+  "samples_per_weight": 100,
+  "drop_fallback": true,
+  "unique_captions": true,
+  "num_sampled_images": 1140,
+  "num_captions": 1190,
+  "theme_summary": [
+    {
+      "theme": "clothing_body",
+      "available_images": 3146,
+      "available_captions": 14125,
+      "sampled_captions": 200
+    },
+    {
+      "theme": "documents_text",
+      "available_images": 6455,
+      "available_captions": 29958,
+      "sampled_captions": 200
+    },
+    {
+      "theme": "food_drink",
+      "available_images": 3937,
+      "available_captions": 18506,
+      "sampled_captions": 100
+    },
+    {
+      "theme": "household_objects",
+      "available_images": 3213,
+      "available_captions": 15226,
+      "sampled_captions": 100
+    },
+    {
+      "theme": "other",
+      "available_images": 742,
+      "available_captions": 3338,
+      "sampled_captions": 200
+    },
+    {
+      "theme": "outdoor_transport",
+      "available_images": 826,
+      "available_captions": 3929,
+      "sampled_captions": 200
+    },
+    {
+      "theme": "quality_unclear",
+      "available_images": 2097,
+      "available_captions": 2880,
+      "sampled_captions": 0
+    },
+    {
+      "theme": "screens_devices",
+      "available_images": 3015,
+      "available_captions": 14034,
+      "sampled_captions": 200
+    }
+  ],
+  "captions_by_theme": {
+    "clothing_body": [
+      {
+        "file_name": "VizWiz_train_00021690.jpg",
+        "caption": "Beautiful view from behind the walls hidden under dark mist"
+      },
+      {
+        "file_name": "VizWiz_train_00021988.jpg",
+        "caption": "A pull chain being pulled by a hand."
+      },
+      {
+        "file_name": "VizWiz_train_00004591.jpg",
+        "caption": "a small toy of a Labrador puppy with a Santa hat in it's plastic packaging"
+      },
+      {
+        "file_name": "VizWiz_train_00010679.jpg",
+        "caption": "A temperature control system displaying 71 degrees on a white wall."
+      },
+      {
+        "file_name": "VizWiz_train_00000597.jpg",
+        "caption": "Someone's foot at the edge of a table with a tray with a small flower in it."
+      },
+      {
+        "file_name": "VizWiz_train_00004635.jpg",
+        "caption": "The red, white and black sole of tennis shoe against a tan, green and red fabric cushion."
+      },
+      {
+        "file_name": "VizWiz_train_00019571.jpg",
+        "caption": "A left foot in a flip flop standing on a carpet floor"
+      },
+      {
+        "file_name": "VizWiz_train_00008374.jpg",
+        "caption": "A angry old cat is sitting on the carpet"
+      },
+      {
+        "file_name": "VizWiz_train_00021197.jpg",
+        "caption": "The fabric of leggings with a white background and red hearts."
+      },
+      {
+        "file_name": "VizWiz_train_00010659.jpg",
+        "caption": "Individual with a checkered shirt with an article of clothing on the counter with a band  near the top of it."
+      },
+      {
+        "file_name": "VizWiz_train_00021754.jpg",
+        "caption": "A person with a plaid red shirt and sandals holding a German Shepard on a harness."
+      },
+      {
+        "file_name": "VizWiz_train_00017796.jpg",
+        "caption": "A black shoe is right on the floor."
+      },
+      {
+        "file_name": "VizWiz_train_00019543.jpg",
+        "caption": "a small wooden brown dresser with four drawers on top of a tiled floor"
+      },
+      {
+        "file_name": "VizWiz_train_00006378.jpg",
+        "caption": "A gray white and red plaid button down shirt."
+      },
+      {
+        "file_name": "VizWiz_train_00006869.jpg",
+        "caption": "Can of fire roasted diced tomatoes with tomatoes on the label"
+      },
+      {
+        "file_name": "VizWiz_train_00004131.jpg",
+        "caption": "Someone in a white and dark blue/black colored plaid shirt."
+      },
+      {
+        "file_name": "VizWiz_train_00021263.jpg",
+        "caption": "a textured antique wood door with a gold handle"
+      },
+      {
+        "file_name": "VizWiz_train_00018703.jpg",
+        "caption": "Pale purple clothing that is being worn by someone."
+      },
+      {
+        "file_name": "VizWiz_train_00002798.jpg",
+        "caption": "a box of frozen French toast on a gray carpet"
+      },
+      {
+        "file_name": "VizWiz_train_00009803.jpg",
+        "caption": "two fuzzy pillows one blue and orange the other is purple."
+      },
+      {
+        "file_name": "VizWiz_train_00000966.jpg",
+        "caption": "a sleeve of mucinex pills on the table next to the USB speaker"
+      },
+      {
+        "file_name": "VizWiz_train_00023302.jpg",
+        "caption": "A person standing barefoot on a bathroom scale."
+      },
+      {
+        "file_name": "VizWiz_train_00012349.jpg",
+        "caption": "A man is standing on a weighing machine on some white tiles."
+      },
+      {
+        "file_name": "VizWiz_train_00005716.jpg",
+        "caption": "A black dog laying on a dark blanket on the floor"
+      },
+      {
+        "file_name": "VizWiz_train_00005139.jpg",
+        "caption": "An animal that may be a cat or dog holded by someone"
+      },
+      {
+        "file_name": "VizWiz_train_00022204.jpg",
+        "caption": "a picture of a man and a lady posing dressed  in black for a party"
+      },
+      {
+        "file_name": "VizWiz_train_00012112.jpg",
+        "caption": "A piece of floral jewelry resting on top of an orange towel."
+      },
+      {
+        "file_name": "VizWiz_train_00008864.jpg",
+        "caption": "A man sits down in a chair pictured down towards his lap."
+      },
+      {
+        "file_name": "VizWiz_train_00007841.jpg",
+        "caption": "A palm of a hand is shown with a 12-sided, 2008 British coin with Queen Elizabeth II on it."
+      },
+      {
+        "file_name": "VizWiz_train_00022342.jpg",
+        "caption": "The front of a very messy bureau drawer is shown with clothes and various other items stacked on top in front of the mirror."
+      },
+      {
+        "file_name": "VizWiz_train_00021596.jpg",
+        "caption": "A green piece of fabric with white words on it"
+      },
+      {
+        "file_name": "VizWiz_train_00005825.jpg",
+        "caption": "Appears to be a carpet or rug of some sort, beige or taupe in color."
+      },
+      {
+        "file_name": "VizWiz_train_00005725.jpg",
+        "caption": "A hand holding an unopened copy of the big bang theory DVDs"
+      },
+      {
+        "file_name": "VizWiz_train_00000556.jpg",
+        "caption": "a red container of old spice deodorant called game day"
+      },
+      {
+        "file_name": "VizWiz_train_00017514.jpg",
+        "caption": "A round tin can of tomatoes is held in place by a hand on a white counter."
+      },
+      {
+        "file_name": "VizWiz_train_00005001.jpg",
+        "caption": "the very bottom of a box of almond crunch bars"
+      },
+      {
+        "file_name": "VizWiz_train_00010305.jpg",
+        "caption": "A person wears a dark sweater vest and white shirt"
+      },
+      {
+        "file_name": "VizWiz_train_00008291.jpg",
+        "caption": "A person in jeans is standing next to the sweatshirt."
+      },
+      {
+        "file_name": "VizWiz_train_00007172.jpg",
+        "caption": "A hand holding a green book about \"preaching without notes\""
+      },
+      {
+        "file_name": "VizWiz_train_00001855.jpg",
+        "caption": "a person holding a jar of yellow substance above a toaster"
+      },
+      {
+        "file_name": "VizWiz_train_00020855.jpg",
+        "caption": "Black and white nike sneakers with white soles on bottom."
+      },
+      {
+        "file_name": "VizWiz_train_00007192.jpg",
+        "caption": "A person wearing a silver and black watch on their wrist"
+      },
+      {
+        "file_name": "VizWiz_train_00008924.jpg",
+        "caption": "Hand holding a box of Raid small roach baits."
+      },
+      {
+        "file_name": "VizWiz_train_00016984.jpg",
+        "caption": "A folded pair of jeans is right  on the bed."
+      },
+      {
+        "file_name": "VizWiz_train_00013448.jpg",
+        "caption": "A blue and yellow striped shirt sitting on a grey surface."
+      },
+      {
+        "file_name": "VizWiz_train_00010337.jpg",
+        "caption": "A close up view of a tree trunk on a dirt trail in the woods."
+      },
+      {
+        "file_name": "VizWiz_train_00018059.jpg",
+        "caption": "A person standing next to a table edge."
+      },
+      {
+        "file_name": "VizWiz_train_00023005.jpg",
+        "caption": "Two pieces of clothing, one sitting on top of the other, both sitting on top of cloth"
+      },
+      {
+        "file_name": "VizWiz_train_00014254.jpg",
+        "caption": "Two brown bread on white surface with one bread bitten off."
+      },
+      {
+        "file_name": "VizWiz_train_00008360.jpg",
+        "caption": "Bottle of Olay brand ultra moisturizing body wash"
+      },
+      {
+        "file_name": "VizWiz_train_00000673.jpg",
+        "caption": "Brown buttons are sewn into a blue cardigan sweater."
+      },
+      {
+        "file_name": "VizWiz_train_00002987.jpg",
+        "caption": "A hand holding a tube of toothpaste in living room."
+      },
+      {
+        "file_name": "VizWiz_train_00006729.jpg",
+        "caption": "A blanket with the words love and peace written on top it as well as the pictures of an unknown symbol and a heart"
+      },
+      {
+        "file_name": "VizWiz_train_00004626.jpg",
+        "caption": "A garment is hanging from the wall in a home."
+      },
+      {
+        "file_name": "VizWiz_train_00015387.jpg",
+        "caption": "Pictured is what appears to be a drape or bed sheet."
+      },
+      {
+        "file_name": "VizWiz_train_00006844.jpg",
+        "caption": "The side of a neon orange, green, blue, and purple Nike sneaker."
+      },
+      {
+        "file_name": "VizWiz_train_00000959.jpg",
+        "caption": "The item pictured appears to be an article of clothing, white in color with a red tag in the neck, and faux wrap styling across the chest."
+      },
+      {
+        "file_name": "VizWiz_train_00002799.jpg",
+        "caption": "a cigarette that is partially burnt on top and against an all black background"
+      },
+      {
+        "file_name": "VizWiz_train_00015725.jpg",
+        "caption": "In this given image is bedroom and shoe on the bed."
+      },
+      {
+        "file_name": "VizWiz_train_00011361.jpg",
+        "caption": "a close up of a t shirt or something with letters on it and brown"
+      },
+      {
+        "file_name": "VizWiz_train_00008730.jpg",
+        "caption": "An extended lens for a Canon brand digital camera."
+      },
+      {
+        "file_name": "VizWiz_train_00019364.jpg",
+        "caption": "Pictured is what appears to be directions for use of a handicap stall in a restroom."
+      },
+      {
+        "file_name": "VizWiz_train_00021241.jpg",
+        "caption": "A grey button-up collared shirt with black buttons."
+      },
+      {
+        "file_name": "VizWiz_train_00008011.jpg",
+        "caption": "A Grey comforter over a white bed skirt"
+      },
+      {
+        "file_name": "VizWiz_train_00011418.jpg",
+        "caption": "A wooden dresser with four drawers with two handles on each drawer and various items on top."
+      },
+      {
+        "file_name": "VizWiz_train_00015935.jpg",
+        "caption": "A printed advertisement for Avon Foot Works products."
+      },
+      {
+        "file_name": "VizWiz_train_00013498.jpg",
+        "caption": "The front of a shirt pocket with a button."
+      },
+      {
+        "file_name": "VizWiz_train_00002989.jpg",
+        "caption": "The photographer is showing their Armitron WR330 wristwatch with the time displayed."
+      },
+      {
+        "file_name": "VizWiz_train_00009906.jpg",
+        "caption": "A stone colored fabric that is slightly wrinkled."
+      },
+      {
+        "file_name": "VizWiz_train_00015285.jpg",
+        "caption": "A close up of a tied off piece of thin rope."
+      },
+      {
+        "file_name": "VizWiz_train_00004921.jpg",
+        "caption": "a closed white door with a coat rack"
+      },
+      {
+        "file_name": "VizWiz_train_00006544.jpg",
+        "caption": "A playing card with a woman posing on a tree branch on top of a wooden surface."
+      },
+      {
+        "file_name": "VizWiz_train_00001092.jpg",
+        "caption": "Close up of a man's shoulder who is wearing a grey t shirt."
+      },
+      {
+        "file_name": "VizWiz_train_00018865.jpg",
+        "caption": "The lap of a person who is wearing light green shorts."
+      },
+      {
+        "file_name": "VizWiz_train_00011407.jpg",
+        "caption": "black Ed Hardy T shirt with a flower design on a bed"
+      },
+      {
+        "file_name": "VizWiz_train_00000048.jpg",
+        "caption": "Green action figure of the Incredible Hulk lying on a brown carpet"
+      },
+      {
+        "file_name": "VizWiz_train_00013756.jpg",
+        "caption": "Pictured is a shirt with Rhinestones on a hanger."
+      },
+      {
+        "file_name": "VizWiz_train_00021889.jpg",
+        "caption": "I see a pair of shoes  on a green board"
+      },
+      {
+        "file_name": "VizWiz_train_00014303.jpg",
+        "caption": "A blanket with a pattern of a knight on it."
+      },
+      {
+        "file_name": "VizWiz_train_00018283.jpg",
+        "caption": "A yellow v neck is shown on a person"
+      },
+      {
+        "file_name": "VizWiz_train_00019110.jpg",
+        "caption": "Here is a picture of a bottle of chocolate milk"
+      },
+      {
+        "file_name": "VizWiz_train_00019713.jpg",
+        "caption": "A pair of pink pants with a pink drawstring."
+      },
+      {
+        "file_name": "VizWiz_train_00019579.jpg",
+        "caption": "A folded up fabric that is white and off white, with some sort of large black metal item on it."
+      },
+      {
+        "file_name": "VizWiz_train_00017819.jpg",
+        "caption": "looking at a neatly folded pair of yellow pants."
+      },
+      {
+        "file_name": "VizWiz_train_00005092.jpg",
+        "caption": "someone is holding a stuffed teddy bear with a purple t shirt"
+      },
+      {
+        "file_name": "VizWiz_train_00009285.jpg",
+        "caption": "A black and white pen is on a pink cloth."
+      },
+      {
+        "file_name": "VizWiz_train_00011258.jpg",
+        "caption": "A black short sleeved button down shirt with two front pockets on a white coat hanger."
+      },
+      {
+        "file_name": "VizWiz_train_00001864.jpg",
+        "caption": "The second disk of something sitting on a fabric surface."
+      },
+      {
+        "file_name": "VizWiz_train_00017661.jpg",
+        "caption": "A blue box that has a picture of a gift box on it that reads \"Kelloggs toy boy\" on it."
+      },
+      {
+        "file_name": "VizWiz_train_00008337.jpg",
+        "caption": "A person is wearing light blue jeans and is sitting down."
+      },
+      {
+        "file_name": "VizWiz_train_00016423.jpg",
+        "caption": "Here it appears to show a jean coat or possibly a jean bag that is black."
+      },
+      {
+        "file_name": "VizWiz_train_00008013.jpg",
+        "caption": "A large grey fabric cloth is pictured, above a dotted floor."
+      },
+      {
+        "file_name": "VizWiz_train_00017650.jpg",
+        "caption": "Green grape that is conjoined is held in palm of hand."
+      },
+      {
+        "file_name": "VizWiz_train_00023083.jpg",
+        "caption": "a person standing on a digital scale that reads 107.2"
+      },
+      {
+        "file_name": "VizWiz_train_00003262.jpg",
+        "caption": "A person in a red t-shirt sitting in a lawn chair."
+      },
+      {
+        "file_name": "VizWiz_train_00019113.jpg",
+        "caption": "A wooden door with a brass peephole."
+      },
+      {
+        "file_name": "VizWiz_train_00007758.jpg",
+        "caption": "A shirt with a collar is laying flat in front of a cabinet."
+      },
+      {
+        "file_name": "VizWiz_train_00013355.jpg",
+        "caption": "a bottle of amber beer with a cartoon face on the label"
+      },
+      {
+        "file_name": "VizWiz_train_00007932.jpg",
+        "caption": "A close up of a Gray heather women's top on a black plastic hanger lays on a tan speckled surface."
+      },
+      {
+        "file_name": "VizWiz_train_00017725.jpg",
+        "caption": "a hand holding a black and metal circular item"
+      },
+      {
+        "file_name": "VizWiz_train_00010555.jpg",
+        "caption": "Striped shirt held up against a white wall"
+      },
+      {
+        "file_name": "VizWiz_train_00008243.jpg",
+        "caption": "A blue sweater is knitted with a blue yarn."
+      },
+      {
+        "file_name": "VizWiz_train_00010425.jpg",
+        "caption": "someone's thumb finger is seen holding some object in hand in brown color"
+      },
+      {
+        "file_name": "VizWiz_train_00018603.jpg",
+        "caption": "The top of someone's head, seems to be a women's gray hair pulled back probably into a ponytail."
+      },
+      {
+        "file_name": "VizWiz_train_00007678.jpg",
+        "caption": "Gray fabric with dirt particles that look like a shirt"
+      },
+      {
+        "file_name": "VizWiz_train_00014694.jpg",
+        "caption": "someone sitting down with a blanket on top of them"
+      },
+      {
+        "file_name": "VizWiz_train_00003338.jpg",
+        "caption": "The threads of the clothing item are black in color and have triangular stitching."
+      },
+      {
+        "file_name": "VizWiz_train_00004953.jpg",
+        "caption": "Fat Cat Scratch Mat, for cats to scratch instead of furniture."
+      },
+      {
+        "file_name": "VizWiz_train_00010914.jpg",
+        "caption": "a grocery item called popup bowl is being held by a man"
+      },
+      {
+        "file_name": "VizWiz_train_00009713.jpg",
+        "caption": "A zipper on a quilted navy blue jacket."
+      },
+      {
+        "file_name": "VizWiz_train_00018001.jpg",
+        "caption": "A ruffled garment is hanging from a kitchen counter with kitchen cabinets in the background."
+      },
+      {
+        "file_name": "VizWiz_train_00019863.jpg",
+        "caption": "Left foot of a person with a white New Balance athletic shoe on it."
+      },
+      {
+        "file_name": "VizWiz_train_00004523.jpg",
+        "caption": "A circular object is on a wood surface next to someone's foot."
+      },
+      {
+        "file_name": "VizWiz_train_00016236.jpg",
+        "caption": "Blue fabric of clothing that looks to be jeans"
+      },
+      {
+        "file_name": "VizWiz_train_00015046.jpg",
+        "caption": "A 1.5 kilogram lifting weight plate on a dark-colored piece of fabric."
+      },
+      {
+        "file_name": "VizWiz_train_00007769.jpg",
+        "caption": "A tag from Marshalls marked six dollars and ninety nine cents is attached to a grey shirt."
+      },
+      {
+        "file_name": "VizWiz_train_00010491.jpg",
+        "caption": "A photo of  man's brown loafer on his right foot."
+      },
+      {
+        "file_name": "VizWiz_train_00014512.jpg",
+        "caption": "Layers of grey fabric that is ruffled and on top of each other."
+      },
+      {
+        "file_name": "VizWiz_train_00022733.jpg",
+        "caption": "The curtain fabric is close up and is beside some kind of blue item."
+      },
+      {
+        "file_name": "VizWiz_train_00000009.jpg",
+        "caption": "A sink drain is in the large white sink"
+      },
+      {
+        "file_name": "VizWiz_train_00007824.jpg",
+        "caption": "A blue and yellow striped long sleeved shirt."
+      },
+      {
+        "file_name": "VizWiz_train_00007336.jpg",
+        "caption": "a black remote resting on a brown couch it is thin and long"
+      },
+      {
+        "file_name": "VizWiz_train_00005426.jpg",
+        "caption": "A white buttoned up shirt with two buttons showing"
+      },
+      {
+        "file_name": "VizWiz_train_00011187.jpg",
+        "caption": "a yellow color lighter placed on a brown surface"
+      },
+      {
+        "file_name": "VizWiz_train_00021236.jpg",
+        "caption": "Here is a picture of somebody standing in the kitchen"
+      },
+      {
+        "file_name": "VizWiz_train_00015369.jpg",
+        "caption": "Up close view of pink and white striped shirt."
+      },
+      {
+        "file_name": "VizWiz_train_00015943.jpg",
+        "caption": "A white and blue patterned shirt with a chest pocket on the right side"
+      },
+      {
+        "file_name": "VizWiz_train_00017386.jpg",
+        "caption": "A blue flat object being held in a hand"
+      },
+      {
+        "file_name": "VizWiz_train_00008175.jpg",
+        "caption": "Top corner of box of Tazo brand Awake black tea."
+      },
+      {
+        "file_name": "VizWiz_train_00012216.jpg",
+        "caption": "Persons hand and foot in the middle and a cane in front of the person"
+      },
+      {
+        "file_name": "VizWiz_train_00011582.jpg",
+        "caption": "A human hand is holding a ball of purple string."
+      },
+      {
+        "file_name": "VizWiz_train_00011597.jpg",
+        "caption": "A blue middle/high school or college shirt that is slightly worn."
+      },
+      {
+        "file_name": "VizWiz_train_00017982.jpg",
+        "caption": "A closeup of light green fabric on a on a shirt or a bag."
+      },
+      {
+        "file_name": "VizWiz_train_00005488.jpg",
+        "caption": "Point at which two individual wires meet together to form one wire in front of red fabric."
+      },
+      {
+        "file_name": "VizWiz_train_00013496.jpg",
+        "caption": "A cord with loose wires hanging out of the end."
+      },
+      {
+        "file_name": "VizWiz_train_00012396.jpg",
+        "caption": "A pile of folded clothing is on a footstool, with other furniture in the background."
+      },
+      {
+        "file_name": "VizWiz_train_00021553.jpg",
+        "caption": "A wooden piece of furniture has many different pieces of clothing on each section."
+      },
+      {
+        "file_name": "VizWiz_train_00021606.jpg",
+        "caption": "A cup of domino's pizza sauce is near the laptop"
+      },
+      {
+        "file_name": "VizWiz_train_00019557.jpg",
+        "caption": "A gray fabric with a ribbed texture and no other markings except a logo."
+      },
+      {
+        "file_name": "VizWiz_train_00004369.jpg",
+        "caption": "A brown leather shoe with brown shoe strings and a white rubber sole."
+      },
+      {
+        "file_name": "VizWiz_train_00017471.jpg",
+        "caption": "a button up t shirt that is currently buttoned"
+      },
+      {
+        "file_name": "VizWiz_train_00002242.jpg",
+        "caption": "Santa doll that holding pole with green leaves on it."
+      },
+      {
+        "file_name": "VizWiz_train_00007265.jpg",
+        "caption": "A green and yellow action figure of a man in futuristic armor, complete with a helmet, webbed feet, and a metal ball tethered to him."
+      },
+      {
+        "file_name": "VizWiz_train_00013611.jpg",
+        "caption": "An older woman's hand and arm wearing a white knit sweater."
+      },
+      {
+        "file_name": "VizWiz_train_00017659.jpg",
+        "caption": "A clear bottle of purell hand sanitizer, sitting on top of a wooden surface."
+      },
+      {
+        "file_name": "VizWiz_train_00016768.jpg",
+        "caption": "a floral pattern on someone's shirt, also showing their arm."
+      },
+      {
+        "file_name": "VizWiz_train_00016305.jpg",
+        "caption": "a pair of bedazzled jeans with button pockets on a white counter and flowered fabric in a corner."
+      },
+      {
+        "file_name": "VizWiz_train_00008442.jpg",
+        "caption": "A lawn mower in a garage in the corner of the room"
+      },
+      {
+        "file_name": "VizWiz_train_00002479.jpg",
+        "caption": "A woman's neck with purple and black shirt and brown frizzy hair"
+      },
+      {
+        "file_name": "VizWiz_train_00022261.jpg",
+        "caption": "a crumpled piece of fabric or cloth on the floor"
+      },
+      {
+        "file_name": "VizWiz_train_00020026.jpg",
+        "caption": "A cotton shirt that has a collar and is yellow in color."
+      },
+      {
+        "file_name": "VizWiz_train_00006038.jpg",
+        "caption": "A door that is white with a lot of dirt on it is closed."
+      },
+      {
+        "file_name": "VizWiz_train_00017901.jpg",
+        "caption": "A white shirt with a blue eeyore donkey on the front."
+      },
+      {
+        "file_name": "VizWiz_train_00007953.jpg",
+        "caption": "A black hockey puck with the national league logo."
+      },
+      {
+        "file_name": "VizWiz_train_00005774.jpg",
+        "caption": "Bottle equate brand antibacterial citrus fresh kitchen hand soap."
+      },
+      {
+        "file_name": "VizWiz_train_00005129.jpg",
+        "caption": "A white bottle of Vaseline lotion held in someone's hand."
+      },
+      {
+        "file_name": "VizWiz_train_00003852.jpg",
+        "caption": "a container of Kirkland brand mixed nuts that is on it's side"
+      },
+      {
+        "file_name": "VizWiz_train_00000576.jpg",
+        "caption": "The ingredients label for a bottle of Simple Pleasures brand liquid hand soap."
+      },
+      {
+        "file_name": "VizWiz_train_00001129.jpg",
+        "caption": "A person is covered up in a blow cartoon blanket"
+      },
+      {
+        "file_name": "VizWiz_train_00006315.jpg",
+        "caption": "a tight white shirt across a woman's chest"
+      },
+      {
+        "file_name": "VizWiz_train_00012453.jpg",
+        "caption": "A woman's foot with red nail polish wearing a golden sandal, a greenish blue office chair and a golden coat."
+      },
+      {
+        "file_name": "VizWiz_train_00016111.jpg",
+        "caption": "Person's neck that has an orange necklace and is wearing a white shirt."
+      },
+      {
+        "file_name": "VizWiz_train_00023110.jpg",
+        "caption": "Someone is holding a music DVD called Verbatim."
+      },
+      {
+        "file_name": "VizWiz_train_00020641.jpg",
+        "caption": "A pair of human feet standing with socks on"
+      },
+      {
+        "file_name": "VizWiz_train_00001932.jpg",
+        "caption": "A comforter has a white base and blue designs."
+      },
+      {
+        "file_name": "VizWiz_train_00011966.jpg",
+        "caption": "A grey colored fabric with a person's finger in the corner."
+      },
+      {
+        "file_name": "VizWiz_train_00010742.jpg",
+        "caption": "a container of ASDA brand loaded peanut butter crunch ice cream"
+      },
+      {
+        "file_name": "VizWiz_train_00016699.jpg",
+        "caption": "a piece of black fabric laying on a white surface"
+      },
+      {
+        "file_name": "VizWiz_train_00015250.jpg",
+        "caption": "Pictured is a bottle of purell hand sanitizer."
+      },
+      {
+        "file_name": "VizWiz_train_00005022.jpg",
+        "caption": "A golden colored dog sleeping with five dogs lined up in the background."
+      },
+      {
+        "file_name": "VizWiz_train_00019083.jpg",
+        "caption": "Black large flower shaped hair clip with diamond like glued on beads"
+      },
+      {
+        "file_name": "VizWiz_train_00018578.jpg",
+        "caption": "A white Jet Flash 4 GB drive sitting on a surface."
+      },
+      {
+        "file_name": "VizWiz_train_00009876.jpg",
+        "caption": "A piece of white fabric that appears to be clothing."
+      },
+      {
+        "file_name": "VizWiz_train_00012911.jpg",
+        "caption": "A piece of red candy on a lamp showing the room red"
+      },
+      {
+        "file_name": "VizWiz_train_00010337.jpg",
+        "caption": "part of a tree with trees in the background"
+      },
+      {
+        "file_name": "VizWiz_train_00006270.jpg",
+        "caption": "a human foot that is hairy and laying on top of a flannel sheet"
+      },
+      {
+        "file_name": "VizWiz_train_00003858.jpg",
+        "caption": "a white dress in a clear zip bag on a bed"
+      },
+      {
+        "file_name": "VizWiz_train_00017410.jpg",
+        "caption": "Black radio with arch handle and metal antenna."
+      },
+      {
+        "file_name": "VizWiz_train_00018317.jpg",
+        "caption": "A person is wearing jeans and on a beige blanket."
+      },
+      {
+        "file_name": "VizWiz_train_00000116.jpg",
+        "caption": "Long sleeve knitted sweater jacket with a floral pattern."
+      },
+      {
+        "file_name": "VizWiz_train_00020020.jpg",
+        "caption": "Part of a person sitting on a couch with a patterned pillow."
+      },
+      {
+        "file_name": "VizWiz_train_00023353.jpg",
+        "caption": "Hand holding paper with a fluffy blue sleeve and a shirt sleeve underneath it."
+      },
+      {
+        "file_name": "VizWiz_train_00020715.jpg",
+        "caption": "A blue shirt and a grey pair of jeans on someone who is sitting"
+      },
+      {
+        "file_name": "VizWiz_train_00002762.jpg",
+        "caption": "A green shirt with large bold black text on it."
+      },
+      {
+        "file_name": "VizWiz_train_00021053.jpg",
+        "caption": "A piece of textured heather or light gray colored fabric"
+      },
+      {
+        "file_name": "VizWiz_train_00011074.jpg",
+        "caption": "an electronic device which is used to talk"
+      },
+      {
+        "file_name": "VizWiz_train_00005624.jpg",
+        "caption": "appears to be a picture of a dresser and purple shirt"
+      },
+      {
+        "file_name": "VizWiz_train_00004560.jpg",
+        "caption": "Some bright pink material with dark purple thread along the seams."
+      },
+      {
+        "file_name": "VizWiz_train_00021804.jpg",
+        "caption": "The top of a person's fist with a few scratches on it."
+      },
+      {
+        "file_name": "VizWiz_train_00018560.jpg",
+        "caption": "A brown penny is on the white soft carpet"
+      },
+      {
+        "file_name": "VizWiz_train_00013735.jpg",
+        "caption": "a can of cranberry sauce laying on the side with yellow and blue label"
+      },
+      {
+        "file_name": "VizWiz_train_00012205.jpg",
+        "caption": "A person is holding an ink refill in their hands."
+      },
+      {
+        "file_name": "VizWiz_train_00001279.jpg",
+        "caption": "A person's feet wearing blue socks on white carpet"
+      },
+      {
+        "file_name": "VizWiz_train_00014791.jpg",
+        "caption": "A hand in a cast pointing to the farthest left of three uniformly lined red buttons on the back of a black speaker box"
+      },
+      {
+        "file_name": "VizWiz_train_00006395.jpg",
+        "caption": "human legs extended out on a piece of furniture in someone's living room"
+      },
+      {
+        "file_name": "VizWiz_train_00023086.jpg",
+        "caption": "A man is holding a item and is wearing a dress shirt."
+      },
+      {
+        "file_name": "VizWiz_train_00003175.jpg",
+        "caption": "A image of a person's hand on a red ball"
+      },
+      {
+        "file_name": "VizWiz_train_00011975.jpg",
+        "caption": "a white bed sheet with blue gold and silver snowflakes on it"
+      }
+    ],
+    "documents_text": [
+      {
+        "file_name": "VizWiz_train_00009791.jpg",
+        "caption": "A baby onesie that has text on it."
+      },
+      {
+        "file_name": "VizWiz_train_00000067.jpg",
+        "caption": "A bag that is white is on the table."
+      },
+      {
+        "file_name": "VizWiz_train_00010071.jpg",
+        "caption": "Package of \"Special Lasagna\" frozen dinner sitting on a wooden table."
+      },
+      {
+        "file_name": "VizWiz_train_00006882.jpg",
+        "caption": "A box of super moist cake mix by Betty Crocker"
+      },
+      {
+        "file_name": "VizWiz_train_00019795.jpg",
+        "caption": "Someone has photographed a length of grey, herringbone textured  fabric."
+      },
+      {
+        "file_name": "VizWiz_train_00019817.jpg",
+        "caption": "A large plastic bag of Kraft milk string cheese"
+      },
+      {
+        "file_name": "VizWiz_train_00011652.jpg",
+        "caption": "A black shirt that reads Harley Davidson of Grand Cayman sits on a table"
+      },
+      {
+        "file_name": "VizWiz_train_00007340.jpg",
+        "caption": "the back of a package of chicken casserole single serve meal"
+      },
+      {
+        "file_name": "VizWiz_train_00010895.jpg",
+        "caption": "On the left hand corner of the photo, a hand is holding up a can of Campbell's soup, while the background shows and open pantry."
+      },
+      {
+        "file_name": "VizWiz_train_00017681.jpg",
+        "caption": "A bottle of an alcoholic beverage showing the government warning label on back."
+      },
+      {
+        "file_name": "VizWiz_train_00018494.jpg",
+        "caption": "A back label with a UPC code and partial cooking instructions."
+      },
+      {
+        "file_name": "VizWiz_train_00019771.jpg",
+        "caption": "A silver cardboard sleeve of Diet Coke resting on a counter and taken at an above angle"
+      },
+      {
+        "file_name": "VizWiz_train_00014082.jpg",
+        "caption": "A trading card is on top of a table."
+      },
+      {
+        "file_name": "VizWiz_train_00016722.jpg",
+        "caption": "A t shirt laying flat with Ringspun on it."
+      },
+      {
+        "file_name": "VizWiz_train_00018214.jpg",
+        "caption": "Purple gold and white label of Barefoot Cabernet Sauvignon wine."
+      },
+      {
+        "file_name": "VizWiz_train_00012429.jpg",
+        "caption": "A package of sunflower seeds from R&NS brand"
+      },
+      {
+        "file_name": "VizWiz_train_00004082.jpg",
+        "caption": "a white sachet package of BONELESS SKINLESS CHICKEN BREAST FILET"
+      },
+      {
+        "file_name": "VizWiz_train_00004923.jpg",
+        "caption": "A white CD is on a brown leather sofa"
+      },
+      {
+        "file_name": "VizWiz_train_00007649.jpg",
+        "caption": "Some sort of label with yellow writing and a blue background regarding biscuits."
+      },
+      {
+        "file_name": "VizWiz_train_00005650.jpg",
+        "caption": "Pack of college ruled paper on white table with black phone"
+      },
+      {
+        "file_name": "VizWiz_train_00001574.jpg",
+        "caption": "An couch with an wool rug texture rotated as no one can tell any obstruction to take seat in."
+      },
+      {
+        "file_name": "VizWiz_train_00014670.jpg",
+        "caption": "a bag of instant noodles on a granite counter top"
+      },
+      {
+        "file_name": "VizWiz_train_00018609.jpg",
+        "caption": "the device information on the bottom of an electronic device"
+      },
+      {
+        "file_name": "VizWiz_train_00013774.jpg",
+        "caption": "A man holding a bottle of Spatlese on a white table."
+      },
+      {
+        "file_name": "VizWiz_train_00001634.jpg",
+        "caption": "A green and black bug zapper still inside of its box"
+      },
+      {
+        "file_name": "VizWiz_train_00018974.jpg",
+        "caption": "Collaborative consumption is the topic of this interesting looking book."
+      },
+      {
+        "file_name": "VizWiz_train_00008094.jpg",
+        "caption": "A piece of red material with a few ripples in it"
+      },
+      {
+        "file_name": "VizWiz_train_00001546.jpg",
+        "caption": "A top view of a cup of Greek yogurt, Chobani brand."
+      },
+      {
+        "file_name": "VizWiz_train_00001348.jpg",
+        "caption": "A green can of flaked light tuna in water sitting on a sink."
+      },
+      {
+        "file_name": "VizWiz_train_00014780.jpg",
+        "caption": "A still packaged 4GB Kingmax micro SDHC memory card being."
+      },
+      {
+        "file_name": "VizWiz_train_00012182.jpg",
+        "caption": "a very old dusty blanket that is on a bed spread"
+      },
+      {
+        "file_name": "VizWiz_train_00012839.jpg",
+        "caption": "a  cellophaned container of Santa Fe marinated chicken breasts"
+      },
+      {
+        "file_name": "VizWiz_train_00021597.jpg",
+        "caption": "The back of a plastic tub container with it's nutrition on the paper"
+      },
+      {
+        "file_name": "VizWiz_train_00013554.jpg",
+        "caption": "Packaging from 1,415 lbs of Dey Dey's Best Beef Ever beef strip loin at $22 per pound."
+      },
+      {
+        "file_name": "VizWiz_train_00004161.jpg",
+        "caption": "A silver package of Wrigley's Extra peppermint flavor gum."
+      },
+      {
+        "file_name": "VizWiz_train_00001537.jpg",
+        "caption": "Wine bottle with sticker on box beside some papers"
+      },
+      {
+        "file_name": "VizWiz_train_00012980.jpg",
+        "caption": "\"Meat packs\" and \"garlic\" are printed on white packaging."
+      },
+      {
+        "file_name": "VizWiz_train_00002130.jpg",
+        "caption": "IMAGE ID BLUR AND ITS A ADVERTISEMENT OF GIFT BOX"
+      },
+      {
+        "file_name": "VizWiz_train_00021543.jpg",
+        "caption": "A black pen resting on a sheet of graph paper."
+      },
+      {
+        "file_name": "VizWiz_train_00004810.jpg",
+        "caption": "A reflection of a person wearing a white shirt in front of a blue background."
+      },
+      {
+        "file_name": "VizWiz_train_00001833.jpg",
+        "caption": "a small red piece of paper with text on it"
+      },
+      {
+        "file_name": "VizWiz_train_00015105.jpg",
+        "caption": "A hand holding a can of soup showing ingredients."
+      },
+      {
+        "file_name": "VizWiz_train_00001819.jpg",
+        "caption": "A box of meatloaf that inside the container with instructions how to make it."
+      },
+      {
+        "file_name": "VizWiz_train_00017127.jpg",
+        "caption": "Streaks of blue, yellow and white diagonally across a white background."
+      },
+      {
+        "file_name": "VizWiz_train_00021908.jpg",
+        "caption": "A cardboard box containing perfume laying on it's side showing the front label."
+      },
+      {
+        "file_name": "VizWiz_train_00006129.jpg",
+        "caption": "A bag of steam n serve frozen cauliflower."
+      },
+      {
+        "file_name": "VizWiz_train_00010403.jpg",
+        "caption": "a white color paper showing some text on it"
+      },
+      {
+        "file_name": "VizWiz_train_00003137.jpg",
+        "caption": "A very wonderful view and worth seeing at all times, my friend"
+      },
+      {
+        "file_name": "VizWiz_train_00022727.jpg",
+        "caption": "A paper bill is laid flat on a table with crease marks."
+      },
+      {
+        "file_name": "VizWiz_train_00014431.jpg",
+        "caption": "A yellow card with a frame that has a heading that states four pentacles."
+      },
+      {
+        "file_name": "VizWiz_train_00006406.jpg",
+        "caption": "Some cookies in a pink package called McDougals."
+      },
+      {
+        "file_name": "VizWiz_train_00014664.jpg",
+        "caption": "a box of gourmet microwavable popcorn in bags"
+      },
+      {
+        "file_name": "VizWiz_train_00015090.jpg",
+        "caption": "A smoker bag to use to cook with beef or pork."
+      },
+      {
+        "file_name": "VizWiz_train_00001076.jpg",
+        "caption": "A ball of pink and white yarn on a green tablecloth."
+      },
+      {
+        "file_name": "VizWiz_train_00015696.jpg",
+        "caption": "TV screen shown some moving character for child series or for advertising"
+      },
+      {
+        "file_name": "VizWiz_train_00002162.jpg",
+        "caption": "A blue package of something showing Best Before date"
+      },
+      {
+        "file_name": "VizWiz_train_00010801.jpg",
+        "caption": "I am looking at a photo of a blue Post It note."
+      },
+      {
+        "file_name": "VizWiz_train_00016645.jpg",
+        "caption": "Pictured is the back label of a can of soup."
+      },
+      {
+        "file_name": "VizWiz_train_00014769.jpg",
+        "caption": "I see a property of texas sticker on a book"
+      },
+      {
+        "file_name": "VizWiz_train_00014310.jpg",
+        "caption": "A card with phone numbers is held upside down in front of a package."
+      },
+      {
+        "file_name": "VizWiz_train_00013349.jpg",
+        "caption": "A 24 size yellow and blue package of plastic spoons."
+      },
+      {
+        "file_name": "VizWiz_train_00008161.jpg",
+        "caption": "a black bottle of aloha Shoyu Soy Sauce"
+      },
+      {
+        "file_name": "VizWiz_train_00006738.jpg",
+        "caption": "A fruit tablecloth with a wooden object holding several papers on top of it, and a door in the background"
+      },
+      {
+        "file_name": "VizWiz_train_00005312.jpg",
+        "caption": "A close up of a colorful card that Tina's on the top, women of Latin America with several small pics all over it, including a woman, a heart, a drum, and a shoe."
+      },
+      {
+        "file_name": "VizWiz_train_00016990.jpg",
+        "caption": "Pack of ramen noodle soup in original flavor"
+      },
+      {
+        "file_name": "VizWiz_train_00018160.jpg",
+        "caption": "Naked the Restored text lunch book sitting on a leg."
+      },
+      {
+        "file_name": "VizWiz_train_00008104.jpg",
+        "caption": "A nike t shirt on a hanger with writing on the front in the shape of a basketball"
+      },
+      {
+        "file_name": "VizWiz_train_00006226.jpg",
+        "caption": "Part of the front box for a children's floor puzzle."
+      },
+      {
+        "file_name": "VizWiz_train_00006885.jpg",
+        "caption": "A close up image of a black tag that says OMAHA."
+      },
+      {
+        "file_name": "VizWiz_train_00010226.jpg",
+        "caption": "Very close image of what looks to be the top of a bottle."
+      },
+      {
+        "file_name": "VizWiz_train_00003462.jpg",
+        "caption": "The bottom of a package of strawberry lollipops, with multicolored circles"
+      },
+      {
+        "file_name": "VizWiz_train_00017042.jpg",
+        "caption": "A package of Kraft Cool whip topping in Lite."
+      },
+      {
+        "file_name": "VizWiz_train_00016349.jpg",
+        "caption": "A can of beans laying flat on the carpet floor"
+      },
+      {
+        "file_name": "VizWiz_train_00007738.jpg",
+        "caption": "A design with blue, purple and pink swirls."
+      },
+      {
+        "file_name": "VizWiz_train_00011706.jpg",
+        "caption": "a paper pack of a chocolate cake named BLUE"
+      },
+      {
+        "file_name": "VizWiz_train_00008156.jpg",
+        "caption": "A view of multiple tall bookshelves filled with books."
+      },
+      {
+        "file_name": "VizWiz_train_00019042.jpg",
+        "caption": "A bottle of wine is on top of a box."
+      },
+      {
+        "file_name": "VizWiz_train_00000248.jpg",
+        "caption": "The handling instructions to some kind of meat and or poultry product"
+      },
+      {
+        "file_name": "VizWiz_train_00011737.jpg",
+        "caption": "Text from a math book discussing various formulas and equations."
+      },
+      {
+        "file_name": "VizWiz_train_00015731.jpg",
+        "caption": "Instruction guide with a list of all the parts included"
+      },
+      {
+        "file_name": "VizWiz_train_00014265.jpg",
+        "caption": "A prescription pill bottle being held in hand."
+      },
+      {
+        "file_name": "VizWiz_train_00002679.jpg",
+        "caption": "A silver and metallic looking package of tassimo coffee"
+      },
+      {
+        "file_name": "VizWiz_train_00001935.jpg",
+        "caption": "A jar of mustard sitting on a white table."
+      },
+      {
+        "file_name": "VizWiz_train_00013691.jpg",
+        "caption": "In this photo is a empty bottle on a table with some coupons"
+      },
+      {
+        "file_name": "VizWiz_train_00005543.jpg",
+        "caption": "A beige carpet is very soft but stained"
+      },
+      {
+        "file_name": "VizWiz_train_00012935.jpg",
+        "caption": "A smaller bag of a special coffee it is brown with gold writing on it."
+      },
+      {
+        "file_name": "VizWiz_train_00003510.jpg",
+        "caption": "A box of borax washing detergent with a picture of the sky on it"
+      },
+      {
+        "file_name": "VizWiz_train_00009016.jpg",
+        "caption": "20 Euro denomination notes sitting on a dark counter"
+      },
+      {
+        "file_name": "VizWiz_train_00022459.jpg",
+        "caption": "A piece of paper is visible with multiple choice questions written in text."
+      },
+      {
+        "file_name": "VizWiz_train_00001834.jpg",
+        "caption": "a sheet of paper and different colored shapes in a ziploc bag."
+      },
+      {
+        "file_name": "VizWiz_train_00022415.jpg",
+        "caption": "Page in a book showing a geometry or algebra math problem."
+      },
+      {
+        "file_name": "VizWiz_train_00006355.jpg",
+        "caption": "A clear cellophane bag with beans inside of it."
+      },
+      {
+        "file_name": "VizWiz_train_00009517.jpg",
+        "caption": "A bottle of Body Image brand scented body lotion."
+      },
+      {
+        "file_name": "VizWiz_train_00007329.jpg",
+        "caption": "Barcode sticker on a box with tape around the box."
+      },
+      {
+        "file_name": "VizWiz_train_00004172.jpg",
+        "caption": "A paper with dimensions on it is open."
+      },
+      {
+        "file_name": "VizWiz_train_00011243.jpg",
+        "caption": "An envelope related to bank or most likely to university"
+      },
+      {
+        "file_name": "VizWiz_train_00021060.jpg",
+        "caption": "A packaged loaf of honey wheat bread on a countertop."
+      },
+      {
+        "file_name": "VizWiz_train_00013812.jpg",
+        "caption": "The complete 24 DVD collection set for Howards Way on BBC"
+      },
+      {
+        "file_name": "VizWiz_train_00017856.jpg",
+        "caption": "The tube is small and has a short nozzle at the end."
+      },
+      {
+        "file_name": "VizWiz_train_00007811.jpg",
+        "caption": "label of plastic packaged bumble bee sensations  spicy Thai chili"
+      },
+      {
+        "file_name": "VizWiz_train_00015491.jpg",
+        "caption": "A tent kit in the box, and to the right of that is a bag of candy"
+      },
+      {
+        "file_name": "VizWiz_train_00020405.jpg",
+        "caption": "Here is a picture of a white paper like with designs"
+      },
+      {
+        "file_name": "VizWiz_train_00016570.jpg",
+        "caption": "A can of Progresso soup with a list of ingredients on the back."
+      },
+      {
+        "file_name": "VizWiz_train_00013478.jpg",
+        "caption": "A grey leather sandal is on the floor inside of a room."
+      },
+      {
+        "file_name": "VizWiz_train_00000203.jpg",
+        "caption": "Back of an electronic device maybe a camera."
+      },
+      {
+        "file_name": "VizWiz_train_00016928.jpg",
+        "caption": "The bottom of the logo of bass pro shop, showing the website, on a t-shirt."
+      },
+      {
+        "file_name": "VizWiz_train_00020653.jpg",
+        "caption": "Paper menu with red and mostly green writing with letters and numbers."
+      },
+      {
+        "file_name": "VizWiz_train_00014055.jpg",
+        "caption": "An iron or brass candle holder with small upright ionic designs"
+      },
+      {
+        "file_name": "VizWiz_train_00007719.jpg",
+        "caption": "A plastic frozen bag of food stuffs inside of it"
+      },
+      {
+        "file_name": "VizWiz_train_00016781.jpg",
+        "caption": "A white perfume box with gold lettering and gold outlined flowers is shown."
+      },
+      {
+        "file_name": "VizWiz_train_00002771.jpg",
+        "caption": "A portion of a screen is showing characters and displaying the 2000s."
+      },
+      {
+        "file_name": "VizWiz_train_00022387.jpg",
+        "caption": "Bottom part of a microwave oven control panel, text menu of start and control options, numbers for input"
+      },
+      {
+        "file_name": "VizWiz_train_00003554.jpg",
+        "caption": "Girl running flag up flagpole while other girls watch."
+      },
+      {
+        "file_name": "VizWiz_train_00006864.jpg",
+        "caption": "A small package of ground beef is being held on the counter."
+      },
+      {
+        "file_name": "VizWiz_train_00003022.jpg",
+        "caption": "A great value spice herb Shaker container on top of a table"
+      },
+      {
+        "file_name": "VizWiz_train_00022708.jpg",
+        "caption": "A page from a book with a math question and multiple choice answers"
+      },
+      {
+        "file_name": "VizWiz_train_00002835.jpg",
+        "caption": "A person is holding a can of chili in their hand."
+      },
+      {
+        "file_name": "VizWiz_train_00018827.jpg",
+        "caption": "A package of pink lemonade Kool-Aid is the image."
+      },
+      {
+        "file_name": "VizWiz_train_00014025.jpg",
+        "caption": "A calculator that reads two thousand and fifty four, point five hundred and sixty two."
+      },
+      {
+        "file_name": "VizWiz_train_00004100.jpg",
+        "caption": "A man is wearing a black shirt with green and white lettering on it."
+      },
+      {
+        "file_name": "VizWiz_train_00007013.jpg",
+        "caption": "Several paragraphs of words on a white jar with a blue label."
+      },
+      {
+        "file_name": "VizWiz_train_00007239.jpg",
+        "caption": "The top side of a product box on a man's lap"
+      },
+      {
+        "file_name": "VizWiz_train_00015339.jpg",
+        "caption": "A SNAPSHOT OF A PERSON WEARING A GREY T SHIRT"
+      },
+      {
+        "file_name": "VizWiz_train_00005484.jpg",
+        "caption": "Black packaging with a golden sword and name on the front"
+      },
+      {
+        "file_name": "VizWiz_train_00018196.jpg",
+        "caption": "A can with a red label being held by someone."
+      },
+      {
+        "file_name": "VizWiz_train_00008851.jpg",
+        "caption": "A bag of tai pei food is on a table."
+      },
+      {
+        "file_name": "VizWiz_train_00005300.jpg",
+        "caption": "A food can with its label text in French is held by the photographer."
+      },
+      {
+        "file_name": "VizWiz_train_00017454.jpg",
+        "caption": "Zoomed in picture of gravel or cement ground"
+      },
+      {
+        "file_name": "VizWiz_train_00016076.jpg",
+        "caption": "A perfume bottle that is wrapped in plastic"
+      },
+      {
+        "file_name": "VizWiz_train_00021601.jpg",
+        "caption": "A box that has a faucet depicted with a barcode sticker on top."
+      },
+      {
+        "file_name": "VizWiz_train_00006836.jpg",
+        "caption": "Kahlua brand coffee pod that has a black lid with text written in yellow and red."
+      },
+      {
+        "file_name": "VizWiz_train_00012929.jpg",
+        "caption": "Some clothes left on the couch and a carpet"
+      },
+      {
+        "file_name": "VizWiz_train_00012481.jpg",
+        "caption": "a wooden shelf with labels of Darlene and Edgar on it"
+      },
+      {
+        "file_name": "VizWiz_train_00006527.jpg",
+        "caption": "The back of a bag of Frito Lay potato chips."
+      },
+      {
+        "file_name": "VizWiz_train_00023193.jpg",
+        "caption": "A infovox3 key memory stick over a cream and brown rug."
+      },
+      {
+        "file_name": "VizWiz_train_00023291.jpg",
+        "caption": "A hand holding a FCC black lighter with a matching white styrofoam cup."
+      },
+      {
+        "file_name": "VizWiz_train_00021433.jpg",
+        "caption": "A close up of an open paperback book with both German and English"
+      },
+      {
+        "file_name": "VizWiz_train_00001379.jpg",
+        "caption": "Can of mushrooms on pink carpet with a strip of paper"
+      },
+      {
+        "file_name": "VizWiz_train_00002418.jpg",
+        "caption": "A bag of frozen chicken right on the table."
+      },
+      {
+        "file_name": "VizWiz_train_00016076.jpg",
+        "caption": "The label on the back of a Hermosa perfume package."
+      },
+      {
+        "file_name": "VizWiz_train_00010913.jpg",
+        "caption": "Black and White window seals next to an organ object"
+      },
+      {
+        "file_name": "VizWiz_train_00020942.jpg",
+        "caption": "Good quality image but image has some drawbacks in framing."
+      },
+      {
+        "file_name": "VizWiz_train_00007110.jpg",
+        "caption": "An unopened granola bar on a carpeted surface and a human hand."
+      },
+      {
+        "file_name": "VizWiz_train_00001197.jpg",
+        "caption": "Four oz boneless pork chops for $4 wrapped in paper."
+      },
+      {
+        "file_name": "VizWiz_train_00000103.jpg",
+        "caption": "A currency of 100 is placed on a towel on the table."
+      },
+      {
+        "file_name": "VizWiz_train_00008607.jpg",
+        "caption": "The corner of a tomato can is on top of a kitchen counter."
+      },
+      {
+        "file_name": "VizWiz_train_00019470.jpg",
+        "caption": "a toy package is shown on a person's lap."
+      },
+      {
+        "file_name": "VizWiz_train_00003462.jpg",
+        "caption": "A multi color polka dot product displaying the nutritional facts on the back."
+      },
+      {
+        "file_name": "VizWiz_train_00016164.jpg",
+        "caption": "A sewing kit is in this cardboard box"
+      },
+      {
+        "file_name": "VizWiz_train_00006774.jpg",
+        "caption": "An orange sign with a scan code that says Get the Free App."
+      },
+      {
+        "file_name": "VizWiz_train_00004251.jpg",
+        "caption": "A green package of Activia yogurt on tile floor."
+      },
+      {
+        "file_name": "VizWiz_train_00018796.jpg",
+        "caption": "A package of stuffing mix with directions and ingredients on the back."
+      },
+      {
+        "file_name": "VizWiz_train_00011329.jpg",
+        "caption": "an ingredient which is used to prepare baked food items"
+      },
+      {
+        "file_name": "VizWiz_train_00013984.jpg",
+        "caption": "A paper wrapped burger and a cash register receipt."
+      },
+      {
+        "file_name": "VizWiz_train_00017921.jpg",
+        "caption": "a book of the historic walk in San Francisco"
+      },
+      {
+        "file_name": "VizWiz_train_00011017.jpg",
+        "caption": "A page from a book called sociolinguistics is on a table"
+      },
+      {
+        "file_name": "VizWiz_train_00014209.jpg",
+        "caption": "Someone holding a new Visa credit or debit card"
+      },
+      {
+        "file_name": "VizWiz_train_00000257.jpg",
+        "caption": "The backwards bottle is some kind of vitamin supplement and it says to take one half level teaspoon one to three times daily in juice or water."
+      },
+      {
+        "file_name": "VizWiz_train_00002934.jpg",
+        "caption": "Partially visible shipping label on a box, only bar code and number visible, numbers read : 03 5858 7638"
+      },
+      {
+        "file_name": "VizWiz_train_00001991.jpg",
+        "caption": "A blue fixture is marked \"Braille\" in silver letters."
+      },
+      {
+        "file_name": "VizWiz_train_00022514.jpg",
+        "caption": "three math equations with complex fractions and algebra"
+      },
+      {
+        "file_name": "VizWiz_train_00017532.jpg",
+        "caption": "The back of a book or box, black text on yellow background with a white border."
+      },
+      {
+        "file_name": "VizWiz_train_00023112.jpg",
+        "caption": "A  script has a class and date to be  filled , below  there is  a question and answers."
+      },
+      {
+        "file_name": "VizWiz_train_00003905.jpg",
+        "caption": "A white, plastic bag with red text that says \"Soft & Chewy Cookies\"."
+      },
+      {
+        "file_name": "VizWiz_train_00013856.jpg",
+        "caption": "A package of Timothy's Extra Bold, Midnight Magic Flavored Coffee"
+      },
+      {
+        "file_name": "VizWiz_train_00000975.jpg",
+        "caption": "A carpeted piece of fabric with the letter S on it."
+      },
+      {
+        "file_name": "VizWiz_train_00021073.jpg",
+        "caption": "Label with text that is on an appliance."
+      },
+      {
+        "file_name": "VizWiz_train_00009511.jpg",
+        "caption": "A package of Green Giant frozen sugar snap peas."
+      },
+      {
+        "file_name": "VizWiz_train_00014753.jpg",
+        "caption": "A package of trader joe's cinnamon raisin bread with an orange and purple label."
+      },
+      {
+        "file_name": "VizWiz_train_00014002.jpg",
+        "caption": "Small magnifying reading glass on top of a newspaper"
+      },
+      {
+        "file_name": "VizWiz_train_00003878.jpg",
+        "caption": "A picture of food is on the packaging."
+      },
+      {
+        "file_name": "VizWiz_train_00011063.jpg",
+        "caption": "a bag of huk mook banana chips that are foreign to the United States"
+      },
+      {
+        "file_name": "VizWiz_train_00003341.jpg",
+        "caption": "The control panel on a crock pot, white and grey with grey and white text."
+      },
+      {
+        "file_name": "VizWiz_train_00001136.jpg",
+        "caption": "A flyer for a Christian open mic event."
+      },
+      {
+        "file_name": "VizWiz_train_00007944.jpg",
+        "caption": "An unsealed can good sits on a wooden table upside down."
+      },
+      {
+        "file_name": "VizWiz_train_00009399.jpg",
+        "caption": "Avery label paper, back of box advertising printing and peeling options."
+      },
+      {
+        "file_name": "VizWiz_train_00022967.jpg",
+        "caption": "A Caucasian individual's left hand holding a pair of Gore Tex gloves with the label visible."
+      },
+      {
+        "file_name": "VizWiz_train_00020108.jpg",
+        "caption": "a black plastic device on a carpeted ground"
+      },
+      {
+        "file_name": "VizWiz_train_00021877.jpg",
+        "caption": "a quick cuisine was packed in a nylon"
+      },
+      {
+        "file_name": "VizWiz_train_00001078.jpg",
+        "caption": "Aquafina bottle of water on a wooden surface"
+      },
+      {
+        "file_name": "VizWiz_train_00022967.jpg",
+        "caption": "a person hand holding a black color paper pack of gore-tex"
+      },
+      {
+        "file_name": "VizWiz_train_00009223.jpg",
+        "caption": "The bottom of a plastic thirst quencher container holding what looks like sand."
+      },
+      {
+        "file_name": "VizWiz_train_00005473.jpg",
+        "caption": "Red bottle of men's fragrance called Hermosa sealed in plastic."
+      },
+      {
+        "file_name": "VizWiz_train_00017304.jpg",
+        "caption": "a box of funfetti cake mix from Pillsbury."
+      },
+      {
+        "file_name": "VizWiz_train_00006477.jpg",
+        "caption": "part of a clear rotisserie chicken seasoning container"
+      },
+      {
+        "file_name": "VizWiz_train_00016907.jpg",
+        "caption": "Piece of paper with survey questions on it in the hands of someone"
+      },
+      {
+        "file_name": "VizWiz_train_00002753.jpg",
+        "caption": "A opened packaged of hot dogs in a ziploc bag."
+      },
+      {
+        "file_name": "VizWiz_train_00009117.jpg",
+        "caption": "A white bottle of shower gel with orange letters on a marble like surface."
+      },
+      {
+        "file_name": "VizWiz_train_00019671.jpg",
+        "caption": "A slice of cheese is on top of a plate."
+      },
+      {
+        "file_name": "VizWiz_train_00014186.jpg",
+        "caption": "A package has an action figure and a motorcycle inside."
+      },
+      {
+        "file_name": "VizWiz_train_00022534.jpg",
+        "caption": "A box of chicken broth with reduced sodium"
+      },
+      {
+        "file_name": "VizWiz_train_00022298.jpg",
+        "caption": "A shelf with many different books on it."
+      },
+      {
+        "file_name": "VizWiz_train_00010477.jpg",
+        "caption": "the back of a nestle brand package of single serve food"
+      },
+      {
+        "file_name": "VizWiz_train_00015721.jpg",
+        "caption": "A reflective coating on top of a textured pattern"
+      },
+      {
+        "file_name": "VizWiz_train_00019003.jpg",
+        "caption": "a package wrapped in yellow paper with big bar code display."
+      },
+      {
+        "file_name": "VizWiz_train_00004078.jpg",
+        "caption": "A box of photo ink from HP, for use in printers."
+      },
+      {
+        "file_name": "VizWiz_train_00006164.jpg",
+        "caption": "A person's hand holding the corner of a black and white image."
+      },
+      {
+        "file_name": "VizWiz_train_00022014.jpg",
+        "caption": "a box of cinnamon and cheese crumb cakes sitting on top of a person's lap"
+      },
+      {
+        "file_name": "VizWiz_train_00004266.jpg",
+        "caption": "A close up of a label that says Green Mountain coffee hazelnut on it."
+      }
+    ],
+    "food_drink": [
+      {
+        "file_name": "VizWiz_train_00004134.jpg",
+        "caption": "A meals made simple black bag from krogers"
+      },
+      {
+        "file_name": "VizWiz_train_00000930.jpg",
+        "caption": "A white can of Great Value golden sweet whole kernel."
+      },
+      {
+        "file_name": "VizWiz_train_00011099.jpg",
+        "caption": "a glass cup is used to cover a small insect"
+      },
+      {
+        "file_name": "VizWiz_train_00009824.jpg",
+        "caption": "A bottle of body lotion with a green label on it."
+      },
+      {
+        "file_name": "VizWiz_train_00009019.jpg",
+        "caption": "A children's writing pad to learn numbers, toothpicks, and a bottle of Mio water enhancer on top of a table."
+      },
+      {
+        "file_name": "VizWiz_train_00005345.jpg",
+        "caption": "A dirty kitchen countertop with a can opener and a canned food object."
+      },
+      {
+        "file_name": "VizWiz_train_00003755.jpg",
+        "caption": "A hand is holding a can of Bumble Bee meat."
+      },
+      {
+        "file_name": "VizWiz_train_00022284.jpg",
+        "caption": "Pictured is a coffee cup in a kitchen setting."
+      },
+      {
+        "file_name": "VizWiz_train_00003167.jpg",
+        "caption": "A close up on a bag of jalapeno cheetos."
+      },
+      {
+        "file_name": "VizWiz_train_00017228.jpg",
+        "caption": "unopened can of baked beans turned towards showing the nutritional facts"
+      },
+      {
+        "file_name": "VizWiz_train_00001137.jpg",
+        "caption": "The back of a white medicine bottle in someone's hand"
+      },
+      {
+        "file_name": "VizWiz_train_00001072.jpg",
+        "caption": "A small bottle of scented hand and body lotion, with a red label that has 3 small snowflakes on it."
+      },
+      {
+        "file_name": "VizWiz_train_00003386.jpg",
+        "caption": "Front of a box showing round brown cereal falling into a spoon of milk."
+      },
+      {
+        "file_name": "VizWiz_train_00008815.jpg",
+        "caption": "Someone is holding a white bottle of medicine with a blue and white label."
+      },
+      {
+        "file_name": "VizWiz_train_00009403.jpg",
+        "caption": "A can of Dark Red Kidney Beans in an office setting."
+      },
+      {
+        "file_name": "VizWiz_train_00020545.jpg",
+        "caption": "a green coffee cup with brown lines between the indentations running down the side"
+      },
+      {
+        "file_name": "VizWiz_train_00000978.jpg",
+        "caption": "A yellow box of Teddy Graham cookies on top of a brown and gray circle patterned comforter."
+      },
+      {
+        "file_name": "VizWiz_train_00023239.jpg",
+        "caption": "A pod of dark roast coffee to use in a Keurig, sitting on a beige carpet."
+      },
+      {
+        "file_name": "VizWiz_train_00007863.jpg",
+        "caption": "An open refrigerator showing the contents both inside and on the door."
+      },
+      {
+        "file_name": "VizWiz_train_00022280.jpg",
+        "caption": "a person holding a bag of cat treats."
+      },
+      {
+        "file_name": "VizWiz_train_00017147.jpg",
+        "caption": "A can of Campbell's Cream of Chicken soup is sitting on top of a wooden picnic table outdoors."
+      },
+      {
+        "file_name": "VizWiz_train_00008904.jpg",
+        "caption": "the front of a green and white can of cut green beans"
+      },
+      {
+        "file_name": "VizWiz_train_00018280.jpg",
+        "caption": "Large hand with medium shade skin in an open pose."
+      },
+      {
+        "file_name": "VizWiz_train_00011311.jpg",
+        "caption": "CAN OF FOOD PLACED ON A COUNTERTOP"
+      },
+      {
+        "file_name": "VizWiz_train_00000251.jpg",
+        "caption": "A frozen dinner meal for one, shepherds pie variety."
+      },
+      {
+        "file_name": "VizWiz_train_00006179.jpg",
+        "caption": "A door covered with yellow blinds with light shining through"
+      },
+      {
+        "file_name": "VizWiz_train_00017258.jpg",
+        "caption": "A red and white canister of Axiron sits on a white surface."
+      },
+      {
+        "file_name": "VizWiz_train_00013931.jpg",
+        "caption": "A tube of cosmetics sitting on a snack tray."
+      },
+      {
+        "file_name": "VizWiz_train_00011291.jpg",
+        "caption": "The front label of a bottle of 2007 red wine from California."
+      },
+      {
+        "file_name": "VizWiz_train_00005982.jpg",
+        "caption": "A large bottle of eau de parfum from candies."
+      },
+      {
+        "file_name": "VizWiz_train_00008663.jpg",
+        "caption": "a 500ml bottle of beloka water from the Australian Alps"
+      },
+      {
+        "file_name": "VizWiz_train_00013744.jpg",
+        "caption": "A kitchen table with a window and two wooden chairs with some drinks and medication as well as various other objects on top of the table."
+      },
+      {
+        "file_name": "VizWiz_train_00003749.jpg",
+        "caption": "a box of Olivia's organic spring mix that supports kids"
+      },
+      {
+        "file_name": "VizWiz_train_00003335.jpg",
+        "caption": "metal can of unidentifiable ingredients sitting on a table"
+      },
+      {
+        "file_name": "VizWiz_train_00015450.jpg",
+        "caption": "A bottle of laundry detergent with a wooden chair in the background."
+      },
+      {
+        "file_name": "VizWiz_train_00003494.jpg",
+        "caption": "An orange bottle of \"orange soda\" up close on a countertop with a kitchen in the background."
+      },
+      {
+        "file_name": "VizWiz_train_00014665.jpg",
+        "caption": "Bag of Walkers brand salt and vinegar chips."
+      },
+      {
+        "file_name": "VizWiz_train_00014050.jpg",
+        "caption": "A Coca Cola bottle sitting on a white speckled surface."
+      },
+      {
+        "file_name": "VizWiz_train_00010666.jpg",
+        "caption": "A can of pinto beans seasoned with pork."
+      },
+      {
+        "file_name": "VizWiz_train_00001550.jpg",
+        "caption": "a white plastic container of round up and an aluminum can of  diet a and w soda"
+      },
+      {
+        "file_name": "VizWiz_train_00018702.jpg",
+        "caption": "a partially eaten dessert resting on a white plate"
+      },
+      {
+        "file_name": "VizWiz_train_00021925.jpg",
+        "caption": "Some ground beef, with either freezer burn or mold."
+      },
+      {
+        "file_name": "VizWiz_train_00004685.jpg",
+        "caption": "A picture of an unidentifiable can of food."
+      },
+      {
+        "file_name": "VizWiz_train_00015366.jpg",
+        "caption": "A person with a red shirt holding a source of light."
+      },
+      {
+        "file_name": "VizWiz_train_00002783.jpg",
+        "caption": "A can of Campbell's chunky soup setting on a table."
+      },
+      {
+        "file_name": "VizWiz_train_00022797.jpg",
+        "caption": "a white and red can of Campbell's condensed TOMATO"
+      },
+      {
+        "file_name": "VizWiz_train_00011896.jpg",
+        "caption": "an aluminum can with a picture and yellow writing up top and red writing in the middle"
+      },
+      {
+        "file_name": "VizWiz_train_00014767.jpg",
+        "caption": "Several pieces of multi-colored hard candy on a white piece of cloth."
+      },
+      {
+        "file_name": "VizWiz_train_00007582.jpg",
+        "caption": "Box of peanut butter toast crunch by General Mills."
+      },
+      {
+        "file_name": "VizWiz_train_00002480.jpg",
+        "caption": "A person is holding up a can of Campbell's chicken and stars soup."
+      },
+      {
+        "file_name": "VizWiz_train_00001636.jpg",
+        "caption": "a chef boyardee can that is very blurry"
+      },
+      {
+        "file_name": "VizWiz_train_00009197.jpg",
+        "caption": "close up picture of buttons on a copy machine."
+      },
+      {
+        "file_name": "VizWiz_train_00011777.jpg",
+        "caption": "A bottle of green body lotion with Vitamin E."
+      },
+      {
+        "file_name": "VizWiz_train_00002854.jpg",
+        "caption": "A packet of CD shown in the image."
+      },
+      {
+        "file_name": "VizWiz_train_00009405.jpg",
+        "caption": "A large white desk has three water glasses on it."
+      },
+      {
+        "file_name": "VizWiz_train_00003720.jpg",
+        "caption": "a small bottle of conditioner on a granite counter top"
+      },
+      {
+        "file_name": "VizWiz_train_00015453.jpg",
+        "caption": "A gray tiled wall with a white control panel with numbers."
+      },
+      {
+        "file_name": "VizWiz_train_00011310.jpg",
+        "caption": "An aluminum beverage can with a pop top opening."
+      },
+      {
+        "file_name": "VizWiz_train_00018394.jpg",
+        "caption": "The view out of a window, with random spices sitting in the foreground."
+      },
+      {
+        "file_name": "VizWiz_train_00014882.jpg",
+        "caption": "A can of Fresca original drink beside a serviette cup holder."
+      },
+      {
+        "file_name": "VizWiz_train_00006323.jpg",
+        "caption": "a person holding an unopened bag of chocolate chips"
+      },
+      {
+        "file_name": "VizWiz_train_00015065.jpg",
+        "caption": "tin Altoids Cinnamon mints container sitting on a table"
+      },
+      {
+        "file_name": "VizWiz_train_00014524.jpg",
+        "caption": "A red can of Campbell's soup and a coffee mug on a white counter top"
+      },
+      {
+        "file_name": "VizWiz_train_00008386.jpg",
+        "caption": "a container/ box / bottle that contains liquid / goods."
+      },
+      {
+        "file_name": "VizWiz_train_00010779.jpg",
+        "caption": "A red lid to a container with hummus in it."
+      },
+      {
+        "file_name": "VizWiz_train_00002561.jpg",
+        "caption": "Found on top of the table is a can good, blender and bottle of spices."
+      },
+      {
+        "file_name": "VizWiz_train_00006661.jpg",
+        "caption": "An empty plastic cereal bag with three burnt tortillas inside"
+      },
+      {
+        "file_name": "VizWiz_train_00021819.jpg",
+        "caption": "Pictured is a can of Pepsi being held directly in front of the camera."
+      },
+      {
+        "file_name": "VizWiz_train_00009810.jpg",
+        "caption": "some fruit items on a bowl placed on a wooden surface"
+      },
+      {
+        "file_name": "VizWiz_train_00006361.jpg",
+        "caption": "A can of tomatoes that are in a blue can"
+      },
+      {
+        "file_name": "VizWiz_train_00018833.jpg",
+        "caption": "some type of liquid that is in a container"
+      },
+      {
+        "file_name": "VizWiz_train_00015411.jpg",
+        "caption": "a vitamin b6 bottle of supplements facts showing"
+      },
+      {
+        "file_name": "VizWiz_train_00010907.jpg",
+        "caption": "A woman's hand holds the bottom part of an empty plastic bottle of Diet Dr Pepper."
+      },
+      {
+        "file_name": "VizWiz_train_00022959.jpg",
+        "caption": "An empty bottle of coca cola next to a white plastic cup."
+      },
+      {
+        "file_name": "VizWiz_train_00008873.jpg",
+        "caption": "Someone is holding a bottle of vitamin D tablets."
+      },
+      {
+        "file_name": "VizWiz_train_00013209.jpg",
+        "caption": "Side of a Pepsi max can that shows it has no sugar added."
+      },
+      {
+        "file_name": "VizWiz_train_00002020.jpg",
+        "caption": "The top of a tin can of soup on a stone countertop."
+      },
+      {
+        "file_name": "VizWiz_train_00009235.jpg",
+        "caption": "I see the back of a single packet of oatmeal."
+      },
+      {
+        "file_name": "VizWiz_train_00001141.jpg",
+        "caption": "a can of cream of celery soup on a counter top"
+      },
+      {
+        "file_name": "VizWiz_train_00012861.jpg",
+        "caption": "A bottle of body wash is on top of a table."
+      },
+      {
+        "file_name": "VizWiz_train_00016347.jpg",
+        "caption": "A can of cream of chicken soup on top of a wooden table."
+      },
+      {
+        "file_name": "VizWiz_train_00010819.jpg",
+        "caption": "red container conditioner for colored treated hair laying down on a wood"
+      },
+      {
+        "file_name": "VizWiz_train_00002369.jpg",
+        "caption": "A pink hello kitty object on a black background"
+      },
+      {
+        "file_name": "VizWiz_train_00008446.jpg",
+        "caption": "A bottle of Kraft dressing made with extra olive oil laying next to a brick wall."
+      },
+      {
+        "file_name": "VizWiz_train_00012832.jpg",
+        "caption": "The back of a bottle of self tanner, called natural glow, resting on a white background."
+      },
+      {
+        "file_name": "VizWiz_train_00008519.jpg",
+        "caption": "A plastic soda bottle is sitting on a counter, in front of several other objects."
+      },
+      {
+        "file_name": "VizWiz_train_00020361.jpg",
+        "caption": "A tin can of food is displaying an image of the food inside."
+      },
+      {
+        "file_name": "VizWiz_train_00016087.jpg",
+        "caption": "A purse on a table between a paper coffee cup with a lid, and a coffee mug."
+      },
+      {
+        "file_name": "VizWiz_train_00018677.jpg",
+        "caption": "the back of a container of food showing nutritional information"
+      },
+      {
+        "file_name": "VizWiz_train_00005465.jpg",
+        "caption": "a can of food with the nutritional facts and has a light yellow label on a pink terry cloth background."
+      },
+      {
+        "file_name": "VizWiz_train_00010681.jpg",
+        "caption": "A can of food resting on a counter top."
+      },
+      {
+        "file_name": "VizWiz_train_00005347.jpg",
+        "caption": "A close up view of a container of oatmeal sitting on a counter with a cord in the background."
+      },
+      {
+        "file_name": "VizWiz_train_00009896.jpg",
+        "caption": "Single blue can of StarKist Chunk Light tuna fish"
+      },
+      {
+        "file_name": "VizWiz_train_00023240.jpg",
+        "caption": "a white dish with three colored candies on a counter top"
+      },
+      {
+        "file_name": "VizWiz_train_00022016.jpg",
+        "caption": "A metallic green colored spray bottle with a cap on it."
+      },
+      {
+        "file_name": "VizWiz_train_00010603.jpg",
+        "caption": "A braille panel featuring the US flag on the writing."
+      },
+      {
+        "file_name": "VizWiz_train_00017450.jpg",
+        "caption": "A kitchen counter with a water bottle, some cooking spray, a deep fryer and other items on it."
+      },
+      {
+        "file_name": "VizWiz_train_00016265.jpg",
+        "caption": "a trial sized bottle of botanical conditioner with nourishing avocado, olive and basil"
+      },
+      {
+        "file_name": "VizWiz_train_00014788.jpg",
+        "caption": "Packaging for a bottle of pills or dietary supplements."
+      },
+      {
+        "file_name": "VizWiz_train_00008865.jpg",
+        "caption": "green and red can of traditional pasta sauce with images of tomatoes, onions, and pasta"
+      }
+    ],
+    "household_objects": [
+      {
+        "file_name": "VizWiz_train_00003449.jpg",
+        "caption": "A desktop size Bluetooth portable JBL speaker system."
+      },
+      {
+        "file_name": "VizWiz_train_00019794.jpg",
+        "caption": "a multicolored rug with a black office chair to the left of it"
+      },
+      {
+        "file_name": "VizWiz_train_00011579.jpg",
+        "caption": "Men's underwear packaging in plastic placed on wooden table."
+      },
+      {
+        "file_name": "VizWiz_train_00013189.jpg",
+        "caption": "Blue and red box with Dual band router"
+      },
+      {
+        "file_name": "VizWiz_train_00013813.jpg",
+        "caption": "a room with a empty bed cot and a wood desk"
+      },
+      {
+        "file_name": "VizWiz_train_00014709.jpg",
+        "caption": "An image of a big red pacman ghost with two eyes."
+      },
+      {
+        "file_name": "VizWiz_train_00007996.jpg",
+        "caption": "The bottom of a red and silver crock pot slow cooker"
+      },
+      {
+        "file_name": "VizWiz_train_00018684.jpg",
+        "caption": "a green bottle of Mountain Valley Spring water on a desk"
+      },
+      {
+        "file_name": "VizWiz_train_00022271.jpg",
+        "caption": "Can of Progresso soup on a white countertop."
+      },
+      {
+        "file_name": "VizWiz_train_00011029.jpg",
+        "caption": "A bottle of beer is held up by a hand for the camera."
+      },
+      {
+        "file_name": "VizWiz_train_00015192.jpg",
+        "caption": "a small flat decorative object sitting on the floor"
+      },
+      {
+        "file_name": "VizWiz_train_00020205.jpg",
+        "caption": "a large bottle of genuine Swedish cider beverage"
+      },
+      {
+        "file_name": "VizWiz_train_00017902.jpg",
+        "caption": "A box of cereal bars is upside down on a table."
+      },
+      {
+        "file_name": "VizWiz_train_00022272.jpg",
+        "caption": "Cruzer memory stick with 4GB of memory."
+      },
+      {
+        "file_name": "VizWiz_train_00012543.jpg",
+        "caption": "A bit of baked chicken is on a stove top"
+      },
+      {
+        "file_name": "VizWiz_train_00010682.jpg",
+        "caption": "A book cover with the silhouette of a man holding earphones over his ears."
+      },
+      {
+        "file_name": "VizWiz_train_00020648.jpg",
+        "caption": "a tin of Campbell's Creams, cream of celery"
+      },
+      {
+        "file_name": "VizWiz_train_00022613.jpg",
+        "caption": "A brown rabbit sitting on an orange carpet near a floor lamp and a piece of furniture."
+      },
+      {
+        "file_name": "VizWiz_train_00013532.jpg",
+        "caption": "A small silver object laying on a wood grained surface and partially blocked by an unknown object."
+      },
+      {
+        "file_name": "VizWiz_train_00011118.jpg",
+        "caption": "Black colored headphones is present and a blue colored pen is present near"
+      },
+      {
+        "file_name": "VizWiz_train_00022386.jpg",
+        "caption": "two white remote controller on a wooden surface"
+      },
+      {
+        "file_name": "VizWiz_train_00004029.jpg",
+        "caption": "Frozen cottage pie entree from Lite n' Easy brand"
+      },
+      {
+        "file_name": "VizWiz_train_00018466.jpg",
+        "caption": "A partially filled water bottle on a wooden desk with paper."
+      },
+      {
+        "file_name": "VizWiz_train_00021430.jpg",
+        "caption": "A K-cup for some type of beverage is sitting on a wood surface."
+      },
+      {
+        "file_name": "VizWiz_train_00011774.jpg",
+        "caption": "A box of fire roasted vegetable frozen pizza"
+      },
+      {
+        "file_name": "VizWiz_train_00011200.jpg",
+        "caption": "a green camelbak water bottle half full of water with a grey and orange lid on a table and a two hole punch and an office chair behind it"
+      },
+      {
+        "file_name": "VizWiz_train_00006641.jpg",
+        "caption": "A rabbit with long ears exposed into a picture of a kitchen."
+      },
+      {
+        "file_name": "VizWiz_train_00018643.jpg",
+        "caption": "A wood table with a tablet, a folder, some papers and a twenty dollar bill."
+      },
+      {
+        "file_name": "VizWiz_train_00006254.jpg",
+        "caption": "a remote that is black and silver on a counter"
+      },
+      {
+        "file_name": "VizWiz_train_00020840.jpg",
+        "caption": "some velveeta macaroni and cheese skillets with broccoli"
+      },
+      {
+        "file_name": "VizWiz_train_00015875.jpg",
+        "caption": "Empty water bottle with white cap and a blue label on top of a wooden surface."
+      },
+      {
+        "file_name": "VizWiz_train_00007046.jpg",
+        "caption": "a blue wrapper with white lettering sitting on a hard surface with wires running across the floor and an area rug sitting on top of hardwood flooring"
+      },
+      {
+        "file_name": "VizWiz_train_00018950.jpg",
+        "caption": "A box for a level to measure to ensure that shelf's are straight."
+      },
+      {
+        "file_name": "VizWiz_train_00019254.jpg",
+        "caption": "The bottom of an egg carton is on top of a blank white surface."
+      },
+      {
+        "file_name": "VizWiz_train_00012978.jpg",
+        "caption": "A box of frozen food is sitting on a table."
+      },
+      {
+        "file_name": "VizWiz_train_00011953.jpg",
+        "caption": "a couple of cans placed on a table top"
+      },
+      {
+        "file_name": "VizWiz_train_00015581.jpg",
+        "caption": "container of Pukka Pies of minced steak and onion pie"
+      },
+      {
+        "file_name": "VizWiz_train_00006043.jpg",
+        "caption": "Small potted plants with a stack of books next to it in front of a coaster on a table with a couch in the back."
+      },
+      {
+        "file_name": "VizWiz_train_00007007.jpg",
+        "caption": "A silver chained watch with white square screen on a flat surface."
+      },
+      {
+        "file_name": "VizWiz_train_00010972.jpg",
+        "caption": "a 1 lb box of roundy's brand rotini pasta noodles"
+      },
+      {
+        "file_name": "VizWiz_train_00002003.jpg",
+        "caption": "Pictured is the top left corner of a tablet or other device."
+      },
+      {
+        "file_name": "VizWiz_train_00017766.jpg",
+        "caption": "An image of a sports water bottle filled water."
+      },
+      {
+        "file_name": "VizWiz_train_00007272.jpg",
+        "caption": "One of the natural product of STOCK chicken is shown by here."
+      },
+      {
+        "file_name": "VizWiz_train_00005945.jpg",
+        "caption": "CLOSE UP SNAPSHOT OF A PIZZA BOX"
+      },
+      {
+        "file_name": "VizWiz_train_00006929.jpg",
+        "caption": "A plastic container full of food with a yellow cap on a desk"
+      },
+      {
+        "file_name": "VizWiz_train_00008438.jpg",
+        "caption": "Part of a 2 band radio with adjustable dials for AM and FM radio."
+      },
+      {
+        "file_name": "VizWiz_train_00008046.jpg",
+        "caption": "A tube of shampoo from a Marriott resort and spa."
+      },
+      {
+        "file_name": "VizWiz_train_00022311.jpg",
+        "caption": "a small black leather wallet on a table"
+      },
+      {
+        "file_name": "VizWiz_train_00013403.jpg",
+        "caption": "the bottom of a glass jar on top of a blue countertop"
+      },
+      {
+        "file_name": "VizWiz_train_00002083.jpg",
+        "caption": "A box for a single serve hamburger microwave pizza"
+      },
+      {
+        "file_name": "VizWiz_train_00003569.jpg",
+        "caption": "a box with several cartoon characters on top of teapots"
+      },
+      {
+        "file_name": "VizWiz_train_00003857.jpg",
+        "caption": "A bottle of what looks like cologne laying flat on a flat surface."
+      },
+      {
+        "file_name": "VizWiz_train_00005879.jpg",
+        "caption": "A telephone charging receiver rests as a stand on a desk."
+      },
+      {
+        "file_name": "VizWiz_train_00009631.jpg",
+        "caption": "A box of mac n cheese is laying on a table."
+      },
+      {
+        "file_name": "VizWiz_train_00017169.jpg",
+        "caption": "On the marble countertop near the stove are bins of flour and dried pasta next to a bowl of fresh fruits."
+      },
+      {
+        "file_name": "VizWiz_train_00003881.jpg",
+        "caption": "Pictured is a tube of blistex medicated lip ointment."
+      },
+      {
+        "file_name": "VizWiz_train_00017554.jpg",
+        "caption": "A photo of pirate treasure box with cartoon pictures on it."
+      },
+      {
+        "file_name": "VizWiz_train_00005468.jpg",
+        "caption": "A package of sweet Italian turkey sausage by the brand called Jennie O."
+      },
+      {
+        "file_name": "VizWiz_train_00001668.jpg",
+        "caption": "The front of a box of cookie cereal with a bowl and milk being poured into it."
+      },
+      {
+        "file_name": "VizWiz_train_00010389.jpg",
+        "caption": "a picture of a chair at a dining table."
+      },
+      {
+        "file_name": "VizWiz_train_00010186.jpg",
+        "caption": "The scissors have a navy handle with green trim and sharp blades."
+      },
+      {
+        "file_name": "VizWiz_train_00008314.jpg",
+        "caption": "A white and blue soap dispenser bottle on a countertop."
+      },
+      {
+        "file_name": "VizWiz_train_00013446.jpg",
+        "caption": "A Gateway computer is on the desk in front of a blue folder."
+      },
+      {
+        "file_name": "VizWiz_train_00011618.jpg",
+        "caption": "some sort of pizza on a box or something"
+      },
+      {
+        "file_name": "VizWiz_train_00010421.jpg",
+        "caption": "A short of a table from above, where some CDs and audio tapes are on the right and a rollo and another type of candy bar are on the left."
+      },
+      {
+        "file_name": "VizWiz_train_00001633.jpg",
+        "caption": "A blue aluminum can of Bud Light is on the counter near a window."
+      },
+      {
+        "file_name": "VizWiz_train_00005277.jpg",
+        "caption": "A dresser/vanity with matching mirror that has numerous items used for cosmetic purposes displayed on the desktop surface."
+      },
+      {
+        "file_name": "VizWiz_train_00020685.jpg",
+        "caption": "Bright red piece of fabric on white counter"
+      },
+      {
+        "file_name": "VizWiz_train_00010538.jpg",
+        "caption": "Appears to be a grey had with black spots"
+      },
+      {
+        "file_name": "VizWiz_train_00009770.jpg",
+        "caption": "A container top of Kraft Macaroni and Cheese dinner."
+      },
+      {
+        "file_name": "VizWiz_train_00022567.jpg",
+        "caption": "A clear glass salt shaker with a silver top."
+      },
+      {
+        "file_name": "VizWiz_train_00019060.jpg",
+        "caption": "an unopened package of Sunchips original multigrain on a wood table"
+      },
+      {
+        "file_name": "VizWiz_train_00014386.jpg",
+        "caption": "An answering machine with a speaker and USB drive powered on and attached to it."
+      },
+      {
+        "file_name": "VizWiz_train_00017222.jpg",
+        "caption": "A grey container with a plaid design is sitting on a dark wood surface."
+      },
+      {
+        "file_name": "VizWiz_train_00000505.jpg",
+        "caption": "Right side of the back of a Benadryl box."
+      },
+      {
+        "file_name": "VizWiz_train_00021339.jpg",
+        "caption": "A container / package that contains various goods / edible / liquid items."
+      },
+      {
+        "file_name": "VizWiz_train_00021962.jpg",
+        "caption": "A microwavable package of macaroni and cheese rests on a counter top."
+      },
+      {
+        "file_name": "VizWiz_train_00018950.jpg",
+        "caption": "A box that contains an unopened wall mounted shelf"
+      },
+      {
+        "file_name": "VizWiz_train_00014187.jpg",
+        "caption": "A chips packet keep in the table shown in the image."
+      },
+      {
+        "file_name": "VizWiz_train_00009586.jpg",
+        "caption": "a Pomegranate that is cut opened on the ground"
+      },
+      {
+        "file_name": "VizWiz_train_00011807.jpg",
+        "caption": "a black device on a wood table surface"
+      },
+      {
+        "file_name": "VizWiz_train_00000135.jpg",
+        "caption": "The wooden object is propped against a shelf and has a center cut out."
+      },
+      {
+        "file_name": "VizWiz_train_00008797.jpg",
+        "caption": "White object with a shiny finish, and several dirt and scrape marks."
+      },
+      {
+        "file_name": "VizWiz_train_00007526.jpg",
+        "caption": "A prepacked bowl of Del Monte sixteen ounces of pineapple chunks"
+      },
+      {
+        "file_name": "VizWiz_train_00018665.jpg",
+        "caption": "A DVD box for Cracker The Complete Collection."
+      },
+      {
+        "file_name": "VizWiz_train_00009830.jpg",
+        "caption": "A lemon & ginger teabags box on the table in front and a clock on the back of the box."
+      },
+      {
+        "file_name": "VizWiz_train_00021252.jpg",
+        "caption": "A red mouse is on a white table."
+      },
+      {
+        "file_name": "VizWiz_train_00022271.jpg",
+        "caption": "A can of soup sitting on a white table top."
+      },
+      {
+        "file_name": "VizWiz_train_00020730.jpg",
+        "caption": "A box of Jell-O No Bake cherry cheesecake dessert."
+      },
+      {
+        "file_name": "VizWiz_train_00010503.jpg",
+        "caption": "purple and white striped bag with brown nylon carry strap"
+      },
+      {
+        "file_name": "VizWiz_train_00013327.jpg",
+        "caption": "A chicken frozen dinner box from Marie Callender's."
+      },
+      {
+        "file_name": "VizWiz_train_00018537.jpg",
+        "caption": "Red plastic container of disposable wipes on counter"
+      },
+      {
+        "file_name": "VizWiz_train_00018265.jpg",
+        "caption": "An unidentified electronic item (a kitchen appliance?) with several icons on a blue screen"
+      },
+      {
+        "file_name": "VizWiz_train_00013509.jpg",
+        "caption": "Someone standing next to a yellowish kitchen counter, with a box of Woolworths Select chicken stock lying face up on the counter."
+      },
+      {
+        "file_name": "VizWiz_train_00019768.jpg",
+        "caption": "A box of pop tarts is laying on a round, wood grained table."
+      },
+      {
+        "file_name": "VizWiz_train_00014917.jpg",
+        "caption": "A can of Green Giant green beans on a counter."
+      },
+      {
+        "file_name": "VizWiz_train_00005591.jpg",
+        "caption": "a bic round stick pen laying on a counter"
+      },
+      {
+        "file_name": "VizWiz_train_00012038.jpg",
+        "caption": "A package of 24 Coffee creamers in single containers."
+      }
+    ],
+    "other": [
+      {
+        "file_name": "VizWiz_train_00006047.jpg",
+        "caption": "a combination of green leave and grey stem is displayed"
+      },
+      {
+        "file_name": "VizWiz_train_00007643.jpg",
+        "caption": "Extremely close up view of a cassette tape and the white writing across the bottom."
+      },
+      {
+        "file_name": "VizWiz_train_00012391.jpg",
+        "caption": "A blue and white striped piece of furniture on a wooden floor."
+      },
+      {
+        "file_name": "VizWiz_train_00013666.jpg",
+        "caption": "A case for a video game rated \"E\" is shown in someone's lap."
+      },
+      {
+        "file_name": "VizWiz_train_00001091.jpg",
+        "caption": "a flat surface with a picture of a man and foreign drawing on it"
+      },
+      {
+        "file_name": "VizWiz_train_00011070.jpg",
+        "caption": "An old DVD of the movie Enemy Mine"
+      },
+      {
+        "file_name": "VizWiz_train_00009254.jpg",
+        "caption": "Several pieces of clothes are sitting in a bathroom sink."
+      },
+      {
+        "file_name": "VizWiz_train_00019390.jpg",
+        "caption": "a nylon pack win a writings on it"
+      },
+      {
+        "file_name": "VizWiz_train_00019703.jpg",
+        "caption": "Yellow banana peels with a grey, blue, and green background."
+      },
+      {
+        "file_name": "VizWiz_train_00022950.jpg",
+        "caption": "photo of colorful flowers like red, yellow and green."
+      },
+      {
+        "file_name": "VizWiz_train_00011279.jpg",
+        "caption": "One part of the image is so bright and the rest part is yellowish ."
+      },
+      {
+        "file_name": "VizWiz_train_00021203.jpg",
+        "caption": "the dials on the back of a white stove top"
+      },
+      {
+        "file_name": "VizWiz_train_00004779.jpg",
+        "caption": "A white piece of cloth on wooden surface"
+      },
+      {
+        "file_name": "VizWiz_train_00013218.jpg",
+        "caption": "A view of a magazine cover for fans of dogs."
+      },
+      {
+        "file_name": "VizWiz_train_00003882.jpg",
+        "caption": "Some cloud are above a black power line."
+      },
+      {
+        "file_name": "VizWiz_train_00017898.jpg",
+        "caption": "a person is touching a dog that is sitting on the floor"
+      },
+      {
+        "file_name": "VizWiz_train_00015209.jpg",
+        "caption": "a kitchen with a tan colored refrigerator and a brown tile floor"
+      },
+      {
+        "file_name": "VizWiz_train_00000927.jpg",
+        "caption": "A analog clock is pasted on a wood plank"
+      },
+      {
+        "file_name": "VizWiz_train_00011135.jpg",
+        "caption": "A dog laying down inside a pop up blue kennel."
+      },
+      {
+        "file_name": "VizWiz_train_00017077.jpg",
+        "caption": "A bunch of pretty light and dark purple flowers are growing in a field"
+      },
+      {
+        "file_name": "VizWiz_train_00016171.jpg",
+        "caption": "a dirty brown towel with bleach stains lays open on a brown titled floor"
+      },
+      {
+        "file_name": "VizWiz_train_00019186.jpg",
+        "caption": "a person is standing on a personal digital scale that is turned off"
+      },
+      {
+        "file_name": "VizWiz_train_00000927.jpg",
+        "caption": "A meter used to show digital readings of practical use."
+      },
+      {
+        "file_name": "VizWiz_train_00002671.jpg",
+        "caption": "a person holding a key with the number 616387"
+      },
+      {
+        "file_name": "VizWiz_train_00018548.jpg",
+        "caption": "big cat sitting on a blanket at the end of the bed"
+      },
+      {
+        "file_name": "VizWiz_train_00012226.jpg",
+        "caption": "Feather of an animal, particularly a chicken or a bird."
+      },
+      {
+        "file_name": "VizWiz_train_00004030.jpg",
+        "caption": "black dash cam mounted to a vehicles windshield."
+      },
+      {
+        "file_name": "VizWiz_train_00013190.jpg",
+        "caption": "the body of a tan, white, and black animal"
+      },
+      {
+        "file_name": "VizWiz_train_00005219.jpg",
+        "caption": "A piece of light grained lumber is leaning against stacked sawhorses, over a sawdust strewn floor."
+      },
+      {
+        "file_name": "VizWiz_train_00001687.jpg",
+        "caption": "A digital household thermostat patched into a wall."
+      },
+      {
+        "file_name": "VizWiz_train_00007229.jpg",
+        "caption": "A bathroom with beige tiles with a blue and white checkered scale and throw rugs on the floor."
+      },
+      {
+        "file_name": "VizWiz_train_00008947.jpg",
+        "caption": "List of rules for off leash dog areas on a wooden board."
+      },
+      {
+        "file_name": "VizWiz_train_00005745.jpg",
+        "caption": "White wood paneling of a door with wood grain showing."
+      },
+      {
+        "file_name": "VizWiz_train_00013004.jpg",
+        "caption": "An unfocused picture of a dog with white fur."
+      },
+      {
+        "file_name": "VizWiz_train_00008940.jpg",
+        "caption": "A picture of a set of angles above the question, \"How big is < ZYW ?\""
+      },
+      {
+        "file_name": "VizWiz_train_00009270.jpg",
+        "caption": "A white with blue tint walls and ceilings with white light fixture."
+      },
+      {
+        "file_name": "VizWiz_train_00021950.jpg",
+        "caption": "A remote control is on top of a black surface with a figurine near the top of it."
+      },
+      {
+        "file_name": "VizWiz_train_00007777.jpg",
+        "caption": "a special edition of a movie called on Golden Pond"
+      },
+      {
+        "file_name": "VizWiz_train_00021788.jpg",
+        "caption": "keys of a control of blurred vision, little distinguishable, gray color."
+      },
+      {
+        "file_name": "VizWiz_train_00011860.jpg",
+        "caption": "a accessory used to walk as a informal wear"
+      },
+      {
+        "file_name": "VizWiz_train_00006968.jpg",
+        "caption": "a person's shadow on concrete road outside a grassy area"
+      },
+      {
+        "file_name": "VizWiz_train_00002598.jpg",
+        "caption": "A pink blanket that is on top of a black leather couch."
+      },
+      {
+        "file_name": "VizWiz_train_00013295.jpg",
+        "caption": "A white bathtub  that has some water in it"
+      },
+      {
+        "file_name": "VizWiz_train_00000737.jpg",
+        "caption": "A plant with large, green leaves and a black trellis."
+      },
+      {
+        "file_name": "VizWiz_train_00021752.jpg",
+        "caption": "A microwave oven is cooking something for one minute."
+      },
+      {
+        "file_name": "VizWiz_train_00015377.jpg",
+        "caption": "A girls chest is showing wearing a gray top"
+      },
+      {
+        "file_name": "VizWiz_train_00001758.jpg",
+        "caption": "A thermostat sits on a white wall with the temperature set at 79 degrees."
+      },
+      {
+        "file_name": "VizWiz_train_00009844.jpg",
+        "caption": "A three bulb fluorescent light fixture viewed from below"
+      },
+      {
+        "file_name": "VizWiz_train_00006095.jpg",
+        "caption": "a blue bedroom with a white ceiling fan with an open closet door"
+      },
+      {
+        "file_name": "VizWiz_train_00018860.jpg",
+        "caption": "After rotating it looks like a portion of a church bench."
+      },
+      {
+        "file_name": "VizWiz_train_00002183.jpg",
+        "caption": "A white and light green baby rattle with a picture of a mama bear holding baby bear."
+      },
+      {
+        "file_name": "VizWiz_train_00022432.jpg",
+        "caption": "A scabbard is a sheath for holding a sword, knife, or other large blade."
+      },
+      {
+        "file_name": "VizWiz_train_00018908.jpg",
+        "caption": "An air conditioning fan with brown edges against a brick wall."
+      },
+      {
+        "file_name": "VizWiz_train_00001311.jpg",
+        "caption": "A DVD with Cruella Deville on the front of it."
+      },
+      {
+        "file_name": "VizWiz_train_00021835.jpg",
+        "caption": "A room with a blue wall and white ceiling with a wire hanging from a window."
+      },
+      {
+        "file_name": "VizWiz_train_00001116.jpg",
+        "caption": "a thermometer that is reading a temperature of 38.5C"
+      },
+      {
+        "file_name": "VizWiz_train_00006749.jpg",
+        "caption": "A brown bag of The Brown Bean Coffee Roasters on a black surface."
+      },
+      {
+        "file_name": "VizWiz_train_00005482.jpg",
+        "caption": "A metallic bowl filled about half way with cotton balls."
+      },
+      {
+        "file_name": "VizWiz_train_00000769.jpg",
+        "caption": "Yellow backpack with zipper and two pouches possible gym background"
+      },
+      {
+        "file_name": "VizWiz_train_00017894.jpg",
+        "caption": "Dark leather or pleather with seams running down it"
+      },
+      {
+        "file_name": "VizWiz_train_00004430.jpg",
+        "caption": "An animal is shown lying on a bed in a room."
+      },
+      {
+        "file_name": "VizWiz_train_00006541.jpg",
+        "caption": "A hallway with a light switch and a shadow of the person taking the photo."
+      },
+      {
+        "file_name": "VizWiz_train_00003864.jpg",
+        "caption": "A black couch with a blue fur blanket draped over it and two red pillows."
+      },
+      {
+        "file_name": "VizWiz_train_00013347.jpg",
+        "caption": "A dial of an oven is shown with numbers on it"
+      },
+      {
+        "file_name": "VizWiz_train_00019390.jpg",
+        "caption": "What looks like a dream catcher or ornament of some kind"
+      },
+      {
+        "file_name": "VizWiz_train_00003518.jpg",
+        "caption": "a close up of a persons leg sitting on a couch"
+      },
+      {
+        "file_name": "VizWiz_train_00016171.jpg",
+        "caption": "A dirty brown towel placed on the floor."
+      },
+      {
+        "file_name": "VizWiz_train_00006044.jpg",
+        "caption": "the back side of a frito lay bag of chips"
+      },
+      {
+        "file_name": "VizWiz_train_00013196.jpg",
+        "caption": "A white Motorola model with a cream color cable plugged in"
+      },
+      {
+        "file_name": "VizWiz_train_00020399.jpg",
+        "caption": "the control dials on an oven for temperature and burners"
+      },
+      {
+        "file_name": "VizWiz_train_00007073.jpg",
+        "caption": "Wall thermostat set to 80 and currently 68 degrees"
+      },
+      {
+        "file_name": "VizWiz_train_00022018.jpg",
+        "caption": "An animal that looks like a cross between a sloth and a rooster"
+      },
+      {
+        "file_name": "VizWiz_train_00010442.jpg",
+        "caption": "The back of a cd case with a man on it and the songs listed that are on it."
+      },
+      {
+        "file_name": "VizWiz_train_00004850.jpg",
+        "caption": "A black and yellow felt tip pen holds super bright colored marker."
+      },
+      {
+        "file_name": "VizWiz_train_00017426.jpg",
+        "caption": "A white door is next to a black pavement."
+      },
+      {
+        "file_name": "VizWiz_train_00017488.jpg",
+        "caption": "Pictured is the fluorescent light fixture on a ceiling."
+      },
+      {
+        "file_name": "VizWiz_train_00021749.jpg",
+        "caption": "A potted plant sits next to a house key on a key ring, a lighter, and a pair of sunglasses."
+      },
+      {
+        "file_name": "VizWiz_train_00020984.jpg",
+        "caption": "I see a bag of chicken that is yellow and red"
+      },
+      {
+        "file_name": "VizWiz_train_00003518.jpg",
+        "caption": "Light jeans-clad leg sitting on a yellow/tan couch"
+      },
+      {
+        "file_name": "VizWiz_train_00022369.jpg",
+        "caption": "Blue jeans cloth showing yellow thread lines and in folds."
+      },
+      {
+        "file_name": "VizWiz_train_00004768.jpg",
+        "caption": "A DVD of The Office is sitting on a bed sheet."
+      },
+      {
+        "file_name": "VizWiz_train_00008647.jpg",
+        "caption": "A black cat with long fur is laying down on a bed sheet."
+      },
+      {
+        "file_name": "VizWiz_train_00003392.jpg",
+        "caption": "A closeup of the temperature dial on an oven."
+      },
+      {
+        "file_name": "VizWiz_train_00016676.jpg",
+        "caption": "A light brown floor vent on tile flooring."
+      },
+      {
+        "file_name": "VizWiz_train_00000896.jpg",
+        "caption": "The container is white in color and has a red top with French onion displayed."
+      },
+      {
+        "file_name": "VizWiz_train_00008647.jpg",
+        "caption": "I see dark-grey fur that most likely belongs to a cat lying on a cotton blanket."
+      },
+      {
+        "file_name": "VizWiz_train_00016585.jpg",
+        "caption": "A white button is connected to an electronic device."
+      },
+      {
+        "file_name": "VizWiz_train_00019637.jpg",
+        "caption": "White cat sticking its head into the bed it is resting on, sitting on white blanket on bed."
+      },
+      {
+        "file_name": "VizWiz_train_00010546.jpg",
+        "caption": "A set of four bar dish cloths is on a man's lap."
+      },
+      {
+        "file_name": "VizWiz_train_00011190.jpg",
+        "caption": "A window with white curtains and at least three dolls on the window seal."
+      },
+      {
+        "file_name": "VizWiz_train_00020812.jpg",
+        "caption": "A close up picture of a two way power calculator."
+      },
+      {
+        "file_name": "VizWiz_train_00005467.jpg",
+        "caption": "A dusty section of an older-style oven with the black control panel showing the oven temp dial and part of the embedded analog clock."
+      },
+      {
+        "file_name": "VizWiz_train_00002515.jpg",
+        "caption": "A metal door going out of a veranda, has openings in it like jail bars"
+      },
+      {
+        "file_name": "VizWiz_train_00017078.jpg",
+        "caption": "The back of a speaker has a cord, and input/ output outlets, and a power button."
+      },
+      {
+        "file_name": "VizWiz_train_00020118.jpg",
+        "caption": "A black fan has only five different blades"
+      },
+      {
+        "file_name": "VizWiz_train_00018056.jpg",
+        "caption": "In the foreground is a wooden railing, in the background is a parking lot with a grey sedan and a green crossover, beyond the fence of the parking lot is a blue/grey house."
+      },
+      {
+        "file_name": "VizWiz_train_00006713.jpg",
+        "caption": "Panel with temperature controlling buttons of a particular product"
+      },
+      {
+        "file_name": "VizWiz_train_00003282.jpg",
+        "caption": "A white thermostat displaying the number 75  sits against a egg shell colored wall."
+      },
+      {
+        "file_name": "VizWiz_train_00020312.jpg",
+        "caption": "A big dog laying on the soft covered bed in front of a couch"
+      },
+      {
+        "file_name": "VizWiz_train_00022264.jpg",
+        "caption": "two little slippers with little faces on them on the floor"
+      },
+      {
+        "file_name": "VizWiz_train_00008364.jpg",
+        "caption": "a white color remote controller of air conditioner"
+      },
+      {
+        "file_name": "VizWiz_train_00019885.jpg",
+        "caption": "the cover of a copy of Woman's World magazine sitting in a magazine rack"
+      },
+      {
+        "file_name": "VizWiz_train_00017231.jpg",
+        "caption": "A 25 cent 2006 quarter that say Colorado 1876 at the top."
+      },
+      {
+        "file_name": "VizWiz_train_00023185.jpg",
+        "caption": "A picture of a pocket watch leaning against something."
+      },
+      {
+        "file_name": "VizWiz_train_00003726.jpg",
+        "caption": "The lid of a smoked bacon and tomato flavored Stir-n Sauce for Pasta container, with some nutritional information."
+      },
+      {
+        "file_name": "VizWiz_train_00022885.jpg",
+        "caption": "A photo of coffee beans with words \"French breakfast blend\" on front."
+      },
+      {
+        "file_name": "VizWiz_train_00016243.jpg",
+        "caption": "A smiley face emoticon with hearts for eyes."
+      },
+      {
+        "file_name": "VizWiz_train_00022519.jpg",
+        "caption": "Appears to  be a picture of a fenced area"
+      },
+      {
+        "file_name": "VizWiz_train_00001397.jpg",
+        "caption": "Loose, black and dark brown hair with a slight curl to it."
+      },
+      {
+        "file_name": "VizWiz_train_00009750.jpg",
+        "caption": "Someone standing on a glass digital scale on a wood laminate floor."
+      },
+      {
+        "file_name": "VizWiz_train_00015183.jpg",
+        "caption": "a blue flower in the right corner and a long white plastic with blue on the end"
+      },
+      {
+        "file_name": "VizWiz_train_00012207.jpg",
+        "caption": "A white thermostat with 7776 written on it"
+      },
+      {
+        "file_name": "VizWiz_train_00019176.jpg",
+        "caption": "The back side of a dollar bill laying on blue cloth."
+      },
+      {
+        "file_name": "VizWiz_train_00010482.jpg",
+        "caption": "Black dog with it's tongue out, sitting in a backyard near plants and stonework."
+      },
+      {
+        "file_name": "VizWiz_train_00002226.jpg",
+        "caption": "a dog is sitting in the land within the iron grilled compound"
+      },
+      {
+        "file_name": "VizWiz_train_00014419.jpg",
+        "caption": "a blue and white toothbrush laying against a black steering wheel"
+      },
+      {
+        "file_name": "VizWiz_train_00018809.jpg",
+        "caption": "A gray rain cloud with a chimney stack to the left of the image."
+      },
+      {
+        "file_name": "VizWiz_train_00009523.jpg",
+        "caption": "A fluffy golden retriever dog sitting in a living room."
+      },
+      {
+        "file_name": "VizWiz_train_00000525.jpg",
+        "caption": "A large insect with front pincers begins to climb the wall of an enclosure."
+      },
+      {
+        "file_name": "VizWiz_train_00011732.jpg",
+        "caption": "A patch of lawn is covered with thin grass and clover."
+      },
+      {
+        "file_name": "VizWiz_train_00013816.jpg",
+        "caption": "A bedroom that is the color red and is the theme throughout the room."
+      },
+      {
+        "file_name": "VizWiz_train_00003349.jpg",
+        "caption": "An bland opaque surface with no real clue about the light source."
+      },
+      {
+        "file_name": "VizWiz_train_00012350.jpg",
+        "caption": "Blue and Black striped wool beanie with a pink string knot on the top."
+      },
+      {
+        "file_name": "VizWiz_train_00010203.jpg",
+        "caption": "two potted purple plants out on a patio"
+      },
+      {
+        "file_name": "VizWiz_train_00018294.jpg",
+        "caption": "A spinning ceiling fan with a dark base is located on the ceiling."
+      },
+      {
+        "file_name": "VizWiz_train_00013147.jpg",
+        "caption": "A clock on a all black stove top."
+      },
+      {
+        "file_name": "VizWiz_train_00020600.jpg",
+        "caption": "A wall thermostat showing the temperature at 71 degrees."
+      },
+      {
+        "file_name": "VizWiz_train_00004430.jpg",
+        "caption": "a pair of dogs are lying on the wrinkled cover of a bed"
+      },
+      {
+        "file_name": "VizWiz_train_00012381.jpg",
+        "caption": "Dark wooden ceiling beams on a white ceiling"
+      },
+      {
+        "file_name": "VizWiz_train_00005100.jpg",
+        "caption": "A beautiful image with a tan wall and picture frame of a castle with a white fan and white door"
+      },
+      {
+        "file_name": "VizWiz_train_00021495.jpg",
+        "caption": "A thick black cord on a dark colored rug"
+      },
+      {
+        "file_name": "VizWiz_train_00014760.jpg",
+        "caption": "A person has long brown hair in a living room."
+      },
+      {
+        "file_name": "VizWiz_train_00018862.jpg",
+        "caption": "close up of a white or light colored ball of yarn"
+      },
+      {
+        "file_name": "VizWiz_train_00007492.jpg",
+        "caption": "CONTROL PANEL ON THE FRONT OF A MICROWAVE"
+      },
+      {
+        "file_name": "VizWiz_train_00023365.jpg",
+        "caption": "A cd case of country music sitting on a person's lap."
+      },
+      {
+        "file_name": "VizWiz_train_00015368.jpg",
+        "caption": "A picture of Jesus and his angels with a gold and white frame."
+      },
+      {
+        "file_name": "VizWiz_train_00022291.jpg",
+        "caption": "some type of flooring that is used to walk on"
+      },
+      {
+        "file_name": "VizWiz_train_00013581.jpg",
+        "caption": "An image of an empty bag of flavored pretzels."
+      },
+      {
+        "file_name": "VizWiz_train_00012391.jpg",
+        "caption": "A mattress with a striped sheet with a wood floor in the background."
+      },
+      {
+        "file_name": "VizWiz_train_00021398.jpg",
+        "caption": "the blue ceiling and a yellow bright light"
+      },
+      {
+        "file_name": "VizWiz_train_00017078.jpg",
+        "caption": "A electronic device has a number of slot for cable connection and a black cable already in connection."
+      },
+      {
+        "file_name": "VizWiz_train_00007483.jpg",
+        "caption": "A white ceiling fan with a single light, on a white ceiling."
+      },
+      {
+        "file_name": "VizWiz_train_00008816.jpg",
+        "caption": "A room that has a hanger laying on the bed with nothing on the wall."
+      },
+      {
+        "file_name": "VizWiz_train_00006723.jpg",
+        "caption": "A mattress and bed with messy blankets against a white wall with a large window"
+      },
+      {
+        "file_name": "VizWiz_train_00002831.jpg",
+        "caption": "A painting of leaves that is inside of the frame."
+      },
+      {
+        "file_name": "VizWiz_train_00007777.jpg",
+        "caption": "A close up of a old movie on DVD."
+      },
+      {
+        "file_name": "VizWiz_train_00012834.jpg",
+        "caption": "Blinds to the window are drawn for privacy."
+      },
+      {
+        "file_name": "VizWiz_train_00006713.jpg",
+        "caption": "An oven with the dial set to one hundred and fifty degrees Fahrenheit"
+      },
+      {
+        "file_name": "VizWiz_train_00021765.jpg",
+        "caption": "An attractive skinny girl with a belly button ring in a bright swimsuit"
+      },
+      {
+        "file_name": "VizWiz_train_00013196.jpg",
+        "caption": "White Motorola modem powered on with green indication lights and different connection wires connected."
+      },
+      {
+        "file_name": "VizWiz_train_00016378.jpg",
+        "caption": "A large pink flower surrounded by other types of flowers."
+      },
+      {
+        "file_name": "VizWiz_train_00017537.jpg",
+        "caption": "A blue background with a light cloudy white shape."
+      },
+      {
+        "file_name": "VizWiz_train_00019360.jpg",
+        "caption": "A grey cat with its tongue sticking out and laying on a bed."
+      },
+      {
+        "file_name": "VizWiz_train_00009254.jpg",
+        "caption": "A sink filled with dirty rags of different colors."
+      },
+      {
+        "file_name": "VizWiz_train_00001091.jpg",
+        "caption": "Foreign currency with a male figure on top of it"
+      },
+      {
+        "file_name": "VizWiz_train_00014064.jpg",
+        "caption": "A red Little Richard CD case, resting on the top of a lap of someone wearing black shorts."
+      },
+      {
+        "file_name": "VizWiz_train_00008868.jpg",
+        "caption": "A black dog wears a collar with two piercing eyes."
+      },
+      {
+        "file_name": "VizWiz_train_00013758.jpg",
+        "caption": "Huge clouds in the sky that are thick and dark."
+      },
+      {
+        "file_name": "VizWiz_train_00005768.jpg",
+        "caption": "A slightly under-watered houseplant sits on the floor in front of a partially opened window."
+      },
+      {
+        "file_name": "VizWiz_train_00009893.jpg",
+        "caption": "A black and grey colored dart board, with control panel and buttons, hanging up on a wall and a white cord."
+      },
+      {
+        "file_name": "VizWiz_train_00022950.jpg",
+        "caption": "A close up look on a red bouquet of flowers."
+      },
+      {
+        "file_name": "VizWiz_train_00007108.jpg",
+        "caption": "the top of a purple and black suitcase"
+      },
+      {
+        "file_name": "VizWiz_train_00009486.jpg",
+        "caption": "A close up image of hair, most likely belonging to a dog or cat."
+      },
+      {
+        "file_name": "VizWiz_train_00007782.jpg",
+        "caption": "A rubber band and red device on a white reflective surface."
+      },
+      {
+        "file_name": "VizWiz_train_00017160.jpg",
+        "caption": "A cd with a man on it and the say \"Here's Sam Cooke\"."
+      },
+      {
+        "file_name": "VizWiz_train_00020410.jpg",
+        "caption": "A white digital thermostat with gray buttons displays the temperature."
+      },
+      {
+        "file_name": "VizWiz_train_00007733.jpg",
+        "caption": "a multi color pant is placed on the floor"
+      },
+      {
+        "file_name": "VizWiz_train_00015837.jpg",
+        "caption": "a person standing on a measuring weight measuring scale showing 105.8"
+      },
+      {
+        "file_name": "VizWiz_train_00000446.jpg",
+        "caption": "A silver chain with a cross hanging off the chain."
+      },
+      {
+        "file_name": "VizWiz_train_00014701.jpg",
+        "caption": "A living room wall that has two pictures on it with a light that has an intricate lampshade."
+      },
+      {
+        "file_name": "VizWiz_train_00005332.jpg",
+        "caption": "Sunlight bleeds into a dark kitchen that has no lights on."
+      },
+      {
+        "file_name": "VizWiz_train_00002677.jpg",
+        "caption": "Mini refrigerator in a bedroom with a bed and other items strewn about in the corner."
+      },
+      {
+        "file_name": "VizWiz_train_00006637.jpg",
+        "caption": "A framed image of the biblical 'last supper'"
+      },
+      {
+        "file_name": "VizWiz_train_00021042.jpg",
+        "caption": "a green fern plant on a gray surface"
+      },
+      {
+        "file_name": "VizWiz_train_00011307.jpg",
+        "caption": "a blur and smoky photo of something sitting on a sofa."
+      },
+      {
+        "file_name": "VizWiz_train_00013796.jpg",
+        "caption": "A ceiling fan that is not turned on, that is brown and old fashioned looking."
+      },
+      {
+        "file_name": "VizWiz_train_00015837.jpg",
+        "caption": "A person is weighing them-self in the bathroom on a digital weight scale."
+      },
+      {
+        "file_name": "VizWiz_train_00021860.jpg",
+        "caption": "A gray concrete with Shabi well written on it."
+      },
+      {
+        "file_name": "VizWiz_train_00006637.jpg",
+        "caption": "a frame showing Jesus and his peoples hanged on the wall"
+      },
+      {
+        "file_name": "VizWiz_train_00013374.jpg",
+        "caption": "A pink fuzzy bath mat on a beige tiled floor."
+      },
+      {
+        "file_name": "VizWiz_train_00018691.jpg",
+        "caption": "An advertisement that is upside down for a grocery store for bath and body products"
+      },
+      {
+        "file_name": "VizWiz_train_00020754.jpg",
+        "caption": "A cat is sitting in a room with a window it"
+      },
+      {
+        "file_name": "VizWiz_train_00013816.jpg",
+        "caption": "Room with red walls, floral picture on wall, mirrored headboard and lamp."
+      },
+      {
+        "file_name": "VizWiz_train_00012776.jpg",
+        "caption": "The dial on an oven it's white and looks over 200 degrees Celsius"
+      },
+      {
+        "file_name": "VizWiz_train_00022818.jpg",
+        "caption": "a wooden floor that is meant to step on to walk"
+      },
+      {
+        "file_name": "VizWiz_train_00000714.jpg",
+        "caption": "A picture of a black and white dog standing on green grass in front of green shrubbery."
+      },
+      {
+        "file_name": "VizWiz_train_00002962.jpg",
+        "caption": "A beige leather sofa sits on  a tan tile floor, against white walls."
+      },
+      {
+        "file_name": "VizWiz_train_00008270.jpg",
+        "caption": "A gold thermostat sits on a white wall."
+      },
+      {
+        "file_name": "VizWiz_train_00006077.jpg",
+        "caption": "a temperature control for an HVAC system showing 72 degrees"
+      },
+      {
+        "file_name": "VizWiz_train_00020125.jpg",
+        "caption": "Bag of tortilla chips, says its naturally made."
+      },
+      {
+        "file_name": "VizWiz_train_00006713.jpg",
+        "caption": "An oven nob with the dial on 150 degrees Fahrenheit."
+      },
+      {
+        "file_name": "VizWiz_train_00008565.jpg",
+        "caption": "The air conditioner's open vent is shown above the control panel."
+      },
+      {
+        "file_name": "VizWiz_train_00019198.jpg",
+        "caption": "Victor Reader electronic device with multiple buttons and a cord plugged into the side."
+      },
+      {
+        "file_name": "VizWiz_train_00016770.jpg",
+        "caption": "a photo of a magazine called this old house showing reinvent your rooms with color on the front."
+      },
+      {
+        "file_name": "VizWiz_train_00010442.jpg",
+        "caption": "The back of a compact disc with music that features two discs."
+      },
+      {
+        "file_name": "VizWiz_train_00013347.jpg",
+        "caption": "a white stove with a dial temperature control"
+      },
+      {
+        "file_name": "VizWiz_train_00015730.jpg",
+        "caption": "a wall white with some grey tiling to it"
+      },
+      {
+        "file_name": "VizWiz_train_00015055.jpg",
+        "caption": "Flowers are bunched together and placed against a white wall."
+      }
+    ],
+    "outdoor_transport": [
+      {
+        "file_name": "VizWiz_train_00009303.jpg",
+        "caption": "A reddish brown acoustic guitar hanging from a mount on a mustard yellow wall"
+      },
+      {
+        "file_name": "VizWiz_train_00011178.jpg",
+        "caption": "Close up picture of a light grey blanket or carpet."
+      },
+      {
+        "file_name": "VizWiz_train_00018459.jpg",
+        "caption": "A white cross hanging from a wall with rosary beads draped over the top of the cross."
+      },
+      {
+        "file_name": "VizWiz_train_00013734.jpg",
+        "caption": "The lid from an aerial view of a tub of ice cream called Velvet"
+      },
+      {
+        "file_name": "VizWiz_train_00008942.jpg",
+        "caption": "A basement window of a house, partially covered with rose bushes ready to flower."
+      },
+      {
+        "file_name": "VizWiz_train_00009624.jpg",
+        "caption": "A dog has a point tail and is on a person's lap."
+      },
+      {
+        "file_name": "VizWiz_train_00017536.jpg",
+        "caption": "A airport luggage carousel has no bags on it."
+      },
+      {
+        "file_name": "VizWiz_train_00011599.jpg",
+        "caption": "Some lights are   positioned on different parts of a  plants next to a building structure."
+      },
+      {
+        "file_name": "VizWiz_train_00007428.jpg",
+        "caption": "Three grey cars are parked in front of a large red wall outside."
+      },
+      {
+        "file_name": "VizWiz_train_00008248.jpg",
+        "caption": "A close up of a brown leather wallet."
+      },
+      {
+        "file_name": "VizWiz_train_00006977.jpg",
+        "caption": "a pink bottle of scented hand lotion or soap laying on a flat surface"
+      },
+      {
+        "file_name": "VizWiz_train_00006162.jpg",
+        "caption": "CraZArt brand super blox kit in a cardboard box with 100 pieces."
+      },
+      {
+        "file_name": "VizWiz_train_00003042.jpg",
+        "caption": "An outside grill on a deck next to a big dog."
+      },
+      {
+        "file_name": "VizWiz_train_00017858.jpg",
+        "caption": "A bare Christmas tree is in front of a window on the far side of a bed."
+      },
+      {
+        "file_name": "VizWiz_train_00004977.jpg",
+        "caption": "A black and brown cat sitting on a gray sofa near pink pillows and pink carpet."
+      },
+      {
+        "file_name": "VizWiz_train_00008456.jpg",
+        "caption": "A computer screen has a image of a building."
+      },
+      {
+        "file_name": "VizWiz_train_00003033.jpg",
+        "caption": "A white door with blue and green carpet in front of it"
+      },
+      {
+        "file_name": "VizWiz_train_00018447.jpg",
+        "caption": "An unpainted wooden picket fence separates two neighbor's yards."
+      },
+      {
+        "file_name": "VizWiz_train_00013290.jpg",
+        "caption": "A garden of  bright pink flowers with green leaves."
+      },
+      {
+        "file_name": "VizWiz_train_00023234.jpg",
+        "caption": "a product made up of milk and like a cream used for cooking"
+      },
+      {
+        "file_name": "VizWiz_train_00018777.jpg",
+        "caption": "A flower with small purple heads and a long green stem is in front of a white board."
+      },
+      {
+        "file_name": "VizWiz_train_00017237.jpg",
+        "caption": "A box for a building set that makes a toy rescue vehicle."
+      },
+      {
+        "file_name": "VizWiz_train_00004816.jpg",
+        "caption": "An unopened package of tortilla chips sits next to a box of kitchen trash bags."
+      },
+      {
+        "file_name": "VizWiz_train_00004974.jpg",
+        "caption": "Three packets of condom for men on a sheet."
+      },
+      {
+        "file_name": "VizWiz_train_00005667.jpg",
+        "caption": "A red couch cushion with a white business card sitting on it."
+      },
+      {
+        "file_name": "VizWiz_train_00018384.jpg",
+        "caption": "I see a brown pod resting on a white towel."
+      },
+      {
+        "file_name": "VizWiz_train_00012206.jpg",
+        "caption": "A view of the road with trees in full bloom, a red SUV and some people walking"
+      },
+      {
+        "file_name": "VizWiz_train_00007654.jpg",
+        "caption": "Vines are growing outdoors in a flower bed next to a terracotta colored tiled walkway."
+      },
+      {
+        "file_name": "VizWiz_train_00017926.jpg",
+        "caption": "A small remote control that is silver with black inlay"
+      },
+      {
+        "file_name": "VizWiz_train_00014804.jpg",
+        "caption": "johnsons and Johnson reach mint waxed floss container"
+      },
+      {
+        "file_name": "VizWiz_train_00018749.jpg",
+        "caption": "a German Shepherd in front of a red Chevrolet car and the legs of a person sitting on a couch"
+      },
+      {
+        "file_name": "VizWiz_train_00012954.jpg",
+        "caption": "A neighborhood with houses, sidewalks, mailboxes and a street."
+      },
+      {
+        "file_name": "VizWiz_train_00015085.jpg",
+        "caption": "A scene in a room with furniture and a small yellow and red Christmas tree."
+      },
+      {
+        "file_name": "VizWiz_train_00007781.jpg",
+        "caption": "a parking lot with some construction materials on the side and a high rise in the background."
+      },
+      {
+        "file_name": "VizWiz_train_00002692.jpg",
+        "caption": "A black and silver watch on a wrist, with several smaller dials within the face of the watch."
+      },
+      {
+        "file_name": "VizWiz_train_00020696.jpg",
+        "caption": "A green small bottle of water in a living room"
+      },
+      {
+        "file_name": "VizWiz_train_00004999.jpg",
+        "caption": "A black object with holes in it and round black nubs protruding."
+      },
+      {
+        "file_name": "VizWiz_train_00007982.jpg",
+        "caption": "A small blue and white flashlight attached to a keyring with a single brass key, lying on a yellow surface."
+      },
+      {
+        "file_name": "VizWiz_train_00006110.jpg",
+        "caption": "Picture of a pillow with patterns on it with a carpet in the back"
+      },
+      {
+        "file_name": "VizWiz_train_00009708.jpg",
+        "caption": "appears to be a picture of a blue card"
+      },
+      {
+        "file_name": "VizWiz_train_00004695.jpg",
+        "caption": "Brown carpet with a few stains that are darker in color"
+      },
+      {
+        "file_name": "VizWiz_train_00008146.jpg",
+        "caption": "A small set of stairs next to a gate and various plants outside."
+      },
+      {
+        "file_name": "VizWiz_train_00000532.jpg",
+        "caption": "Cookie cutters and frosting bag with tips in a bag."
+      },
+      {
+        "file_name": "VizWiz_train_00017649.jpg",
+        "caption": "a tan retriever dog laying on a pink carpet"
+      },
+      {
+        "file_name": "VizWiz_train_00013201.jpg",
+        "caption": "A highly decorated colorful sculpture of a asian Indian head and neck."
+      },
+      {
+        "file_name": "VizWiz_train_00003155.jpg",
+        "caption": "An image of a white dog laying on a tan carpet in a living room with a brown sofa in the background."
+      },
+      {
+        "file_name": "VizWiz_train_00007562.jpg",
+        "caption": "A small dog lying on top of a blanket on a bed."
+      },
+      {
+        "file_name": "VizWiz_train_00001241.jpg",
+        "caption": "A white package with monkeys and a banana on the front."
+      },
+      {
+        "file_name": "VizWiz_train_00001360.jpg",
+        "caption": "Small tubes of shampoo and body lotion placed on the vanity"
+      },
+      {
+        "file_name": "VizWiz_train_00013799.jpg",
+        "caption": "A container of macaroni and cheese is sitting on a counter."
+      },
+      {
+        "file_name": "VizWiz_train_00007934.jpg",
+        "caption": "A red four door car with houses in the background."
+      },
+      {
+        "file_name": "VizWiz_train_00017350.jpg",
+        "caption": "By the blue door is a arborvitae which is a type of shrub."
+      },
+      {
+        "file_name": "VizWiz_train_00023097.jpg",
+        "caption": "A children use a vehicle and a chair behind it."
+      },
+      {
+        "file_name": "VizWiz_train_00003155.jpg",
+        "caption": "A brown sofa with a white and black dog laying in front of it."
+      },
+      {
+        "file_name": "VizWiz_train_00016011.jpg",
+        "caption": "A dark red and white menu from a restaurant lists it's daily deals."
+      },
+      {
+        "file_name": "VizWiz_train_00021600.jpg",
+        "caption": "Black, white and grey kitten that is leaning on someone wearing blue jeans."
+      },
+      {
+        "file_name": "VizWiz_train_00018591.jpg",
+        "caption": "Four giraffe figurines displayed by a door glass near a body of water."
+      },
+      {
+        "file_name": "VizWiz_train_00012360.jpg",
+        "caption": "A car simulator has been photographed improperly with a steering wheel visible."
+      },
+      {
+        "file_name": "VizWiz_train_00002695.jpg",
+        "caption": "A yellow and green gadget on a piece of cardboard."
+      },
+      {
+        "file_name": "VizWiz_train_00021647.jpg",
+        "caption": "A large white apartment building surrounded by trees is shown."
+      },
+      {
+        "file_name": "VizWiz_train_00000514.jpg",
+        "caption": "A black animal is laying on a throw rug over tan carpet, in front of closed cabinet doors."
+      },
+      {
+        "file_name": "VizWiz_train_00014514.jpg",
+        "caption": "A person holds a yellow bottle of something"
+      },
+      {
+        "file_name": "VizWiz_train_00007817.jpg",
+        "caption": "A small bundle of wound nylon rope on a blue cloth."
+      },
+      {
+        "file_name": "VizWiz_train_00011947.jpg",
+        "caption": "A yellow banana with clear beading on the outside laying on a tan and black cushion."
+      },
+      {
+        "file_name": "VizWiz_train_00012067.jpg",
+        "caption": "UP CLOSE SNAPSHOT OF PLANTS AND LEAVES"
+      },
+      {
+        "file_name": "VizWiz_train_00011421.jpg",
+        "caption": "Meter with a small red square identifier on a level between four hundred fifty and five hundred."
+      },
+      {
+        "file_name": "VizWiz_train_00009167.jpg",
+        "caption": "image contain a pussy cat face staring at camera."
+      },
+      {
+        "file_name": "VizWiz_train_00004816.jpg",
+        "caption": "A bag of tortilla chips on the floor next to a box of kitchen bags."
+      },
+      {
+        "file_name": "VizWiz_train_00006993.jpg",
+        "caption": "The entrance of a building on a cloudy day."
+      },
+      {
+        "file_name": "VizWiz_train_00023072.jpg",
+        "caption": "Green wallet, on the legs of a person."
+      },
+      {
+        "file_name": "VizWiz_train_00021445.jpg",
+        "caption": "A red bag with a cartoon like face that contains caramel corn"
+      },
+      {
+        "file_name": "VizWiz_train_00012064.jpg",
+        "caption": "a small red and blue flyer on a wooden surface"
+      },
+      {
+        "file_name": "VizWiz_train_00002941.jpg",
+        "caption": "A red Russell Stover heart is on a white surface."
+      },
+      {
+        "file_name": "VizWiz_train_00020372.jpg",
+        "caption": "A large cloud that is up in the sky."
+      },
+      {
+        "file_name": "VizWiz_train_00001677.jpg",
+        "caption": "a person holding a bottle of Malibu heat body lotion"
+      },
+      {
+        "file_name": "VizWiz_train_00010647.jpg",
+        "caption": "The end of a wire with a plastic piece on it."
+      },
+      {
+        "file_name": "VizWiz_train_00012405.jpg",
+        "caption": "A bag of Hippie Chips potato chips are sitting on a person's lap."
+      },
+      {
+        "file_name": "VizWiz_train_00001969.jpg",
+        "caption": "Exterior shot, grassy lawn with concrete and glass building behind it."
+      },
+      {
+        "file_name": "VizWiz_train_00014530.jpg",
+        "caption": "A red debit card is broken in two pieces"
+      },
+      {
+        "file_name": "VizWiz_train_00015912.jpg",
+        "caption": "a bright street light or a lamp light"
+      },
+      {
+        "file_name": "VizWiz_train_00017188.jpg",
+        "caption": "A plastic green butterfly magnet stuck to a wall."
+      },
+      {
+        "file_name": "VizWiz_train_00001360.jpg",
+        "caption": "Two travel-sized containers of lotion and conditioning shampoo standing on a countertop surface"
+      },
+      {
+        "file_name": "VizWiz_train_00003806.jpg",
+        "caption": "Part of a toddler's rug that have animation images of trains."
+      },
+      {
+        "file_name": "VizWiz_train_00003709.jpg",
+        "caption": "A long hair puppy is sitting in its cage."
+      },
+      {
+        "file_name": "VizWiz_train_00020067.jpg",
+        "caption": "White painted surface with yellow and white items."
+      },
+      {
+        "file_name": "VizWiz_train_00014086.jpg",
+        "caption": "a small furry creature in someone's grassy backyard"
+      },
+      {
+        "file_name": "VizWiz_train_00023218.jpg",
+        "caption": "A black and brown dog walking down a set of stairs outside next to some bushes."
+      },
+      {
+        "file_name": "VizWiz_train_00008166.jpg",
+        "caption": "A black dog sitting at a bed with green sheet."
+      },
+      {
+        "file_name": "VizWiz_train_00002228.jpg",
+        "caption": "A chess board with dots on it and a case on it."
+      },
+      {
+        "file_name": "VizWiz_train_00006928.jpg",
+        "caption": "A plastic trash can placed outside of a White House next to a small basement window"
+      },
+      {
+        "file_name": "VizWiz_train_00003025.jpg",
+        "caption": "A tree filled parcel of property behind a hedge is photographed through the front window of a vehicle."
+      },
+      {
+        "file_name": "VizWiz_train_00013899.jpg",
+        "caption": "A framed painting hung up on a white wall of a man looking at boats."
+      },
+      {
+        "file_name": "VizWiz_train_00018837.jpg",
+        "caption": "The front of a box for a children's toy truck"
+      },
+      {
+        "file_name": "VizWiz_train_00010898.jpg",
+        "caption": "Someone's lap who is wearing shorts in a carpeted room."
+      },
+      {
+        "file_name": "VizWiz_train_00015372.jpg",
+        "caption": "Two vehicles are passing each other at night, one truck, one car, in front of a grassy area."
+      },
+      {
+        "file_name": "VizWiz_train_00015085.jpg",
+        "caption": "The corner of a room at Christmastime, with a small red and green Christmas tree on a coffee table by the window."
+      },
+      {
+        "file_name": "VizWiz_train_00019575.jpg",
+        "caption": "The ides of march DVD \"is this man our next president\""
+      },
+      {
+        "file_name": "VizWiz_train_00015650.jpg",
+        "caption": "Outdoor picture of large apartment building and homes across from a home with a red truck parked in yard."
+      },
+      {
+        "file_name": "VizWiz_train_00006082.jpg",
+        "caption": "A monument containing eight pillars on a cloudy winter day."
+      },
+      {
+        "file_name": "VizWiz_train_00019103.jpg",
+        "caption": "A silver digital point and shoot camera on carpet"
+      },
+      {
+        "file_name": "VizWiz_train_00012940.jpg",
+        "caption": "The horizon during a sunset or sunrise after a rain."
+      },
+      {
+        "file_name": "VizWiz_train_00010183.jpg",
+        "caption": "A small silver ring on a wooden surface."
+      },
+      {
+        "file_name": "VizWiz_train_00011562.jpg",
+        "caption": "white thermostat set to a temperature of 78 degrees Fahrenheit"
+      },
+      {
+        "file_name": "VizWiz_train_00022428.jpg",
+        "caption": "A screened window overlooking a parking lot and neighborhood."
+      },
+      {
+        "file_name": "VizWiz_train_00011479.jpg",
+        "caption": "Partial view of an illustrated photo showing a banana peel and a green wall."
+      },
+      {
+        "file_name": "VizWiz_train_00008053.jpg",
+        "caption": "burgundy pink carpet with some type of exercise equipment"
+      },
+      {
+        "file_name": "VizWiz_train_00021443.jpg",
+        "caption": "In this picture is a image of a roof top"
+      },
+      {
+        "file_name": "VizWiz_train_00014784.jpg",
+        "caption": "A window showing a street view with a red car and trees."
+      },
+      {
+        "file_name": "VizWiz_train_00011214.jpg",
+        "caption": "picture of a small trash can with a black trash bag."
+      },
+      {
+        "file_name": "VizWiz_train_00008197.jpg",
+        "caption": "A full bottle of lotion is lying on a brown surface indoors, the label and description are on the bottle."
+      },
+      {
+        "file_name": "VizWiz_train_00014264.jpg",
+        "caption": "A sideways view down a brick driveway of a home."
+      },
+      {
+        "file_name": "VizWiz_train_00015706.jpg",
+        "caption": "A blue Hi-Liter sitting on the carpet with some black cords around it."
+      },
+      {
+        "file_name": "VizWiz_train_00001481.jpg",
+        "caption": "Blue cutting board with hole and circular white balls."
+      },
+      {
+        "file_name": "VizWiz_train_00015473.jpg",
+        "caption": "Green weeds coming from cracked concrete and a green planted in a black pot."
+      },
+      {
+        "file_name": "VizWiz_train_00018412.jpg",
+        "caption": "appears to be a picture of a radio"
+      },
+      {
+        "file_name": "VizWiz_train_00002690.jpg",
+        "caption": "A bedroom with a bed, a laundry hamper and a knick knack shelf."
+      },
+      {
+        "file_name": "VizWiz_train_00023167.jpg",
+        "caption": "picture of trees and landscape during a rainy day"
+      },
+      {
+        "file_name": "VizWiz_train_00018777.jpg",
+        "caption": "5 or 6 purple flowers with green stem and leaves"
+      },
+      {
+        "file_name": "VizWiz_train_00005486.jpg",
+        "caption": "New plants are springing forth early this year."
+      },
+      {
+        "file_name": "VizWiz_train_00015883.jpg",
+        "caption": "A brown dog is laying down on the carpet."
+      },
+      {
+        "file_name": "VizWiz_train_00005605.jpg",
+        "caption": "a red classic car with a white drop top that is being stored in a garage"
+      },
+      {
+        "file_name": "VizWiz_train_00007244.jpg",
+        "caption": "A small creek that is right by the trees."
+      },
+      {
+        "file_name": "VizWiz_train_00016798.jpg",
+        "caption": "Button controls for side mirrors on a vehicle."
+      },
+      {
+        "file_name": "VizWiz_train_00002189.jpg",
+        "caption": "A card with the iTunes logo and a twenty dollar bill are on a wood table."
+      },
+      {
+        "file_name": "VizWiz_train_00004061.jpg",
+        "caption": "A packet of chicken broth mix, it says herb ox instant broth, sodium free."
+      },
+      {
+        "file_name": "VizWiz_train_00006558.jpg",
+        "caption": "A Popular Mechanics magazine sitting on a carpeted surface."
+      },
+      {
+        "file_name": "VizWiz_train_00004525.jpg",
+        "caption": "A nap time and story time audio disc"
+      },
+      {
+        "file_name": "VizWiz_train_00013749.jpg",
+        "caption": "A $10 gift card to a restaurant is laying down flat on a light surface."
+      },
+      {
+        "file_name": "VizWiz_train_00002023.jpg",
+        "caption": "Three signs showing a bust stop, no parking, and a wheelchair sign"
+      },
+      {
+        "file_name": "VizWiz_train_00004061.jpg",
+        "caption": "Chicken bouillon packet colored green on some lined carpet."
+      },
+      {
+        "file_name": "VizWiz_train_00000123.jpg",
+        "caption": "Black cables on top of a speckled surface."
+      },
+      {
+        "file_name": "VizWiz_train_00010775.jpg",
+        "caption": "A gravel lot is shown with some outdoor grilling equipment, wood pile, an old wooden bench, and a basket full of logs."
+      },
+      {
+        "file_name": "VizWiz_train_00017237.jpg",
+        "caption": "A box on someone's lap that says super blox with a car on it."
+      },
+      {
+        "file_name": "VizWiz_train_00015067.jpg",
+        "caption": "A road in a cul de-sac with multiple houses and many vehicles."
+      },
+      {
+        "file_name": "VizWiz_train_00011947.jpg",
+        "caption": "A bright yellow banana shaped piece of art with yellow beads on 90% of it."
+      },
+      {
+        "file_name": "VizWiz_train_00007933.jpg",
+        "caption": "A Mexican restaurant storefront with multiple employees behind the counter."
+      },
+      {
+        "file_name": "VizWiz_train_00001006.jpg",
+        "caption": "tea tree shampoo white bottle on yellow dry towel"
+      },
+      {
+        "file_name": "VizWiz_train_00006190.jpg",
+        "caption": "A light post is next to a street on a cloudy day."
+      },
+      {
+        "file_name": "VizWiz_train_00007839.jpg",
+        "caption": "a large bush that is behind a house in the yard"
+      },
+      {
+        "file_name": "VizWiz_train_00017627.jpg",
+        "caption": "A close of a cartoon character smiling and has brown hair."
+      },
+      {
+        "file_name": "VizWiz_train_00007781.jpg",
+        "caption": "Construction work is being done on a five story building."
+      },
+      {
+        "file_name": "VizWiz_train_00017536.jpg",
+        "caption": "Metal airport luggage turnstile that is currently empty."
+      },
+      {
+        "file_name": "VizWiz_train_00021443.jpg",
+        "caption": "House consist of roof and tree without leaf"
+      },
+      {
+        "file_name": "VizWiz_train_00011599.jpg",
+        "caption": "A dark picture of small lights, probably on a Christmas tree."
+      },
+      {
+        "file_name": "VizWiz_train_00001893.jpg",
+        "caption": "A dog is happily playing with its owner and wants to sit on his lap."
+      },
+      {
+        "file_name": "VizWiz_train_00017213.jpg",
+        "caption": "A finger pushing a button on a white device."
+      },
+      {
+        "file_name": "VizWiz_train_00006232.jpg",
+        "caption": "A food menu with a list of different types of sandwiches."
+      },
+      {
+        "file_name": "VizWiz_train_00022768.jpg",
+        "caption": "A magazine cover depicting a mountain range and several people swimming in a lake."
+      },
+      {
+        "file_name": "VizWiz_train_00019492.jpg",
+        "caption": "A crinkled bag of potato chips with a blue and red color scheme."
+      },
+      {
+        "file_name": "VizWiz_train_00019582.jpg",
+        "caption": "It shows part of a membership card to some club or organization."
+      },
+      {
+        "file_name": "VizWiz_train_00015878.jpg",
+        "caption": "A camping lantern light sitting on a carpet."
+      },
+      {
+        "file_name": "VizWiz_train_00014804.jpg",
+        "caption": "A white container has string to clean your teeth"
+      },
+      {
+        "file_name": "VizWiz_train_00016798.jpg",
+        "caption": "black buttons from a vehicle for mirror control"
+      },
+      {
+        "file_name": "VizWiz_train_00019889.jpg",
+        "caption": "a container of Kroger soft cream cheese that is unopened"
+      },
+      {
+        "file_name": "VizWiz_train_00022972.jpg",
+        "caption": "a large dark colored dog is laying on the floor"
+      },
+      {
+        "file_name": "VizWiz_train_00005196.jpg",
+        "caption": "A vehicle is parked in front of a grass lawn."
+      },
+      {
+        "file_name": "VizWiz_train_00011157.jpg",
+        "caption": "A white dog sitting on a carpeted floor licking himself."
+      },
+      {
+        "file_name": "VizWiz_train_00002951.jpg",
+        "caption": "A picture of an area covered in snow with trees, street lights, and a long handrail"
+      },
+      {
+        "file_name": "VizWiz_train_00013545.jpg",
+        "caption": "a small white wood statue of a man in a cowboy hat"
+      },
+      {
+        "file_name": "VizWiz_train_00006082.jpg",
+        "caption": "An outdoor museum and Muriel that shows 8 large stone pillars with various human images on them with the sky and clouds in the background."
+      },
+      {
+        "file_name": "VizWiz_train_00016428.jpg",
+        "caption": "a bottle of medication by the Equate brand"
+      },
+      {
+        "file_name": "VizWiz_train_00003709.jpg",
+        "caption": "a small black and brown dog sitting in a black kennel."
+      },
+      {
+        "file_name": "VizWiz_train_00022428.jpg",
+        "caption": "A landscape view of a parking lot with a mixture of cars and trucks."
+      },
+      {
+        "file_name": "VizWiz_train_00007269.jpg",
+        "caption": "a part of black color steering of honda car"
+      },
+      {
+        "file_name": "VizWiz_train_00020530.jpg",
+        "caption": "a orange kitten with very hairy ears that is laying down"
+      },
+      {
+        "file_name": "VizWiz_train_00003611.jpg",
+        "caption": "A small tan and white dog with a black nose and ears sits on a tree stump."
+      },
+      {
+        "file_name": "VizWiz_train_00001893.jpg",
+        "caption": "a pet with body full of hair standing with two legs and two legs on the person's leg"
+      },
+      {
+        "file_name": "VizWiz_train_00001481.jpg",
+        "caption": "Several circular items are on a blue cutting board"
+      },
+      {
+        "file_name": "VizWiz_train_00004218.jpg",
+        "caption": "A curly haired dog walking on carpeted floor."
+      },
+      {
+        "file_name": "VizWiz_train_00019631.jpg",
+        "caption": "I see a deer in the driveway standing up"
+      },
+      {
+        "file_name": "VizWiz_train_00008262.jpg",
+        "caption": "Here is a photo of a large or medium sized dog that almost looks like a golden retriever but black, it's got a dark colored leash on and is sitting down."
+      },
+      {
+        "file_name": "VizWiz_train_00015074.jpg",
+        "caption": "A bright blue sky with a couple of airplane poles and the tops of trees although it is dark."
+      },
+      {
+        "file_name": "VizWiz_train_00018551.jpg",
+        "caption": "A small white fan is on top of the floor."
+      },
+      {
+        "file_name": "VizWiz_train_00020435.jpg",
+        "caption": "A black stain is smeared onto a yellow fabric."
+      },
+      {
+        "file_name": "VizWiz_train_00014363.jpg",
+        "caption": "Dark foreground with large pole in background displaying two red lights located at approximately twenty and forty percent from the top."
+      },
+      {
+        "file_name": "VizWiz_train_00022699.jpg",
+        "caption": "A framed drawing that is used as wall art"
+      },
+      {
+        "file_name": "VizWiz_train_00007840.jpg",
+        "caption": "A tan and yellow colored cat is sitting on a soft surface but the face is partially cut  out of the photo."
+      },
+      {
+        "file_name": "VizWiz_train_00011415.jpg",
+        "caption": "A green piece of plastic is held up by a person's hand."
+      },
+      {
+        "file_name": "VizWiz_train_00003072.jpg",
+        "caption": "A Bose brand stereo with a stuffed puppy dog in a red and white scarf sitting on top."
+      },
+      {
+        "file_name": "VizWiz_train_00011942.jpg",
+        "caption": "a partial picture of a car steering wheel"
+      },
+      {
+        "file_name": "VizWiz_train_00017226.jpg",
+        "caption": "A bag of oolong tea leaves laying down."
+      },
+      {
+        "file_name": "VizWiz_train_00008166.jpg",
+        "caption": "a black and white dog sitting on an unmade bed"
+      },
+      {
+        "file_name": "VizWiz_train_00017363.jpg",
+        "caption": "three different bushes on the side of a White House"
+      },
+      {
+        "file_name": "VizWiz_train_00010676.jpg",
+        "caption": "a brown color dog is laying down on the floor"
+      },
+      {
+        "file_name": "VizWiz_train_00023081.jpg",
+        "caption": "A bag of potato chips sits on the carpet"
+      },
+      {
+        "file_name": "VizWiz_train_00007527.jpg",
+        "caption": "A black dog is sitting on the carpet."
+      },
+      {
+        "file_name": "VizWiz_train_00012476.jpg",
+        "caption": "Outdoor image of an inground pool that is oval shaped including a background image of the sky and  trees."
+      },
+      {
+        "file_name": "VizWiz_train_00013395.jpg",
+        "caption": "A small package of Tropical Punch Kool-Aid mix."
+      },
+      {
+        "file_name": "VizWiz_train_00012407.jpg",
+        "caption": "A jar that has a small picture of a baby on it."
+      },
+      {
+        "file_name": "VizWiz_train_00011388.jpg",
+        "caption": "A dog is lying on the floor and chewing on a toy."
+      },
+      {
+        "file_name": "VizWiz_train_00002111.jpg",
+        "caption": "An outdoor view of the countryside so green and refreshing."
+      },
+      {
+        "file_name": "VizWiz_train_00015158.jpg",
+        "caption": "A small insect is on a wooden block outside, the color of the insect is yellow."
+      },
+      {
+        "file_name": "VizWiz_train_00001193.jpg",
+        "caption": "A bottle of coconut lotion resting on a person's legs."
+      },
+      {
+        "file_name": "VizWiz_train_00021907.jpg",
+        "caption": "A person is holding a small orange with their thumb & finger."
+      },
+      {
+        "file_name": "VizWiz_train_00011273.jpg",
+        "caption": "Bowl of fruit salad with strawberries, peaches and other fruit"
+      },
+      {
+        "file_name": "VizWiz_train_00018201.jpg",
+        "caption": "A forest landscape with buildings along the horizon"
+      },
+      {
+        "file_name": "VizWiz_train_00008595.jpg",
+        "caption": "A street view of a large office building with a huge expanse of windows."
+      },
+      {
+        "file_name": "VizWiz_train_00015310.jpg",
+        "caption": "Two blue traffic cones with a sign in between on the side of the street."
+      },
+      {
+        "file_name": "VizWiz_train_00006954.jpg",
+        "caption": "A carpeted floor with 5 dog toys scattered around, which look to have been chewed on."
+      }
+    ],
+    "quality_unclear": [],
+    "screens_devices": [
+      {
+        "file_name": "VizWiz_train_00003966.jpg",
+        "caption": "A floor with an oriental rug, a box of baby wipes, a pair of headphones, and a partial electronic object, among two partially shown wooden shelf units."
+      },
+      {
+        "file_name": "VizWiz_train_00014747.jpg",
+        "caption": "IMAGE IS CLEAR AND HALF OF THE IMAGE IS MISSING"
+      },
+      {
+        "file_name": "VizWiz_train_00014322.jpg",
+        "caption": "A bottle of tea right on top of the desk."
+      },
+      {
+        "file_name": "VizWiz_train_00002504.jpg",
+        "caption": "A computer monitor with a white screen is above a keyboard with a touchpad."
+      },
+      {
+        "file_name": "VizWiz_train_00021534.jpg",
+        "caption": "A sealed product of a computer memory in plastic container"
+      },
+      {
+        "file_name": "VizWiz_train_00001309.jpg",
+        "caption": "a flat screen TV mounted to a wall"
+      },
+      {
+        "file_name": "VizWiz_train_00003087.jpg",
+        "caption": "A white projector sits on a wooden floor with a computer chair next to it."
+      },
+      {
+        "file_name": "VizWiz_train_00004397.jpg",
+        "caption": "A black console is right on top of the rug."
+      },
+      {
+        "file_name": "VizWiz_train_00018258.jpg",
+        "caption": "a silver wireless computer keyboard sitting on a light wooden table."
+      },
+      {
+        "file_name": "VizWiz_train_00004643.jpg",
+        "caption": "image shows a electric switch on a wall."
+      },
+      {
+        "file_name": "VizWiz_train_00022217.jpg",
+        "caption": "Closeup of white text on a black computer monitor."
+      },
+      {
+        "file_name": "VizWiz_train_00019934.jpg",
+        "caption": "Windows Startup Repair prompt stating that Startup Repair was unable to repair computer automatically"
+      },
+      {
+        "file_name": "VizWiz_train_00012061.jpg",
+        "caption": "A Michael Jackson Poster on a white wall."
+      },
+      {
+        "file_name": "VizWiz_train_00017348.jpg",
+        "caption": "a computer monitor on a wood desk by a window"
+      },
+      {
+        "file_name": "VizWiz_train_00001828.jpg",
+        "caption": "A crumbed fillet of fish frozen dinner on a wicker placemat and an empty steel mug."
+      },
+      {
+        "file_name": "VizWiz_train_00010936.jpg",
+        "caption": "A television monitoring showing the front screen on top of a cabinet with small speakers, a bottle, and a glass mug in front."
+      },
+      {
+        "file_name": "VizWiz_train_00010820.jpg",
+        "caption": "A sheet that is right on top of the bed."
+      },
+      {
+        "file_name": "VizWiz_train_00017344.jpg",
+        "caption": "Main menu on a cell phone that shows all the apps, very colorful."
+      },
+      {
+        "file_name": "VizWiz_train_00013443.jpg",
+        "caption": "The LED front panel of an alarm clock with buttons."
+      },
+      {
+        "file_name": "VizWiz_train_00015317.jpg",
+        "caption": "A computer device with a LCD screen and a finger near it."
+      },
+      {
+        "file_name": "VizWiz_train_00007194.jpg",
+        "caption": "A black keyboard has English and Arabic letters"
+      },
+      {
+        "file_name": "VizWiz_train_00016073.jpg",
+        "caption": "a smartphone with a blue screen trying to connect"
+      },
+      {
+        "file_name": "VizWiz_train_00000295.jpg",
+        "caption": "An dual laptop with two labels classifying the CPU and The OS level."
+      },
+      {
+        "file_name": "VizWiz_train_00019931.jpg",
+        "caption": "MacBook computer screen with many apps on the bottom."
+      },
+      {
+        "file_name": "VizWiz_train_00020825.jpg",
+        "caption": "A phone screen shows 11:32 o'clock and it shows that the unlocking which can be possible by sliding the right at the bottom."
+      },
+      {
+        "file_name": "VizWiz_train_00003264.jpg",
+        "caption": "A screenshot of a phone displays the phones apps and a picture of a child in the background."
+      },
+      {
+        "file_name": "VizWiz_train_00019941.jpg",
+        "caption": "a computer monitor on a cluttered desk of papers"
+      },
+      {
+        "file_name": "VizWiz_train_00015592.jpg",
+        "caption": "Black stereo case with black headphones set on top."
+      },
+      {
+        "file_name": "VizWiz_train_00021438.jpg",
+        "caption": "A medium sized black dog laying on a wooden floor."
+      },
+      {
+        "file_name": "VizWiz_train_00007553.jpg",
+        "caption": "A portion of a black piece of electronics trademarked \"Keys U See\"."
+      },
+      {
+        "file_name": "VizWiz_train_00021792.jpg",
+        "caption": "A computer is showing a screen with a message"
+      },
+      {
+        "file_name": "VizWiz_train_00018689.jpg",
+        "caption": "A wonderful view of the fog windows in the room is very thick"
+      },
+      {
+        "file_name": "VizWiz_train_00009678.jpg",
+        "caption": "Blue tablet screen showing different options with installations message."
+      },
+      {
+        "file_name": "VizWiz_train_00003128.jpg",
+        "caption": "some sort of chips in a green and yellow bag"
+      },
+      {
+        "file_name": "VizWiz_train_00008499.jpg",
+        "caption": "A black remote control by the brand Panasonic."
+      },
+      {
+        "file_name": "VizWiz_train_00012457.jpg",
+        "caption": "A blue cell phone sits on a blue and yellow blanket."
+      },
+      {
+        "file_name": "VizWiz_train_00004590.jpg",
+        "caption": "a white box with black headphones and earbuds inside."
+      },
+      {
+        "file_name": "VizWiz_train_00013049.jpg",
+        "caption": "The blue loading screen for Windows 7 Enterprise"
+      },
+      {
+        "file_name": "VizWiz_train_00000077.jpg",
+        "caption": "A drinking punch juice inside a metallic wrapping."
+      },
+      {
+        "file_name": "VizWiz_train_00020871.jpg",
+        "caption": "A room with a TV screen and a computer screen."
+      },
+      {
+        "file_name": "VizWiz_train_00020773.jpg",
+        "caption": "Someone listening to music on headphones while wearing their seatbelt."
+      },
+      {
+        "file_name": "VizWiz_train_00007481.jpg",
+        "caption": "Screen displaying PC Name at the top with Example, colon living room PC highlighted below."
+      },
+      {
+        "file_name": "VizWiz_train_00014493.jpg",
+        "caption": "A television set in the living room is powered on."
+      },
+      {
+        "file_name": "VizWiz_train_00021659.jpg",
+        "caption": "A pink flower in full bloom with lily pads behind it."
+      },
+      {
+        "file_name": "VizWiz_train_00005190.jpg",
+        "caption": "TV screen depicting a police officer taking to a man wearing overalls and a fedora next to a car with the trunk open."
+      },
+      {
+        "file_name": "VizWiz_train_00014679.jpg",
+        "caption": "The news is being watched on a gray television on a brown stand, A red vacuum sits to the right."
+      },
+      {
+        "file_name": "VizWiz_train_00002996.jpg",
+        "caption": "A laptop computer is on a desk and not powered on next to coiled wires."
+      },
+      {
+        "file_name": "VizWiz_train_00008632.jpg",
+        "caption": "A closeup of a laptop screen displaying a black background with a partially filled status bar with the words \"Microsoft Corporation\" underneath."
+      },
+      {
+        "file_name": "VizWiz_train_00023143.jpg",
+        "caption": "A tablet in a heavy duty black case, on a table with some handmade cards explaining how to use it."
+      },
+      {
+        "file_name": "VizWiz_train_00018626.jpg",
+        "caption": "A standing fan is next to a guitar case in front of two windows with blinds"
+      },
+      {
+        "file_name": "VizWiz_train_00017675.jpg",
+        "caption": "A machine has several buttons and numbers on it."
+      },
+      {
+        "file_name": "VizWiz_train_00005857.jpg",
+        "caption": "A crumpled towel is lying in a clean bathtub."
+      },
+      {
+        "file_name": "VizWiz_train_00010577.jpg",
+        "caption": "Large wooden drum with carvings on the lower half, and black decorative string around the top half."
+      },
+      {
+        "file_name": "VizWiz_train_00021675.jpg",
+        "caption": "The instruction screen to an ATM is shown."
+      },
+      {
+        "file_name": "VizWiz_train_00004679.jpg",
+        "caption": "I see an advertisement for Panasonic eyewear and TV, the label has a dog and human running."
+      },
+      {
+        "file_name": "VizWiz_train_00015653.jpg",
+        "caption": "a wired cisco telephone showing the options screen"
+      },
+      {
+        "file_name": "VizWiz_train_00021964.jpg",
+        "caption": "a picture of a word in a unique font."
+      },
+      {
+        "file_name": "VizWiz_train_00015375.jpg",
+        "caption": "IMAGE WAS CLEAR BUTS NO ITEAM SO ITS DARK"
+      },
+      {
+        "file_name": "VizWiz_train_00000007.jpg",
+        "caption": "A cleaning kit is shown in plastic packaging on someone's legs"
+      },
+      {
+        "file_name": "VizWiz_train_00017405.jpg",
+        "caption": "A yellow and blue Intel label on a white box"
+      },
+      {
+        "file_name": "VizWiz_train_00009189.jpg",
+        "caption": "a box Blu ray disc of Galapagos DVD on a bedspread"
+      },
+      {
+        "file_name": "VizWiz_train_00014137.jpg",
+        "caption": "some sort of mobile phone device that you can use to talk to people"
+      },
+      {
+        "file_name": "VizWiz_train_00000500.jpg",
+        "caption": "An unopened pack of sage ground seasoning made by Marshalls Creek Spices."
+      },
+      {
+        "file_name": "VizWiz_train_00003133.jpg",
+        "caption": "a captcha screen with warped letters and numbers above a text box"
+      },
+      {
+        "file_name": "VizWiz_train_00010246.jpg",
+        "caption": "Computer screen that is next to a white door."
+      },
+      {
+        "file_name": "VizWiz_train_00022965.jpg",
+        "caption": "the photo is of a tube of paste in front of a computer keyboard."
+      },
+      {
+        "file_name": "VizWiz_train_00022498.jpg",
+        "caption": "A man's hand typing on a black Logitech keyboard with a blue stripe on the left side."
+      },
+      {
+        "file_name": "VizWiz_train_00008811.jpg",
+        "caption": "Concrete floor with patterns and crack in the middle."
+      },
+      {
+        "file_name": "VizWiz_train_00006879.jpg",
+        "caption": "A room is rimmed with various cushioned chairs and a large TV in the corner."
+      },
+      {
+        "file_name": "VizWiz_train_00001625.jpg",
+        "caption": "A savory beef rissoles frozen dinner sitting on a wooden surface."
+      },
+      {
+        "file_name": "VizWiz_train_00006951.jpg",
+        "caption": "A smartphone that is peach colored is right on top of the couch."
+      },
+      {
+        "file_name": "VizWiz_train_00016446.jpg",
+        "caption": "A blue women's bathroom sign on a white painted wall."
+      },
+      {
+        "file_name": "VizWiz_train_00002184.jpg",
+        "caption": "The lower part of a TV screen on a wood and metal stand."
+      },
+      {
+        "file_name": "VizWiz_train_00002404.jpg",
+        "caption": "Behind a laptop is a bouquet of white flowers."
+      },
+      {
+        "file_name": "VizWiz_train_00021089.jpg",
+        "caption": "a silver Lenovo laptop with a black keyboard"
+      },
+      {
+        "file_name": "VizWiz_train_00014061.jpg",
+        "caption": "Here is a picture of a black mobile phone"
+      },
+      {
+        "file_name": "VizWiz_train_00022660.jpg",
+        "caption": "A computer screen displaying a ReCAPTCHA with an agreement to continue."
+      },
+      {
+        "file_name": "VizWiz_train_00001970.jpg",
+        "caption": "An old CRT monitor sitting on a pad that has some control buttons on it, I'm not sure what kind of device it is."
+      },
+      {
+        "file_name": "VizWiz_train_00021629.jpg",
+        "caption": "Corner of computer desk with several keyboard and a chair piled with objects in the background."
+      },
+      {
+        "file_name": "VizWiz_train_00015439.jpg",
+        "caption": "A plant with multiple attached red berries growing on a branch."
+      },
+      {
+        "file_name": "VizWiz_train_00021738.jpg",
+        "caption": "An open laptop that doesn't have the screen turned on."
+      },
+      {
+        "file_name": "VizWiz_train_00003546.jpg",
+        "caption": "A brown chair with a book on it that says stories of Rell Sunn: Queen of Makaha."
+      },
+      {
+        "file_name": "VizWiz_train_00003632.jpg",
+        "caption": "The screen of an Apple computer monitor with the power off."
+      },
+      {
+        "file_name": "VizWiz_train_00019301.jpg",
+        "caption": "The front of a package of Healthy Choice creamy tomato basil penne pasta meal."
+      },
+      {
+        "file_name": "VizWiz_train_00013690.jpg",
+        "caption": "a TV or computer screen that is turned off"
+      },
+      {
+        "file_name": "VizWiz_train_00015968.jpg",
+        "caption": "A green digit displays on a black screen of a silver appliance."
+      },
+      {
+        "file_name": "VizWiz_train_00004808.jpg",
+        "caption": "A black item with a Apple logo visible."
+      },
+      {
+        "file_name": "VizWiz_train_00007513.jpg",
+        "caption": "Pictured is a close up view of a grey calculator with white buttons."
+      },
+      {
+        "file_name": "VizWiz_train_00015301.jpg",
+        "caption": "A speaker system on a windowsill facing a beige curtain."
+      },
+      {
+        "file_name": "VizWiz_train_00017614.jpg",
+        "caption": "A red color screen is shown by the image."
+      },
+      {
+        "file_name": "VizWiz_train_00012133.jpg",
+        "caption": "A cell phone, part of a computer monitor and three small plastic drawers are sitting on a wood grained desktop."
+      },
+      {
+        "file_name": "VizWiz_train_00006215.jpg",
+        "caption": "A computer screen has a black Apple logo and a dashed circle showing something is loading."
+      },
+      {
+        "file_name": "VizWiz_train_00015651.jpg",
+        "caption": "Some off white material has purple flowers and  a purple butterfly printed on it."
+      },
+      {
+        "file_name": "VizWiz_train_00021525.jpg",
+        "caption": "A man appears on the screen of a computer."
+      },
+      {
+        "file_name": "VizWiz_train_00021046.jpg",
+        "caption": "a black spectacle placed on a white surface"
+      },
+      {
+        "file_name": "VizWiz_train_00019982.jpg",
+        "caption": "A computer screen shows an article about a sports team."
+      },
+      {
+        "file_name": "VizWiz_train_00005906.jpg",
+        "caption": "A black box with a silver picture of a iPhone"
+      },
+      {
+        "file_name": "VizWiz_train_00020628.jpg",
+        "caption": "Part of digital display on a washing machine is pictured."
+      },
+      {
+        "file_name": "VizWiz_train_00008916.jpg",
+        "caption": "a MetroPCS cell phone that is very black and on someone's lap"
+      },
+      {
+        "file_name": "VizWiz_train_00011368.jpg",
+        "caption": "An electronic display with white buttons and red lighted indicators and has LED screens for numeric display."
+      },
+      {
+        "file_name": "VizWiz_train_00019657.jpg",
+        "caption": "in this image shows outside of concrete building with bricks outside"
+      },
+      {
+        "file_name": "VizWiz_train_00018927.jpg",
+        "caption": "a box of some sort plugged into an outlet on a wall"
+      },
+      {
+        "file_name": "VizWiz_train_00010576.jpg",
+        "caption": "Unknown device with numbers and letters appearing on electronic indicators."
+      },
+      {
+        "file_name": "VizWiz_train_00012561.jpg",
+        "caption": "Spray nine container being held up in front of a desktop computer."
+      },
+      {
+        "file_name": "VizWiz_train_00014981.jpg",
+        "caption": "A few dials on a plastic machine for some sort of visual product."
+      },
+      {
+        "file_name": "VizWiz_train_00012971.jpg",
+        "caption": "A TV monitor in a bedroom with a small hanging closet below it."
+      },
+      {
+        "file_name": "VizWiz_train_00003414.jpg",
+        "caption": "The front of a computer tower with a power button, logo and light indicator."
+      },
+      {
+        "file_name": "VizWiz_train_00007093.jpg",
+        "caption": "a computer monitor screen showing recycle bin logo"
+      },
+      {
+        "file_name": "VizWiz_train_00006498.jpg",
+        "caption": "the side of a TV or monitor and several electronic devices on the floor"
+      },
+      {
+        "file_name": "VizWiz_train_00009606.jpg",
+        "caption": "a box TV that is currently on and on a desk"
+      },
+      {
+        "file_name": "VizWiz_train_00000546.jpg",
+        "caption": "appears to be a picture of a piece of wood"
+      },
+      {
+        "file_name": "VizWiz_train_00017085.jpg",
+        "caption": "an electronic device with digital view and button controls"
+      },
+      {
+        "file_name": "VizWiz_train_00016084.jpg",
+        "caption": "The text contains u25 and is in a blue background"
+      },
+      {
+        "file_name": "VizWiz_train_00006622.jpg",
+        "caption": "A computer sits on a desk in someone's room."
+      },
+      {
+        "file_name": "VizWiz_train_00017087.jpg",
+        "caption": "A group of electronics sits on a wooden desk and includes power cords and some devices"
+      },
+      {
+        "file_name": "VizWiz_train_00006414.jpg",
+        "caption": "I see a white coffee cup in front of a black keyboard."
+      },
+      {
+        "file_name": "VizWiz_train_00000200.jpg",
+        "caption": "An Apple iPhone is laying on a table."
+      },
+      {
+        "file_name": "VizWiz_train_00001999.jpg",
+        "caption": "a captcha image on a computer reading Keys"
+      },
+      {
+        "file_name": "VizWiz_train_00020490.jpg",
+        "caption": "A 920XL HP memory card for a laptop computer,"
+      },
+      {
+        "file_name": "VizWiz_train_00018363.jpg",
+        "caption": "a blue rectangular object, probably a laptop with colorful patterned background"
+      },
+      {
+        "file_name": "VizWiz_train_00001648.jpg",
+        "caption": "A white, watchman brand, appliance with a digital display showing 8."
+      },
+      {
+        "file_name": "VizWiz_train_00006609.jpg",
+        "caption": "open monitor displaying startup repair for windows application"
+      },
+      {
+        "file_name": "VizWiz_train_00001930.jpg",
+        "caption": "A remote control, a pair of headphones, and a box of granola bars"
+      },
+      {
+        "file_name": "VizWiz_train_00000908.jpg",
+        "caption": "A red textured, rubbery item labeled \"acer\" in silver takes up the whole screen."
+      },
+      {
+        "file_name": "VizWiz_train_00009343.jpg",
+        "caption": "A standard remote control for a television system."
+      },
+      {
+        "file_name": "VizWiz_train_00001993.jpg",
+        "caption": "a Philips television and its remove was placed on a brown shelf"
+      },
+      {
+        "file_name": "VizWiz_train_00014886.jpg",
+        "caption": "A Peanut Butter Fudge Ice cream bucket on someone's lap"
+      },
+      {
+        "file_name": "VizWiz_train_00006840.jpg",
+        "caption": "imagine how you would describe this image on the phone to a friend."
+      },
+      {
+        "file_name": "VizWiz_train_00007946.jpg",
+        "caption": "a photo of a digital person on a screen that is white"
+      },
+      {
+        "file_name": "VizWiz_train_00019592.jpg",
+        "caption": "a white color Johnson control electronic device placed on a white surface"
+      },
+      {
+        "file_name": "VizWiz_train_00014033.jpg",
+        "caption": "TV screen a top a storage unit is in this image."
+      },
+      {
+        "file_name": "VizWiz_train_00006248.jpg",
+        "caption": "Very dark room with a TV on in the distance."
+      },
+      {
+        "file_name": "VizWiz_train_00015651.jpg",
+        "caption": "A paper with a white background a purple  butterflies."
+      },
+      {
+        "file_name": "VizWiz_train_00003776.jpg",
+        "caption": "A cartoon lemon that has a face on it that has a scary smile on it."
+      },
+      {
+        "file_name": "VizWiz_train_00020903.jpg",
+        "caption": "A computer screen showing a windows installation in progress asking for a product key."
+      },
+      {
+        "file_name": "VizWiz_train_00016549.jpg",
+        "caption": "A white computer keyboard sitting on a purple towel."
+      },
+      {
+        "file_name": "VizWiz_train_00016682.jpg",
+        "caption": "Laptops like this one can perform so many handy tasks."
+      },
+      {
+        "file_name": "VizWiz_train_00013607.jpg",
+        "caption": "Several clouds in a blue sky and green grass"
+      },
+      {
+        "file_name": "VizWiz_train_00007006.jpg",
+        "caption": "A person holds up the side of their laptop to view the side with the ports."
+      },
+      {
+        "file_name": "VizWiz_train_00022068.jpg",
+        "caption": "a black color laptop computer screen showing some text"
+      },
+      {
+        "file_name": "VizWiz_train_00013617.jpg",
+        "caption": "Black Samsung Duos phone on a brown surface"
+      },
+      {
+        "file_name": "VizWiz_train_00022520.jpg",
+        "caption": "The laptop has different color keys and letters"
+      },
+      {
+        "file_name": "VizWiz_train_00011612.jpg",
+        "caption": "A corner of a bedroom wall and ceiling with white walls"
+      },
+      {
+        "file_name": "VizWiz_train_00005564.jpg",
+        "caption": "A sky is blue and there are trees."
+      },
+      {
+        "file_name": "VizWiz_train_00002654.jpg",
+        "caption": "A manual that shows you how to install Mac OS X."
+      },
+      {
+        "file_name": "VizWiz_train_00002768.jpg",
+        "caption": "Two I-pods on display and a tablet under a glass or plastic case."
+      },
+      {
+        "file_name": "VizWiz_train_00019270.jpg",
+        "caption": "A windows logo with the four colors in it that are red, green, blue and yellow on a blue background."
+      },
+      {
+        "file_name": "VizWiz_train_00012340.jpg",
+        "caption": "a math test of some sort that has lots of lines on it"
+      },
+      {
+        "file_name": "VizWiz_train_00010059.jpg",
+        "caption": "The back label of a tube of soy and oat hand or body lotion."
+      },
+      {
+        "file_name": "VizWiz_train_00012154.jpg",
+        "caption": "Image shows a small can of fruit salad."
+      },
+      {
+        "file_name": "VizWiz_train_00011779.jpg",
+        "caption": "The sun is reflecting off of a blue car windshield."
+      },
+      {
+        "file_name": "VizWiz_train_00013423.jpg",
+        "caption": "A picture of the left side of a black computer keyboard."
+      },
+      {
+        "file_name": "VizWiz_train_00021039.jpg",
+        "caption": "Printed fabric with squared images that resemble a smartphone screen that says For That."
+      },
+      {
+        "file_name": "VizWiz_train_00001501.jpg",
+        "caption": "A computer screen has a message for a system recovery."
+      },
+      {
+        "file_name": "VizWiz_train_00019760.jpg",
+        "caption": "A cubicle of a gray computer monitor with a black Dell keyboard and a black headphones."
+      },
+      {
+        "file_name": "VizWiz_train_00019066.jpg",
+        "caption": "I see a laptop with male and female on it"
+      },
+      {
+        "file_name": "VizWiz_train_00018791.jpg",
+        "caption": "A white keyboard with keys written in black"
+      },
+      {
+        "file_name": "VizWiz_train_00002780.jpg",
+        "caption": "A messy room with a television, a table, a rug and several boxes"
+      },
+      {
+        "file_name": "VizWiz_train_00001763.jpg",
+        "caption": "IMAGE WAS CLEAR BUT IT IS NOT ITEM"
+      },
+      {
+        "file_name": "VizWiz_train_00011460.jpg",
+        "caption": "A telephone sitting on a light brown table."
+      },
+      {
+        "file_name": "VizWiz_train_00021027.jpg",
+        "caption": "A close up of an ergonomic keyboard with trackpad."
+      },
+      {
+        "file_name": "VizWiz_train_00009653.jpg",
+        "caption": "A red Solo cup sitting on a table, with a dart board a couple of inches about it."
+      },
+      {
+        "file_name": "VizWiz_train_00022394.jpg",
+        "caption": "A computer screen with a grey box with multiple choice questions in it."
+      },
+      {
+        "file_name": "VizWiz_train_00003063.jpg",
+        "caption": "a picture of a bottle sitting in a dark room"
+      },
+      {
+        "file_name": "VizWiz_train_00007121.jpg",
+        "caption": "Contact information is given with a telephone number and website."
+      },
+      {
+        "file_name": "VizWiz_train_00005598.jpg",
+        "caption": "a blue screen on a windows brand computer"
+      },
+      {
+        "file_name": "VizWiz_train_00005546.jpg",
+        "caption": "A square object that you can hold in your hand."
+      },
+      {
+        "file_name": "VizWiz_train_00015572.jpg",
+        "caption": "A screen prompting to press ctrl+alt+delete in windows 7."
+      },
+      {
+        "file_name": "VizWiz_train_00012896.jpg",
+        "caption": "a bunch of white clouds in a blue sky"
+      },
+      {
+        "file_name": "VizWiz_train_00004017.jpg",
+        "caption": "A smartphone being held in the right hand."
+      },
+      {
+        "file_name": "VizWiz_train_00012061.jpg",
+        "caption": "Poster of Michael Jackson on a wall above a computer screen"
+      },
+      {
+        "file_name": "VizWiz_train_00005338.jpg",
+        "caption": "A blue wireless mouse made by Microsoft lying against a wooden surface."
+      },
+      {
+        "file_name": "VizWiz_train_00007946.jpg",
+        "caption": "A photograph of a woman leaning against a brick wall."
+      },
+      {
+        "file_name": "VizWiz_train_00013324.jpg",
+        "caption": "A top part of a laptop computer screen is shown."
+      },
+      {
+        "file_name": "VizWiz_train_00007151.jpg",
+        "caption": "A start up DVD for Windows 7 Home Premium."
+      },
+      {
+        "file_name": "VizWiz_train_00002105.jpg",
+        "caption": "Monitor that shows the temperature and time on a wall."
+      },
+      {
+        "file_name": "VizWiz_train_00012777.jpg",
+        "caption": "A LG monitor displaying booting or installation process"
+      },
+      {
+        "file_name": "VizWiz_train_00022524.jpg",
+        "caption": "A pair of silver framed sunglasses with large purple lenses."
+      },
+      {
+        "file_name": "VizWiz_train_00023415.jpg",
+        "caption": "A man wearing a coat and winter hat talking into a microphone."
+      },
+      {
+        "file_name": "VizWiz_train_00015979.jpg",
+        "caption": "A computer on an entertainment stand is in the corner of the room playing a movie."
+      },
+      {
+        "file_name": "VizWiz_train_00002777.jpg",
+        "caption": "TV screen showing a person with a stack of money in his hand, appearing to be in a car."
+      },
+      {
+        "file_name": "VizWiz_train_00001374.jpg",
+        "caption": "A corner of an old TV or screen"
+      },
+      {
+        "file_name": "VizWiz_train_00019008.jpg",
+        "caption": "Picture of a computer screen showing a TV and AV summary"
+      },
+      {
+        "file_name": "VizWiz_train_00015693.jpg",
+        "caption": "A shirt with a dog and slogan on it."
+      },
+      {
+        "file_name": "VizWiz_train_00023039.jpg",
+        "caption": "A keyboard with letters and numbers is behind a screen"
+      },
+      {
+        "file_name": "VizWiz_train_00000383.jpg",
+        "caption": "An older model TeleSensory machine, and in the screen you can see a reflection of a chair and a window/door."
+      },
+      {
+        "file_name": "VizWiz_train_00002633.jpg",
+        "caption": "A desk with monitor, audio controller and keyboard with easy readable text and numbers."
+      },
+      {
+        "file_name": "VizWiz_train_00021473.jpg",
+        "caption": "a website giving an error code 34 and requiring input of a security code"
+      },
+      {
+        "file_name": "VizWiz_train_00023294.jpg",
+        "caption": "Image of an apple computer monitor screen with a blue bic pen"
+      },
+      {
+        "file_name": "VizWiz_train_00006799.jpg",
+        "caption": "A computer screen displaying some menu in center of the screen."
+      },
+      {
+        "file_name": "VizWiz_train_00004849.jpg",
+        "caption": "A bright yellow DVD with the text \"Office Professional\"."
+      },
+      {
+        "file_name": "VizWiz_train_00011596.jpg",
+        "caption": "A computer monitor with a screen displaying a message about system restoring."
+      },
+      {
+        "file_name": "VizWiz_train_00014033.jpg",
+        "caption": "a picture of an entertainment center in a home."
+      },
+      {
+        "file_name": "VizWiz_train_00013905.jpg",
+        "caption": "The back of a bottle of Heineken beer."
+      },
+      {
+        "file_name": "VizWiz_train_00006236.jpg",
+        "caption": "Some sort of charger placed between some person's legs"
+      },
+      {
+        "file_name": "VizWiz_train_00011417.jpg",
+        "caption": "a laptop computer and desktop with radio equipment on a desk with a world map behind it all"
+      },
+      {
+        "file_name": "VizWiz_train_00001647.jpg",
+        "caption": "A person with one denim leg and black shoes over some brown carpeting and turquoise, blue, and cream striped comforter."
+      },
+      {
+        "file_name": "VizWiz_train_00004789.jpg",
+        "caption": "Pictured is a screen caption from a cell phone."
+      }
+    ]
+  }
+}

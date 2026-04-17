@@ -3,6 +3,8 @@ from diffusers import (
     AutoPipelineForText2Image,
     DDIMScheduler,
     DDPMScheduler,
+    FlowMatchEulerDiscreteScheduler,
+    StableDiffusion3Pipeline,
     StableDiffusionPipeline,
     StableDiffusionXLPipeline,
 )
@@ -48,6 +50,12 @@ def load_generation_pipeline(model_id: str, family: str, device: str, torch_dtyp
             torch_dtype=torch_dtype,
             use_safetensors=True,
         )
+    elif family in {"sd3", "sd3.5"}:
+        pipeline = StableDiffusion3Pipeline.from_pretrained(
+            model_id,
+            torch_dtype=torch_dtype,
+            use_safetensors=True,
+        )
     elif family == "sdxl":
         pipeline = StableDiffusionXLPipeline.from_pretrained(
             model_id,
@@ -74,4 +82,6 @@ def get_scheduler(name: str, scheduler_config):
         return DDIMScheduler.from_config(scheduler_config)
     if name == "ddpm":
         return DDPMScheduler.from_config(scheduler_config)
+    if name in {"flow_match_euler", "flowmatch_euler", "fm_euler"}:
+        return FlowMatchEulerDiscreteScheduler.from_config(scheduler_config)
     raise ValueError(f"Unsupported scheduler: {name}")

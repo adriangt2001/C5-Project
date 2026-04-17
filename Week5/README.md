@@ -38,3 +38,12 @@ uv run python src/task_b/compare_parameters.py
 ```
 
 This script reads `outputs/task_b/summary.json` and saves comparison plots to `outputs/task_b/analysis`.
+
+## Run Task D (standalone prompt to image generation)
+
+```bash
+cd C5-Project/Week5
+uv run python src/task_d/generate_images.py --config configs/task_d/sdxl_turbo_generate.yaml
+```
+
+This script reads prompts from `configs/task_d/sdxl_turbo_generate.yaml` and saves the generated images under `outputs/task_d`.
