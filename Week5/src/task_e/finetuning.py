@@ -57,17 +57,15 @@ def build_dataloaders(args, processor):
 
     # include synthetic data augmentation samples in the train set
     synthetic_samples = []
-    if args.synthetic_data_dir:
-        synthetic_annotations_path = Path(args.synthetic_data_dir) / "annotations" / "train_synthetic.json"
-        synthetic_samples = load_annotations(
-            synthetic_annotations_path)
+    if args.use_synthetic:
+        synthetic_samples = load_annotations(data_dir / "annotations" / "train_synthetic.json")
         train_samples += synthetic_samples
         log_with_time(
-            f"Loaded synthetic dataset from {synthetic_annotations_path}"
+            f"Loaded synthetic dataset from {data_dir / 'annotations' / 'train_synthetic.json'}"
         )
         log_with_time(f"Synthetic training samples: {len(synthetic_samples)}")
     else:
-        log_with_time("No synthetic dataset provided. Training will use only original images.")
+        log_with_time("No synthetic data added. Training will use only original images.")
 
     log_with_time(
         f"Final training samples: {len(train_samples)} "

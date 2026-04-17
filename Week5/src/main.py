@@ -45,7 +45,7 @@ def build_parser():
     task_d_flux_parser.add_argument("--skip_existing", action="store_true")
     task_d_flux_parser.set_defaults(func=run_task_d_flux)
 
-    # Task e: Finetune captioning model with augmented data
+    # Task d: Build synthetic annotations from generated images
     synthetic_annotations_parser = subparsers.add_parser(
         "build_synthetic_annotations", help="Build train_synthetic.json from generated images"
     )
@@ -55,6 +55,7 @@ def build_parser():
     synthetic_annotations_parser.set_defaults(
         func=run_build_synthetic_annotations)
 
+    # Task e: Finetune captioning model with augmented data
     finetune_parser = subparsers.add_parser(
         "finetuning", help="Run Finetuning")
     finetune_parser.add_argument("--config", required=True)
