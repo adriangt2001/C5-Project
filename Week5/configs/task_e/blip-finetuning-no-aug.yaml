@@ -23,7 +23,7 @@ best_trained_model_path: finetuned_models/no-aug
 
 # logging parameters
 wandb:
-  project: "C5-Week4"
+  project: "C5-Week5"
   entity: "c5-team2"       
   name: "blip-finetuning-no-aug"       
   enabled: true 
