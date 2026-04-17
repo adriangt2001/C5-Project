@@ -1,5 +1,5 @@
 {
-  "source_annotations_path": "Week5/src/task_c/annotations/train_filtered.json",
+  "source_annotations_path": "Week5/data/annotations/train_filtered.json",
   "seed": 7,
   "samples_per_weight": 2,
   "drop_fallback": true,

@@ -7,6 +7,7 @@ from .pipeline import (
     resolve_device,
     seed_everything,
 )
+from .metrics import compute_metrics
 
 __all__ = [
     "ensure_dir",
@@ -18,4 +19,5 @@ __all__ = [
     "resolve_device",
     "save_json",
     "seed_everything",
+    "compute_metrics"
 ]

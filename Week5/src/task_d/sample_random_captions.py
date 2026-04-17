@@ -200,7 +200,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--train_annotations_path",
         type=str,
-        default="src/task_c/annotations/train_filtered.json",
+        default="data/annotations/train_filtered.json",
     )
     parser.add_argument(
         "--output_captions_path",
