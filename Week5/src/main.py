@@ -2,7 +2,7 @@ import argparse
 
 from src.task_a import run_task_a
 from src.task_b import run_task_b
-from src.task_d import run_task_d_flux
+from src.task_d import run_task_d_flux, run_build_synthetic_annotations
 from src.task_e import run_finetuning
 from src.utils import load_config
 
@@ -46,6 +46,13 @@ def build_parser():
     task_d_flux_parser.set_defaults(func=run_task_d_flux)
 
     # Task e: Finetune captioning model with augmented data
+    synthetic_annotations_parser = subparsers.add_parser(
+        "build_synthetic_annotations", help="Build train_synthetic.json from generated images"
+    )
+    synthetic_annotations_parser.add_argument("--config", required=True)
+    synthetic_annotations_parser.set_defaults(
+        func=run_build_synthetic_annotations)
+
     finetune_parser = subparsers.add_parser(
         "finetuning", help="Run Finetuning")
     finetune_parser.add_argument("--config", required=True)
