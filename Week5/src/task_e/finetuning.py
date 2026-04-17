@@ -49,15 +49,30 @@ def build_dataloaders(args, processor):
         seed=args.split_seed,
     )
 
+    log_with_time(
+        f"Loaded original dataset from {data_dir / 'annotations' / 'train_filtered.json'}"
+    )
+    log_with_time(f"Original train samples: {len(train_samples)}")
+    log_with_time(f"Validation samples: {len(val_samples)}")
+
     # include synthetic data augmentation samples in the train set
+    synthetic_samples = []
     if args.synthetic_data_dir:
+        synthetic_annotations_path = Path(args.synthetic_data_dir) / "annotations" / "train_synthetic.json"
         synthetic_samples = load_annotations(
-            Path(args.synthetic_data_dir) / "annotations" / "train_synthetic.json")
+            synthetic_annotations_path)
         train_samples += synthetic_samples
         log_with_time(
-            f"Included {len(synthetic_samples)} synthetic samples for training. "
-            f"Total training samples: {len(train_samples)}"
+            f"Loaded synthetic dataset from {synthetic_annotations_path}"
         )
+        log_with_time(f"Synthetic training samples: {len(synthetic_samples)}")
+    else:
+        log_with_time("No synthetic dataset provided. Training will use only original images.")
+
+    log_with_time(
+        f"Final training samples: {len(train_samples)} "
+        f"(original={len(train_samples) - len(synthetic_samples)}, synthetic={len(synthetic_samples)})"
+    )
 
     max_len = min(processor.tokenizer.model_max_length, 40)
 
