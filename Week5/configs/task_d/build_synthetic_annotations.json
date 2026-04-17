@@ -1,0 +1,8 @@
+{
+    "report_paths": [
+        "results/flux_run_shard_1/generation_report.jsonl",
+        "results/flux_run_shard_2/generation_report.jsonl",
+        "results/flux_run_shard_3/generation_report.jsonl"
+    ],
+    "output_dir": "data"
+}

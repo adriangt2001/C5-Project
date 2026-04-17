@@ -50,6 +50,8 @@ def build_parser():
         "build_synthetic_annotations", help="Build train_synthetic.json from generated images"
     )
     synthetic_annotations_parser.add_argument("--config", required=True)
+    synthetic_annotations_parser.add_argument(
+        "--limit", type=int, default=None)
     synthetic_annotations_parser.set_defaults(
         func=run_build_synthetic_annotations)
 

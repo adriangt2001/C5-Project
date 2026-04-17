@@ -73,13 +73,12 @@ def build_coco_payload(generations: list[dict], output_images_dir: Path) -> dict
     annotations = []
 
     for idx, generation in enumerate(generations):
-        src_image_path = generation["image_path"]
-        suffix = src_image_path.suffix.lower() or ".png"
-        dst_file_name = f"synthetic_{idx:06d}{suffix}"
+        file_name = str(generation["image_path"]).split("/")[-1]
+        print(file_name, flush=True)
 
         images.append(
             {
-                "file_name": dst_file_name,
+                "file_name": file_name,
                 "vizwiz_url": None,
                 "id": idx,
                 "text_detected": False,
@@ -109,15 +108,15 @@ def build_coco_payload(generations: list[dict], output_images_dir: Path) -> dict
     return payload
 
 
-def copy_images(generations: list[dict], output_images_dir: Path) -> None:
-    output_images_dir.mkdir(parents=True, exist_ok=True)
-    for idx, generation in enumerate(generations):
-        src_image_path = generation["image_path"]
-        if not src_image_path.exists():
-            raise FileNotFoundError(f"Generated image not found: {src_image_path}")
-        suffix = src_image_path.suffix.lower() or ".png"
-        dst_path = output_images_dir / f"synthetic_{idx:06d}{suffix}"
-        shutil.copy2(src_image_path, dst_path)
+# def copy_images(generations: list[dict], output_images_dir: Path) -> None:
+#     output_images_dir.mkdir(parents=True, exist_ok=True)
+#     for idx, generation in enumerate(generations):
+#         src_image_path = generation["image_path"]
+#         if not src_image_path.exists():
+#             raise FileNotFoundError(f"Generated image not found: {src_image_path}")
+#         suffix = src_image_path.suffix.lower() or ".png"
+#         dst_path = output_images_dir / f"synthetic_{idx:06d}{suffix}"
+#         shutil.copy2(src_image_path, dst_path)
 
 
 def save_json(path: Path, payload: dict) -> None:
@@ -140,11 +139,12 @@ def run_build_synthetic_annotations(args) -> None:
         log(f"Applied generation limit: {args.limit}")
 
     log(f"Found {len(generations)} successful generated images")
-    copy_images(generations, synthetic_images_dir)
+    # copy_images(generations, synthetic_images_dir)
+
     payload = build_coco_payload(generations, synthetic_images_dir)
     save_json(output_json_path, payload)
 
-    log(f"Copied {len(generations)} images to {synthetic_images_dir}")
+    # log(f"Copied {len(generations)} images to {synthetic_images_dir}")
     log(f"Saved synthetic annotations to {output_json_path}")
 
 
