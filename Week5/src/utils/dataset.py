@@ -93,11 +93,11 @@ class VizWizCaptionDataset(Dataset):
         training: bool = True,
     ) -> None:
         self.data_dir = Path(data_dir)
-        self.samples = list(samples)
         self.processor = processor
         self.max_len = max_len
         self.is_llm = is_llm
         self.training = training
+        self.samples = self._filter_missing_samples(list(samples))
 
     def _resolve_image_path(self, sample: VizWizSample) -> Path:
         candidates = [
@@ -108,6 +108,35 @@ class VizWizCaptionDataset(Dataset):
             if candidate.exists():
                 return candidate
         return candidates[0]
+
+    def _filter_missing_samples(
+        self,
+        samples: Sequence[VizWizSample],
+    ) -> List[VizWizSample]:
+        kept_samples: List[VizWizSample] = []
+        missing_samples: List[VizWizSample] = []
+
+        for sample in samples:
+            image_path = self._resolve_image_path(sample)
+            if image_path.exists():
+                kept_samples.append(sample)
+            else:
+                missing_samples.append(sample)
+
+        if missing_samples:
+            split_counts: Dict[str, int] = defaultdict(int)
+            for sample in missing_samples:
+                split_counts[sample.split] += 1
+            split_summary = ", ".join(
+                f"{split}={count}" for split, count in sorted(split_counts.items())
+            )
+            print(
+                f"[dataset] Skipping {len(missing_samples)} samples with missing image files "
+                f"({split_summary}).",
+                flush=True,
+            )
+
+        return kept_samples
 
     def __len__(self) -> int:
         return len(self.samples)
