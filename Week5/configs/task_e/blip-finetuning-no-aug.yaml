@@ -1,7 +1,7 @@
 model_name: "Salesforce/blip-image-captioning-base"
 model_type: "blip"
 data_dir: "data/"
-batch_size: 32
+batch_size: 30
 num_workers: 4
 val_ratio: 0.1
 split_seed: 42
