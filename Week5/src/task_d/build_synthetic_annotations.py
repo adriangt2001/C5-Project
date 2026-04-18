@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import argparse
 import json
-import shutil
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -154,14 +153,13 @@ def create_flux_symlinks(generations: list[dict], output_images_dir: Path) -> li
     output_images_dir.mkdir(parents=True, exist_ok=True)
     prepared_generations = []
 
-    for idx, generation in enumerate(generations):
+    for generation in generations:
         src_image_path = generation["image_path"]
         if not src_image_path.exists():
             raise FileNotFoundError(
                 f"Generated FLUX image not found: {src_image_path}")
 
-        suffix = src_image_path.suffix.lower() or ".png"
-        file_name = f"synthetic_{idx:06d}{suffix}"
+        file_name = src_image_path.name
         dst_path = output_images_dir / file_name
 
         if dst_path.exists() or dst_path.is_symlink():
@@ -178,20 +176,22 @@ def create_flux_symlinks(generations: list[dict], output_images_dir: Path) -> li
     return prepared_generations
 
 
-def copy_sd_images(generations: list[dict], output_images_dir: Path) -> list[dict]:
+def create_sd_symlinks(generations: list[dict], output_images_dir: Path) -> list[dict]:
     output_images_dir.mkdir(parents=True, exist_ok=True)
     prepared_generations = []
 
-    for idx, generation in enumerate(generations):
+    for generation in generations:
         src_image_path = generation["image_path"]
         if not src_image_path.exists():
             raise FileNotFoundError(
                 f"Generated SD image not found: {src_image_path}")
 
-        suffix = src_image_path.suffix.lower() or ".png"
-        file_name = f"synthetic_{idx:06d}{suffix}"
+        file_name = src_image_path.name
         dst_path = output_images_dir / file_name
-        shutil.copy2(src_image_path, dst_path)
+
+        if dst_path.exists() or dst_path.is_symlink():
+            dst_path.unlink()
+        dst_path.symlink_to(src_image_path.resolve())
 
         prepared_generations.append(
             {
@@ -253,14 +253,14 @@ def build_sd_synthetic_annotations(args) -> None:
         log(f"Applied generation limit: {args.limit}")
 
     log(f"Found {len(generations)} successful SD generated images")
-    prepared_generations = copy_sd_images(generations, synthetic_images_dir)
+    prepared_generations = create_sd_symlinks(generations, synthetic_images_dir)
     payload = build_coco_payload(
         prepared_generations,
         description="Synthetic training split generated from Stable Diffusion manifest",
     )
     save_json(output_json_path, payload)
 
-    log(f"Copied {len(prepared_generations)} images to {synthetic_images_dir}")
+    log(f"Created {len(prepared_generations)} symbolic links in {synthetic_images_dir}")
     log(f"Saved synthetic annotations to {output_json_path}")
 
 
