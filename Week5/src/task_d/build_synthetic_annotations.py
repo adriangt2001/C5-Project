@@ -125,7 +125,7 @@ def save_json(path: Path, payload: dict) -> None:
         json.dump(payload, handle, indent=2)
 
 
-def run_build_synthetic_annotations(args) -> None:
+def run_build_synthetic_annotations_flux(args) -> None:
     report_paths = [resolve_path(path) for path in args.report_paths]
     output_root = resolve_path(args.output_dir)
     annotations_dir = output_root / "annotations"
@@ -169,7 +169,7 @@ def main() -> None:
         default=None,
         help="Optional limit on the number of successful generations to include.",
     )
-    run_build_synthetic_annotations(parser.parse_args())
+    run_build_synthetic_annotations_flux(parser.parse_args())
 
 
 if __name__ == "__main__":
