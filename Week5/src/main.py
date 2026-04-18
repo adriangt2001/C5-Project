@@ -2,7 +2,10 @@ import argparse
 
 from src.task_a import run_task_a
 from src.task_b import run_task_b
-from src.task_d import run_task_d_flux, run_build_synthetic_annotations
+from src.task_d import (
+    run_task_d_flux,
+    run_build_synthetic_annotations,
+)
 from src.task_e import run_finetuning, run_finetuning_sd_data, run_inference
 from src.utils import load_config
 
@@ -47,7 +50,7 @@ def build_parser():
 
     # Task d: Build synthetic annotations from generated images
     synthetic_annotations_parser = subparsers.add_parser(
-        "build_synthetic_annotations", help="Build train_synthetic.json from generated images"
+        "build_synthetic_annotations", help="Build train_synthetic.json from FLUX reports or SD manifests"
     )
     synthetic_annotations_parser.add_argument("--config", required=True)
     synthetic_annotations_parser.add_argument(

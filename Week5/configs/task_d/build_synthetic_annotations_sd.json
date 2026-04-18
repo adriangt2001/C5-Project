@@ -1,0 +1,5 @@
+{
+    "input_type": "sd",
+    "manifest_path": "data/sd_generated/captions_with_images.json",
+    "output_dir": "data"
+}
