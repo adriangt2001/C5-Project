@@ -57,14 +57,26 @@ def build_dataloaders(args, processor):
 
     # include synthetic data augmentation samples in the train set
     synthetic_samples = []
-    if args.use_synthetic:
+
+    # TODO: add flux suffix to filenames
+    if args.use_synthetic_flux:
         synthetic_samples = load_annotations(data_dir / "annotations" / "train_synthetic.json")
         train_samples += synthetic_samples
         log_with_time(
             f"Loaded synthetic dataset from {data_dir / 'annotations' / 'train_synthetic.json'}"
         )
-        log_with_time(f"Synthetic training samples: {len(synthetic_samples)}")
-    else:
+        log_with_time(f"Synthetic FLUX training samples: {len(synthetic_samples)}")
+
+    if args.use_synthetic_sd:
+        synthetic_sd_samples = load_annotations(data_dir / "annotations" / "train_synthetic_sd.json")
+        synthetic_samples += synthetic_sd_samples
+        train_samples += synthetic_sd_samples
+        log_with_time(
+            f"Loaded synthetic dataset from {data_dir / 'annotations' / 'train_synthetic_sd.json'}"
+        )
+        log_with_time(f"Synthetic SD training samples: {len(synthetic_sd_samples)}")
+
+    if not args.use_synthetic_flux and not args.use_synthetic_sd:
         log_with_time("No synthetic data added. Training will use only original images.")
 
     log_with_time(

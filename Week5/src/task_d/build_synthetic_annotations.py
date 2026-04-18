@@ -157,7 +157,8 @@ def create_flux_symlinks(generations: list[dict], output_images_dir: Path) -> li
     for idx, generation in enumerate(generations):
         src_image_path = generation["image_path"]
         if not src_image_path.exists():
-            raise FileNotFoundError(f"Generated FLUX image not found: {src_image_path}")
+            raise FileNotFoundError(
+                f"Generated FLUX image not found: {src_image_path}")
 
         suffix = src_image_path.suffix.lower() or ".png"
         file_name = f"synthetic_{idx:06d}{suffix}"
@@ -184,7 +185,8 @@ def copy_sd_images(generations: list[dict], output_images_dir: Path) -> list[dic
     for idx, generation in enumerate(generations):
         src_image_path = generation["image_path"]
         if not src_image_path.exists():
-            raise FileNotFoundError(f"Generated SD image not found: {src_image_path}")
+            raise FileNotFoundError(
+                f"Generated SD image not found: {src_image_path}")
 
         suffix = src_image_path.suffix.lower() or ".png"
         file_name = f"synthetic_{idx:06d}{suffix}"
@@ -218,7 +220,8 @@ def build_flux_synthetic_annotations(args) -> None:
         log(f"Applied generation limit: {args.limit}")
 
     log(f"Found {len(generations)} successful FLUX generated images")
-    prepared_generations = create_flux_symlinks(generations, synthetic_images_dir)
+    prepared_generations = create_flux_symlinks(
+        generations, synthetic_images_dir)
     payload = build_coco_payload(
         prepared_generations,
         description="Synthetic training split generated from FLUX reports",
@@ -268,11 +271,13 @@ def run_build_synthetic_annotations(args) -> None:
 
     if input_type == "flux":
         if not getattr(args, "report_paths", None):
-            raise ValueError("For input_type='flux', provide report_paths in the config.")
+            raise ValueError(
+                "For input_type='flux', provide report_paths in the config.")
         build_flux_synthetic_annotations(args)
     elif input_type == "sd":
         if not getattr(args, "manifest_path", None):
-            raise ValueError("For input_type='sd', provide manifest_path in the config.")
+            raise ValueError(
+                "For input_type='sd', provide manifest_path in the config.")
         build_sd_synthetic_annotations(args)
     else:
         raise ValueError("input_type must be either 'flux' or 'sd'.")

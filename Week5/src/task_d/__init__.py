@@ -1,5 +1,5 @@
 from .generate_images_flux import run_task_d_flux
-from .build_synthetic_annotations import run_build_synthetic_annotations
+from .build_synthetic_annotations import run_build_synthetic_annotations_flux
 
 run_task_d = run_task_d_flux
 
