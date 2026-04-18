@@ -3,7 +3,7 @@ import argparse
 from src.task_a import run_task_a
 from src.task_b import run_task_b
 from src.task_d import run_task_d_flux, run_build_synthetic_annotations
-from src.task_e import run_finetuning
+from src.task_e import run_finetuning, run_finetuning_sd_data
 from src.utils import load_config
 
 
@@ -60,6 +60,12 @@ def build_parser():
         "finetuning", help="Run Finetuning")
     finetune_parser.add_argument("--config", required=True)
     finetune_parser.set_defaults(func=run_finetuning)
+
+    finetune_sd_parser = subparsers.add_parser(
+        "finetuning_sd_data", help="Run finetuning with original VizWiz + synthetic image folders"
+    )
+    finetune_sd_parser.add_argument("--config", required=True)
+    finetune_sd_parser.set_defaults(func=run_finetuning_sd_data)
 
     return parser
 

@@ -1,0 +1,33 @@
+model_name: "Salesforce/blip-image-captioning-base"
+model_type: "blip"
+data_dir: "data"
+batch_size: 32
+num_workers: 4
+val_ratio: 0.1
+split_seed: 42
+checkpoint: null
+output_file: "results/task_e/blip-finetuning-sd-data-extended.json"
+max_new_tokens: 30
+num_beams: 4
+
+use_synthetic: true
+synthetic_data_dirs:
+  - "/home/jgarciat/C5-Project/Week5/outputs/sdxl_turbo"
+  - "/home/jgarciat/C5-Project/Week5/outputs/sdxl"
+  
+
+# training parameters
+finetune_encoder: true
+finetune_decoder: true
+lr_encoder: 0.00001
+lr_decoder: 0.00005
+weight_decay: 0.01
+epochs: 30
+best_trained_model_path: "finetuned_models/sd_data_extended"
+
+# logging parameters
+wandb:
+  project: "C5-Week5"
+  entity: "c5-team2"
+  name: "blip-finetuning-sd-data-extended"
+  enabled: true
