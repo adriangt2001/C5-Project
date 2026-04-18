@@ -74,11 +74,13 @@ def build_parser():
     # Flux data
     infer_parser = subparsers.add_parser(
         "inference", help="Run Inference finetuned models")
+    infer_parser.add_argument("--config", required=True)
     infer_parser.set_defaults(func=run_inference)
 
     # Stable diffusion + flux data
 
     return parser
+
 
 def main():
     parser = build_parser()
