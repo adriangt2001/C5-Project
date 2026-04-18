@@ -36,8 +36,10 @@ def load_annotations(annotation_path: Path) -> List[VizWizSample]:
     images = payload.get("images", [])
     annotations = payload.get("annotations", [])
     # split = annotation_path.stem
+    # TODO: change flux
     split = "train" if "train_filtered" == annotation_path.stem \
             else "synthetic" if "train_synthetic" == annotation_path.stem \
+            else "synthetic_sd" if "train_synthetic_sd" == annotation_path.stem \
             else annotation_path.stem
 
     captions_by_image: Dict[int, List[str]] = defaultdict(list)
